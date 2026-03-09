@@ -61,7 +61,7 @@
       position: fixed; top: 0; left: 0; right: 0; background: #fff;
       padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.1rem;
       white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
-      align-items: center; justify-content: flex-start;
+      align-items: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
     nav a, nav button {
@@ -69,9 +69,11 @@
       font-size: 1.03125rem; transition: color 0.3s, transform 0.3s;
       background: transparent; border: none; cursor: pointer; padding: 0;
       font-family: inherit;
+      flex: 0 0 auto;
     }
     nav a:hover, nav a:focus, nav button:hover, nav button:focus { color: var(--cor-secundaria); transform: scale(1.05); }
     .admin-nav-btn.admin-on { color: #dc3545; }
+    .nav-spacer { flex: 1 1 auto; }
 
     @media (max-width: 480px) {
       nav { padding: 0.59375rem 0.84375rem; gap: 0.84375rem; }
@@ -310,6 +312,7 @@
       width: 100%;
       max-width: 1200px;
       margin-top: 28px;
+      align-items: start;
     }
 
     .atividade {
@@ -323,9 +326,11 @@
       text-align: left;
       opacity: 0;
       animation: slideUp 0.5s forwards;
-      min-height: 100%;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
+      min-height: auto;
+      height: auto;
+      align-self: start;
     }
 
     .atividade:hover {
@@ -432,6 +437,33 @@
       font-weight: 700;
       color: var(--cor-primaria);
       text-decoration: underline;
+    }
+
+    .atividades-admin {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(255,255,255,0.72);
+      border-radius: 18px;
+      box-shadow: var(--sombra);
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+
+    .agenda-admin-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .admin-subtitulo {
+      color: var(--cor-primaria);
+      font-weight: 800;
+      margin: 18px 0 8px;
+      text-align: left;
+      width: 100%;
     }
 
     @keyframes fadeIn { to { opacity:1; } }
@@ -798,6 +830,7 @@
       <a href="#banco-dados">Participe</a>
       <a href="#eventos-dados">Eventos</a>
       <a href="#contato">Contato</a>
+      <div class="nav-spacer"></div>
       <button type="button" class="admin-nav-btn" :class="{ 'admin-on': isAdmin }" @click="toggleAdmin">
         {{ isAdmin ? 'Sair Admin' : 'Admin' }}
       </button>
@@ -815,12 +848,7 @@
         <div class="mural-topo" v-if="isAdmin">
           <label class="botao-formulario" style="cursor:pointer;">
             <i class="fas fa-image"></i> Inserir foto
-            <input
-              type="file"
-              accept="image/*"
-              @change="handleImageUpload"
-              style="display:none;"
-            >
+            <input type="file" accept="image/*" @change="handleImageUpload" style="display:none;">
           </label>
         </div>
 
@@ -853,29 +881,86 @@
       <section id="atividades" aria-labelledby="titulo-atividades">
         <h2 id="titulo-atividades">Atividades</h2>
 
+        <div class="atividades-admin" v-if="isAdmin">
+          <h3 style="margin-top:0; color:var(--cor-primaria);">Gerenciar atividades</h3>
+
+          <div class="form-db">
+            <input v-model="atividadeForm.titulo" placeholder="Título da atividade" aria-label="Título da atividade">
+            <input v-model="atividadeForm.localPadrao" placeholder="Local padrão" aria-label="Local padrão">
+            <input v-model="atividadeForm.link" placeholder="Link de mais informações" aria-label="Link de mais informações">
+            <textarea v-model="atividadeForm.resumo" placeholder="Descrição/resumo" aria-label="Descrição da atividade"></textarea>
+            <textarea v-model="atividadeForm.extra" placeholder="Observação extra" aria-label="Observação extra"></textarea>
+          </div>
+
+          <div class="admin-subtitulo">Horários</div>
+
+          <div v-for="(linha, idx) in atividadeForm.agenda" :key="'agenda-'+idx" class="agenda-admin-item">
+            <div class="form-db" style="margin-top:0;">
+              <input v-model="linha.dia" placeholder="Dia da semana" aria-label="Dia da semana">
+              <input v-model="linha.horasTexto" placeholder="Horários (ex: 19:00 | 20:30)" aria-label="Horários">
+              <input v-model="linha.local" placeholder="Local" aria-label="Local">
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+              <button class="botao-formulario" style="background:#dc3545;" type="button" @click="removerLinhaAgenda(idx)">Remover horário</button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+            <button class="botao-formulario" type="button" @click="adicionarLinhaAgenda">Adicionar horário</button>
+            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarAtividade">Salvar atividade</button>
+            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
+          </div>
+
+          <div style="margin-top:20px; text-align:left;">
+            <strong>Atividades cadastradas:</strong>
+            <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
+              <button
+                v-for="(item, idx) in atividades"
+                :key="'admin-atividade-'+idx"
+                class="botao-formulario"
+                type="button"
+                style="background:#007bff;"
+                @click="editarAtividade(idx)"
+              >
+                Editar {{ item.titulo }}
+              </button>
+              <button
+                v-for="(item, idx) in atividades"
+                :key="'admin-del-atividade-'+idx"
+                class="botao-formulario"
+                type="button"
+                style="background:#dc3545;"
+                @click="excluirAtividade(idx)"
+              >
+                Excluir {{ item.titulo }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="atividades-grid">
           <article
             class="atividade"
-            v-for="(item, nome) in atividades"
-            :key="nome"
-            @click="!reduceMotionActive && toggle(nome)"
-            @keydown.enter.prevent="!reduceMotionActive && toggle(nome)"
-            @keydown.space.prevent="!reduceMotionActive && toggle(nome)"
-            :aria-expanded="(reduceMotionActive || active===nome) ? 'true' : 'false'"
+            v-for="(item, idx) in atividades"
+            :key="item.titulo + '-' + idx"
+            @click="!reduceMotionActive && toggle(idx)"
+            @keydown.enter.prevent="!reduceMotionActive && toggle(idx)"
+            @keydown.space.prevent="!reduceMotionActive && toggle(idx)"
+            :aria-expanded="(reduceMotionActive || active===idx) ? 'true' : 'false'"
             :role="reduceMotionActive ? null : 'button'"
             :tabindex="reduceMotionActive ? -1 : 0"
           >
             <div class="atividade-topo">
-              <h3>{{ nome }}</h3>
+              <h3>{{ item.titulo }}</h3>
               <span class="atividade-badge">{{ item.localPadrao }}</span>
             </div>
 
             <p class="atividade-resumo">{{ item.resumo }}</p>
             <p class="atividade-preview">
-              {{ item.agenda.length }} horário(s) disponível(is) • clique para {{ active===nome ? 'recolher' : 'expandir' }}
+              {{ item.agenda.length }} horário(s) disponível(is) • clique para {{ active===idx ? 'recolher' : 'expandir' }}
             </p>
 
-            <div class="atividade-detalhes" v-if="reduceMotionActive || active===nome">
+            <div class="atividade-detalhes" v-if="reduceMotionActive || active===idx">
               <div class="atividade-lista">
                 <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
                   <div class="atividade-item-linha1">
@@ -892,7 +977,7 @@
 
               <a
                 class="link-info"
-                :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
+                :href="item.link || ('https://www.google.com/search?q='+encodeURIComponent(item.titulo+' '+(item.localPadrao||'')))"
                 target="_blank"
                 rel="noopener noreferrer"
                 @click.stop
@@ -945,85 +1030,62 @@
             <button v-if="isAdmin" type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
           </form>
 
-          <div style="margin-top:20px; width:100%; max-width:900px;">
-            <input
-              v-model="filtro"
-              :placeholder="isAdmin ? 'Buscar em todos os cadastros...' : 'Buscar nos seus cadastros...'"
-              style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
-              aria-label="Buscar cadastro"
-            >
-            <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
-          </div>
+          <template v-if="isAdmin">
+            <div style="margin-top:20px; width:100%; max-width:900px;">
+              <input
+                v-model="filtro"
+                placeholder="Buscar em todos os cadastros..."
+                style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
+                aria-label="Buscar cadastro"
+              >
+              <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
+            </div>
 
-          <div class="table-wrap">
-            <table class="table-db" aria-label="Tabela de cadastros de pessoas">
-              <thead>
-                <tr>
-                  <th scope="col">ID</th>
-                  <th scope="col">Nº</th>
-                  <th scope="col">Nome</th>
-                  <th scope="col">Idade</th>
-                  <th scope="col">Cidade</th>
-                  <th scope="col">Modalidade</th>
-                  <th scope="col">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(r, i) in paginated" :key="r.id">
-                  <td>{{ r.id }}</td>
-                  <td>{{ (page - 1) * perPage + i + 1 }}</td>
-                  <td>{{ r.nome }}</td>
-                  <td>{{ r.idade }}</td>
-                  <td>{{ r.cidade }}</td>
-                  <td>{{ r.modalidade }}</td>
-                  <td class="table-actions">
-                    <button
-                      @click="viewDetalhes(r)"
-                      class="botao-formulario"
-                      style="background:#6c757d;"
-                      :aria-label="'Ver detalhes do cadastro de ' + r.nome"
-                    >
-                      🔍 Ver detalhes
-                    </button>
+            <div class="table-wrap">
+              <table class="table-db" aria-label="Tabela de cadastros de pessoas">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nº</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Idade</th>
+                    <th scope="col">Cidade</th>
+                    <th scope="col">Modalidade</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(r, i) in paginated" :key="r.id">
+                    <td>{{ r.id }}</td>
+                    <td>{{ (page - 1) * perPage + i + 1 }}</td>
+                    <td>{{ r.nome }}</td>
+                    <td>{{ r.idade }}</td>
+                    <td>{{ r.cidade }}</td>
+                    <td>{{ r.modalidade }}</td>
+                    <td class="table-actions">
+                      <button @click="viewDetalhes(r)" class="botao-formulario" style="background:#6c757d;">🔍 Ver detalhes</button>
+                      <button @click="openEdit(r)" class="botao-formulario" style="background:#007bff;">🖋️ Editar</button>
+                      <button @click="deleteRegistro(r)" class="botao-formulario" style="background:#dc3545;">🗑️ Excluir</button>
+                    </td>
+                  </tr>
 
-                    <button
-                      @click="openEdit(r)"
-                      class="botao-formulario"
-                      style="background:#007bff;"
-                      :aria-label="'Editar cadastro de ' + r.nome"
-                    >
-                      🖋️ Editar
-                    </button>
+                  <tr v-if="!loading && paginated.length === 0">
+                    <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum cadastro encontrado.</td>
+                  </tr>
 
-                    <button
-                      @click="deleteRegistro(r)"
-                      class="botao-formulario"
-                      style="background:#dc3545;"
-                      :aria-label="'Excluir cadastro de ' + r.nome"
-                    >
-                      🗑️ Excluir
-                    </button>
-                  </td>
-                </tr>
+                  <tr v-if="loading">
+                    <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-                <tr v-if="!loading && paginated.length === 0">
-                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">
-                    {{ isAdmin ? 'Nenhum cadastro encontrado.' : 'Você ainda não possui cadastros visíveis.' }}
-                  </td>
-                </tr>
-
-                <tr v-if="loading">
-                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
-            <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
-            <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
-            <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
-          </div>
+            <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
+              <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
+              <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
+              <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+            </div>
+          </template>
         </div>
       </section>
 
@@ -1230,11 +1292,57 @@
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v4';
+    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v5';
     const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
     const SENHA_EXCLUSAO = '1234';
     const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
     const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
+    const ATIVIDADES_STORAGE_KEY = 'aso_atividades_custom_v1';
+
+    const ATIVIDADES_PADRAO = [
+      {
+        titulo: 'Curso de Libras',
+        resumo: 'Aprendizado de Libras para comunidade e familiares.',
+        localPadrao: 'Sede da ASO',
+        extra: 'Turmas abertas conforme disponibilidade.',
+        link: '',
+        agenda: [
+          { dia: 'Segunda-feira', horas: ['19:00'], local: 'Sede da ASO' },
+          { dia: 'Quarta-feira', horas: ['19:00'], local: 'Sede da ASO' }
+        ]
+      },
+      {
+        titulo: 'Atendimento Social',
+        resumo: 'Apoio e orientação à comunidade surda.',
+        localPadrao: 'Sede da ASO',
+        extra: 'Atendimento mediante agendamento.',
+        link: '',
+        agenda: [
+          { dia: 'Terça-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' },
+          { dia: 'Quinta-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' }
+        ]
+      },
+      {
+        titulo: 'Eventos e Encontros',
+        resumo: 'Ações de integração, cultura, convivência e conscientização.',
+        localPadrao: 'Ourinhos/SP',
+        extra: 'As datas são divulgadas pelas redes sociais e nos canais da associação.',
+        link: '',
+        agenda: [
+          { dia: 'Programação mensal', horas: ['Datas variáveis'], local: 'Ourinhos/SP' }
+        ]
+      },
+      {
+        titulo: 'Voluntariado',
+        resumo: 'Participe apoiando as ações da associação e fortalecendo a inclusão.',
+        localPadrao: 'Sede da ASO',
+        extra: 'Entre em contato para saber como colaborar.',
+        link: '',
+        agenda: [
+          { dia: 'Sob consulta', horas: ['Horário combinado'], local: 'Sede da ASO' }
+        ]
+      }
+    ];
 
     new Vue({
       el: '#app',
@@ -1247,41 +1355,17 @@
           'Entre suas iniciativas estão a promoção de cursos de Libras, eventos de conscientização e atividades voltadas à integração entre a comunidade surda e a sociedade.'
         ],
 
-        atividades: {
-          'Curso de Libras': {
-            resumo: 'Aprendizado de Libras para comunidade e familiares.',
-            localPadrao: 'Sede da ASO',
-            extra: 'Turmas abertas conforme disponibilidade.',
-            agenda: [
-              { dia: 'Segunda-feira', horas: ['19:00'], local: 'Sede da ASO' },
-              { dia: 'Quarta-feira', horas: ['19:00'], local: 'Sede da ASO' }
-            ]
-          },
-          'Atendimento Social': {
-            resumo: 'Apoio e orientação à comunidade surda.',
-            localPadrao: 'Sede da ASO',
-            extra: 'Atendimento mediante agendamento.',
-            agenda: [
-              { dia: 'Terça-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' },
-              { dia: 'Quinta-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' }
-            ]
-          },
-          'Eventos e Encontros': {
-            resumo: 'Ações de integração, cultura, convivência e conscientização.',
-            localPadrao: 'Ourinhos/SP',
-            extra: 'As datas são divulgadas pelas redes sociais e nos canais da associação.',
-            agenda: [
-              { dia: 'Programação mensal', horas: ['Datas variáveis'], local: 'Ourinhos/SP' }
-            ]
-          },
-          'Voluntariado': {
-            resumo: 'Participe apoiando as ações da associação e fortalecendo a inclusão.',
-            localPadrao: 'Sede da ASO',
-            extra: 'Entre em contato para saber como colaborar.',
-            agenda: [
-              { dia: 'Sob consulta', horas: ['Horário combinado'], local: 'Sede da ASO' }
-            ]
-          }
+        atividades: JSON.parse(JSON.stringify(ATIVIDADES_PADRAO)),
+        atividadeForm: {
+          indice: null,
+          titulo: '',
+          resumo: '',
+          localPadrao: '',
+          extra: '',
+          link: '',
+          agenda: [
+            { dia: '', horasTexto: '', local: '' }
+          ]
         },
 
         imagens: [...GALERIA_PADRAO],
@@ -1371,7 +1455,6 @@
 
         eventosFiltrados() {
           if (!this.filtroEventos) return this.eventosBanco;
-
           const f = this.normalizarTexto(this.filtroEventos);
 
           return this.eventosBanco.filter(ev =>
@@ -1414,11 +1497,7 @@
         normalizarDataEvento(data) {
           if (!data) return '';
           const str = String(data).trim();
-
-          if (str.includes('T')) {
-            return str.split('T')[0];
-          }
-
+          if (str.includes('T')) return str.split('T')[0];
           return str.length >= 10 ? str.slice(0, 10) : str;
         },
 
@@ -1427,9 +1506,7 @@
             const salvo = localStorage.getItem(GALERIA_STORAGE_KEY);
             if (!salvo) return;
             const parsed = JSON.parse(salvo);
-            if (Array.isArray(parsed) && parsed.length) {
-              this.imagens = parsed.slice(0, 25);
-            }
+            if (Array.isArray(parsed) && parsed.length) this.imagens = parsed.slice(0, 25);
           } catch (e) {
             console.error('Erro ao carregar mural local:', e);
           }
@@ -1440,8 +1517,129 @@
             localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 25)));
           } catch (e) {
             console.error('Erro ao salvar mural local:', e);
-            alert('Não consegui salvar as fotos neste navegador. Talvez o arquivo seja grande demais.');
+            alert('Não consegui salvar as fotos neste navegador.');
           }
+        },
+
+        carregarAtividadesLocal() {
+          try {
+            const salvo = localStorage.getItem(ATIVIDADES_STORAGE_KEY);
+            if (!salvo) return;
+            const parsed = JSON.parse(salvo);
+            if (Array.isArray(parsed) && parsed.length) this.atividades = parsed;
+          } catch (e) {
+            console.error('Erro ao carregar atividades:', e);
+          }
+        },
+
+        salvarAtividadesLocal() {
+          try {
+            localStorage.setItem(ATIVIDADES_STORAGE_KEY, JSON.stringify(this.atividades));
+          } catch (e) {
+            console.error('Erro ao salvar atividades:', e);
+            alert('Não consegui salvar as atividades no navegador.');
+          }
+        },
+
+        limparAtividadeForm() {
+          this.atividadeForm = {
+            indice: null,
+            titulo: '',
+            resumo: '',
+            localPadrao: '',
+            extra: '',
+            link: '',
+            agenda: [
+              { dia: '', horasTexto: '', local: '' }
+            ]
+          };
+        },
+
+        adicionarLinhaAgenda() {
+          this.atividadeForm.agenda.push({ dia: '', horasTexto: '', local: '' });
+        },
+
+        removerLinhaAgenda(idx) {
+          this.atividadeForm.agenda.splice(idx, 1);
+          if (!this.atividadeForm.agenda.length) {
+            this.atividadeForm.agenda.push({ dia: '', horasTexto: '', local: '' });
+          }
+        },
+
+        editarAtividade(idx) {
+          const item = this.atividades[idx];
+          this.atividadeForm = {
+            indice: idx,
+            titulo: item.titulo || '',
+            resumo: item.resumo || '',
+            localPadrao: item.localPadrao || '',
+            extra: item.extra || '',
+            link: item.link || '',
+            agenda: (item.agenda || []).map(l => ({
+              dia: l.dia || '',
+              horasTexto: (l.horas || []).join(' | '),
+              local: l.local || ''
+            }))
+          };
+          if (!this.atividadeForm.agenda.length) {
+            this.atividadeForm.agenda.push({ dia: '', horasTexto: '', local: '' });
+          }
+          window.location.hash = '#atividades';
+        },
+
+        excluirAtividade(idx) {
+          if (!this.isAdmin) return;
+          const senha = prompt('Informe a senha para excluir a atividade:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente excluir esta atividade?')) return;
+
+          this.atividades.splice(idx, 1);
+          this.salvarAtividadesLocal();
+          if (this.active === idx) this.active = null;
+          if (this.active > idx) this.active--;
+          this.limparAtividadeForm();
+        },
+
+        salvarAtividade() {
+          if (!this.isAdmin) return;
+
+          const agendaTratada = this.atividadeForm.agenda
+            .filter(l => l.dia || l.horasTexto || l.local)
+            .map(l => ({
+              dia: l.dia || '',
+              horas: String(l.horasTexto || '')
+                .split('|')
+                .map(h => h.trim())
+                .filter(Boolean),
+              local: l.local || ''
+            }));
+
+          if (!this.atividadeForm.titulo.trim()) {
+            alert('Informe o título da atividade.');
+            return;
+          }
+
+          const novaAtividade = {
+            titulo: this.atividadeForm.titulo.trim(),
+            resumo: this.atividadeForm.resumo.trim(),
+            localPadrao: this.atividadeForm.localPadrao.trim(),
+            extra: this.atividadeForm.extra.trim(),
+            link: this.atividadeForm.link.trim(),
+            agenda: agendaTratada.length ? agendaTratada : [{ dia: '', horas: [], local: '' }]
+          };
+
+          if (this.atividadeForm.indice === null || this.atividadeForm.indice === undefined) {
+            this.atividades.push(novaAtividade);
+          } else {
+            this.$set(this.atividades, this.atividadeForm.indice, novaAtividade);
+          }
+
+          this.salvarAtividadesLocal();
+          this.limparAtividadeForm();
         },
 
         handleImageUpload(event) {
@@ -1502,7 +1700,6 @@
         getMesAnoEvento(data) {
           const normalizada = this.normalizarDataEvento(data);
           if (!normalizada || normalizada.split('-').length !== 3) return 'sem data';
-
           const [ano, mes] = normalizada.split('-');
           const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
           return `${meses[Number(mes) - 1] || mes}/${ano}`;
@@ -1511,7 +1708,6 @@
         formatarData(data) {
           const normalizada = this.normalizarDataEvento(data);
           if (!normalizada) return '';
-
           const partes = normalizada.split('-');
           if (partes.length !== 3) return normalizada;
           return `${partes[2]}/${partes[1]}/${partes[0]}`;
@@ -1530,7 +1726,6 @@
 
           const senha = prompt('Informe a senha de administrador:');
           if (senha === null) return;
-
           if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
@@ -1580,7 +1775,6 @@
           if (!r.ok) throw new Error('Falha ao listar eventos');
           const data = await r.json();
           this.eventosBanco = Array.isArray(data) ? data : (data.data || []);
-
           this.eventosBanco.sort((a, b) => {
             const da = this.normalizarDataEvento(a.dataEvento);
             const db = this.normalizarDataEvento(b.dataEvento);
@@ -1644,8 +1838,8 @@
           this.modalImage = this.imagens[this.modalIndex];
         },
 
-        toggle(nome) {
-          this.active = this.active===nome ? null : nome;
+        toggle(idx) {
+          this.active = this.active===idx ? null : idx;
         },
 
         async load() {
@@ -1697,11 +1891,13 @@
               observacoes: ''
             };
 
-            this.$nextTick(() => {
-              document.querySelector('#banco-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
-            });
+            if (this.isAdmin) this.page = this.totalPages;
 
-            this.page = this.totalPages;
+            this.$nextTick(() => {
+              if (this.isAdmin) {
+                document.querySelector('#banco-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
+              }
+            });
           } catch (e) {
             alert('Erro ao inserir: ' + e.message);
           } finally {
@@ -1828,10 +2024,6 @@
             };
 
             this.eventosPage = 1;
-
-            this.$nextTick(() => {
-              document.querySelector('#eventos-dados .eventos-vitrine-wrap')?.scrollIntoView({ behavior:'smooth' });
-            });
           } catch (e) {
             alert('Erro ao inserir evento: ' + e.message);
           } finally {
@@ -1956,6 +2148,7 @@
       mounted() {
         this.carregarAdminLocal();
         this.carregarGaleriaLocal();
+        this.carregarAtividadesLocal();
         this.load();
         this.loadEventos();
 

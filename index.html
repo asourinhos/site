@@ -59,20 +59,23 @@
 
     nav {
       position: fixed; top: 0; left: 0; right: 0; background: #fff;
-      padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.375rem;
+      padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.1rem;
       white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       align-items: center; justify-content: flex-start;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    nav a {
+    nav a, nav button {
       text-decoration: none; color: #333; font-weight: bold;
       font-size: 1.03125rem; transition: color 0.3s, transform 0.3s;
+      background: transparent; border: none; cursor: pointer; padding: 0;
+      font-family: inherit;
     }
-    nav a:hover, nav a:focus { color: var(--cor-secundaria); transform: scale(1.05); }
+    nav a:hover, nav a:focus, nav button:hover, nav button:focus { color: var(--cor-secundaria); transform: scale(1.05); }
+    .admin-nav-btn.admin-on { color: #dc3545; }
 
     @media (max-width: 480px) {
       nav { padding: 0.59375rem 0.84375rem; gap: 0.84375rem; }
-      nav a { font-size: 0.90625rem; }
+      nav a, nav button { font-size: 0.90625rem; }
     }
 
     header {
@@ -157,7 +160,7 @@
           #b88e62 36px
         );
       border-radius: 26px;
-      padding: 54px 28px 28px;
+      padding: 60px 28px 28px;
       box-shadow: var(--sombra);
       position: relative;
       overflow: hidden;
@@ -178,11 +181,12 @@
     .mural-titulo-interno {
       position: absolute;
       top: 12px;
-      left: 18px;
-      font-size: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.55rem;
       font-weight: 900;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.78);
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.82);
       text-shadow: 0 2px 8px rgba(0,0,0,0.18);
       z-index: 2;
       user-select: none;
@@ -572,29 +576,42 @@
       flex-direction: column;
       text-align: left;
       min-height: 100%;
+      position: relative;
+    }
+
+    .evento-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(0,179,81,0.08), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(27,40,69,0.08), transparent 28%);
+      pointer-events: none;
     }
 
     .evento-card-topo {
-      padding: 18px 18px 8px;
+      padding: 18px;
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 10px;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
     }
 
     .evento-data-box {
       background: var(--cor-primaria);
       color: #fff;
-      min-width: 78px;
-      border-radius: 16px;
+      min-width: 84px;
+      border-radius: 18px;
       padding: 12px 10px;
       text-align: center;
       box-shadow: 0 8px 18px rgba(27,40,69,0.24);
+      flex-shrink: 0;
     }
 
     .evento-dia-num {
       display: block;
-      font-size: 1.6rem;
+      font-size: 1.7rem;
       line-height: 1;
       font-weight: 900;
     }
@@ -602,9 +619,38 @@
     .evento-mes-ano {
       display: block;
       margin-top: 4px;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+    }
+
+    .evento-titulo-box {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .evento-tag {
+      display: inline-block;
+      width: fit-content;
+      background: #e9f8ef;
+      color: #087f3e;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .evento-titulo {
+      margin: 0;
+      color: var(--cor-primaria);
+      font-size: 1.25rem;
+      line-height: 1.3;
+      word-break: break-word;
     }
 
     .evento-card-conteudo {
@@ -613,13 +659,8 @@
       flex-direction: column;
       gap: 12px;
       flex: 1;
-    }
-
-    .evento-titulo {
-      margin: 0;
-      color: var(--cor-primaria);
-      font-size: 1.3rem;
-      line-height: 1.3;
+      position: relative;
+      z-index: 1;
     }
 
     .evento-descricao {
@@ -727,11 +768,10 @@
 
     @media (max-width: 768px) {
       section { font-size: 1rem; }
-      .evento-card-topo { flex-direction: column; align-items: flex-start; }
-      .evento-data-box { min-width: 92px; }
       .mural-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .mural-foto-img { height: 125px; }
       .eventos-grid { grid-template-columns: 1fr; }
+      .evento-card-topo { align-items: flex-start; }
     }
 
     @media (max-width: 480px) {
@@ -750,17 +790,20 @@
     <button type="button" id="btn-motion" title="Reduzir animações e expandir tudo">Menos animação</button>
   </div>
 
-  <nav role="navigation" aria-label="Principal">
-    <a href="#topo">ASO</a>
-    <a href="#quem-somos">Quem Somos</a>
-    <a href="#atividades">Atividades</a>
-    <a href="#banco-dados">Participe</a>
-    <a href="#eventos-dados">Eventos</a>
-    <a href="#contato">Contato</a>
-  </nav>
+  <div id="app">
+    <nav role="navigation" aria-label="Principal">
+      <a href="#topo">ASO</a>
+      <a href="#quem-somos">Quem Somos</a>
+      <a href="#atividades">Atividades</a>
+      <a href="#banco-dados">Participe</a>
+      <a href="#eventos-dados">Eventos</a>
+      <a href="#contato">Contato</a>
+      <button type="button" class="admin-nav-btn" :class="{ 'admin-on': isAdmin }" @click="toggleAdmin">
+        {{ isAdmin ? 'Sair Admin' : 'Admin' }}
+      </button>
+    </nav>
 
-  <main id="conteudo-principal">
-    <div id="app">
+    <main id="conteudo-principal">
       <header id="topo" aria-label="Início">
         <img alt="Logo da ASO, Associação Amigos dos Surdos de Ourinhos" class="logo" src="logo.jpg"/>
       </header>
@@ -769,7 +812,7 @@
         <h2 id="titulo-quem-somos">Quem Somos</h2>
         <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
 
-        <div class="mural-topo">
+        <div class="mural-topo" v-if="isAdmin">
           <label class="botao-formulario" style="cursor:pointer;">
             <i class="fas fa-image"></i> Inserir foto
             <input
@@ -798,7 +841,7 @@
               />
               <div class="mural-foto-rodape">
                 <span>Foto {{ i + 1 }}</span>
-                <button class="btn-remover-foto" type="button" @click="removerFoto(i)">
+                <button v-if="isAdmin" class="btn-remover-foto" type="button" @click="removerFoto(i)">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -868,6 +911,7 @@
           <div class="badge" role="status" aria-live="polite">
             🔗 Status da API Pessoas: <strong>{{ apiStatus }}</strong>
           </div>
+          <div class="badge" v-if="isAdmin"><strong>Modo administrador ativo</strong></div>
         </div>
 
         <div class="bloco-admin">
@@ -898,13 +942,13 @@
             <textarea v-model="novo.observacoes" id="observacoes" placeholder="Observações" aria-label="Observações"></textarea>
 
             <button type="submit" class="botao-formulario" :disabled="loading">INSERT</button>
-            <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
+            <button v-if="isAdmin" type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
           </form>
 
           <div style="margin-top:20px; width:100%; max-width:900px;">
             <input
               v-model="filtro"
-              placeholder="Buscar por nome, e-mail, cidade ou modalidade..."
+              :placeholder="isAdmin ? 'Buscar em todos os cadastros...' : 'Buscar nos seus cadastros...'"
               style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
               aria-label="Buscar cadastro"
             >
@@ -963,7 +1007,9 @@
                 </tr>
 
                 <tr v-if="!loading && paginated.length === 0">
-                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum registro encontrado.</td>
+                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">
+                    {{ isAdmin ? 'Nenhum cadastro encontrado.' : 'Você ainda não possui cadastros visíveis.' }}
+                  </td>
                 </tr>
 
                 <tr v-if="loading">
@@ -988,9 +1034,10 @@
           <div class="badge" role="status" aria-live="polite">
             📅 Status da API Eventos: <strong>{{ eventosApiStatus }}</strong>
           </div>
+          <div class="badge" v-if="isAdmin"><strong>Gerenciamento de eventos visível apenas para administrador</strong></div>
         </div>
 
-        <div class="eventos-admin">
+        <div class="eventos-admin" v-if="isAdmin">
           <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
             <p id="dica-form-eventos" class="visually-hidden">
               Preencha os campos obrigatórios para cadastrar um evento.
@@ -1043,13 +1090,17 @@
                   <span class="evento-dia-num">{{ getDiaEvento(ev.dataEvento) }}</span>
                   <span class="evento-mes-ano">{{ getMesAnoEvento(ev.dataEvento) }}</span>
                 </div>
+
+                <div class="evento-titulo-box">
+                  <span class="evento-tag">Evento ASO</span>
+                  <h4 class="evento-titulo">{{ ev.nomeEvento }}</h4>
+                </div>
               </div>
 
               <div class="evento-card-conteudo">
-                <h4 class="evento-titulo">{{ ev.nomeEvento }}</h4>
                 <p class="evento-descricao">{{ ev.descricao || 'Sem descrição.' }}</p>
 
-                <div class="evento-acoes">
+                <div class="evento-acoes" v-if="isAdmin">
                   <button class="mini-btn ver" type="button" @click="viewDetalhesEvento(ev)">Ver detalhes</button>
                   <button class="mini-btn editar" type="button" @click="openEditEvento(ev)">Editar</button>
                   <button class="mini-btn excluir" type="button" @click="deleteEvento(ev)">Excluir</button>
@@ -1174,18 +1225,22 @@
           </div>
         </div>
       </div>
-    </div>
-  </main>
+    </main>
+  </div>
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v3';
+    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v4';
     const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
     const SENHA_EXCLUSAO = '1234';
+    const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
+    const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
 
     new Vue({
       el: '#app',
       data: {
+        isAdmin: false,
+
         textoQuemSomos: [
           'A Associação Amigos dos Surdos de Ourinhos (ASO) é uma organização social dedicada à promoção da inclusão, acessibilidade e valorização da comunidade surda na região de Ourinhos.',
           'A associação atua no desenvolvimento de ações que buscam ampliar a participação das pessoas surdas na sociedade, incentivando o respeito às diferenças e a igualdade de oportunidades.',
@@ -1233,7 +1288,7 @@
         active: null,
         reduceMotionActive: false,
 
-        banco: [],
+        bancoTodos: [],
         novo: {
           nome: '',
           email: '',
@@ -1277,11 +1332,27 @@
       },
 
       computed: {
+        meusIds() {
+          try {
+            const raw = localStorage.getItem(MEUS_REGISTROS_STORAGE_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed.map(Number) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+
+        registrosBase() {
+          if (this.isAdmin) return this.bancoTodos;
+          const ids = new Set(this.meusIds);
+          return this.bancoTodos.filter(r => ids.has(Number(r.id)));
+        },
+
         registrosFiltrados() {
-          if (!this.filtro) return this.banco;
+          if (!this.filtro) return this.registrosBase;
           const f = this.normalizarTexto(this.filtro);
 
-          return this.banco.filter(r =>
+          return this.registrosBase.filter(r =>
             this.normalizarTexto(r.nome).includes(f) ||
             this.normalizarTexto(r.email).includes(f) ||
             this.normalizarTexto(r.cidade).includes(f) ||
@@ -1325,6 +1396,9 @@
         },
         filtroEventos() {
           this.eventosPage = 1;
+        },
+        isAdmin() {
+          this.page = 1;
         }
       },
 
@@ -1371,6 +1445,12 @@
         },
 
         handleImageUpload(event) {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode inserir fotos.');
+            event.target.value = '';
+            return;
+          }
+
           const file = event.target.files && event.target.files[0];
           if (!file) return;
 
@@ -1396,6 +1476,11 @@
         },
 
         removerFoto(index) {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode excluir fotos.');
+            return;
+          }
+
           const senha = prompt('Informe a senha para excluir a foto:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1432,12 +1517,61 @@
           return `${partes[2]}/${partes[1]}/${partes[0]}`;
         },
 
+        carregarAdminLocal() {
+          this.isAdmin = localStorage.getItem(ADMIN_STORAGE_KEY) === '1';
+        },
+
+        toggleAdmin() {
+          if (this.isAdmin) {
+            this.isAdmin = false;
+            localStorage.removeItem(ADMIN_STORAGE_KEY);
+            return;
+          }
+
+          const senha = prompt('Informe a senha de administrador:');
+          if (senha === null) return;
+
+          if (senha !== SENHA_EXCLUSAO) {
+            alert('Senha incorreta.');
+            return;
+          }
+
+          this.isAdmin = true;
+          localStorage.setItem(ADMIN_STORAGE_KEY, '1');
+        },
+
+        salvarMeuRegistroId(id) {
+          try {
+            const atual = this.meusIds.slice();
+            if (!atual.includes(Number(id))) {
+              atual.push(Number(id));
+              localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify(atual));
+            }
+          } catch (e) {
+            console.error('Erro ao salvar id local do usuário:', e);
+          }
+        },
+
+        removerMeuRegistroId(id) {
+          try {
+            const atual = this.meusIds.filter(x => Number(x) !== Number(id));
+            localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify(atual));
+          } catch (e) {
+            console.error('Erro ao remover id local do usuário:', e);
+          }
+        },
+
+        podeManipularRegistro(registro) {
+          if (this.isAdmin) return true;
+          return this.meusIds.includes(Number(registro.id));
+        },
+
         async apiGetList() {
           const url = API + '?action=list';
           const r = await fetch(url, { method: 'GET' });
           if (!r.ok) throw new Error('Falha ao listar');
           const data = await r.json();
-          this.banco = Array.isArray(data) ? data : (data.data || []);
+          this.bancoTodos = Array.isArray(data) ? data : (data.data || []);
         },
 
         async apiGetEventosList() {
@@ -1546,7 +1680,9 @@
           this.loading = true;
           try {
             const created = await this.apiPost('insert', this.novo);
-            this.banco.push(created);
+            this.bancoTodos.push(created);
+            this.salvarMeuRegistroId(created.id);
+
             this.novo = {
               nome: '',
               email: '',
@@ -1560,9 +1696,11 @@
               modalidade: '',
               observacoes: ''
             };
+
             this.$nextTick(() => {
               document.querySelector('#banco-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
             });
+
             this.page = this.totalPages;
           } catch (e) {
             alert('Erro ao inserir: ' + e.message);
@@ -1572,10 +1710,18 @@
         },
 
         viewDetalhes(r) {
+          if (!this.podeManipularRegistro(r)) {
+            alert('Você só pode visualizar os cadastros que inseriu.');
+            return;
+          }
           this.detalhes = r;
         },
 
         openEdit(r) {
+          if (!this.podeManipularRegistro(r)) {
+            alert('Você só pode editar os cadastros que inseriu.');
+            return;
+          }
           this.editBuffer = JSON.parse(JSON.stringify(r));
           this.editModal = true;
         },
@@ -1586,11 +1732,16 @@
         },
 
         async saveEdit() {
+          if (!this.editBuffer || !this.podeManipularRegistro(this.editBuffer)) {
+            alert('Você não tem permissão para editar este cadastro.');
+            return;
+          }
+
           this.loading = true;
           try {
             const upd = await this.apiPost('update', this.editBuffer);
-            const idx = this.banco.findIndex(x => Number(x.id) === Number(upd.id));
-            if (idx !== -1) this.$set(this.banco, idx, upd);
+            const idx = this.bancoTodos.findIndex(x => Number(x.id) === Number(upd.id));
+            if (idx !== -1) this.$set(this.bancoTodos, idx, upd);
             this.closeEdit();
           } catch (e) {
             alert('Erro ao salvar: ' + e.message);
@@ -1600,6 +1751,11 @@
         },
 
         async deleteRegistro(registro) {
+          if (!this.podeManipularRegistro(registro)) {
+            alert('Você só pode excluir os cadastros que inseriu.');
+            return;
+          }
+
           const senha = prompt('Informe a senha para excluir o registro:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1611,7 +1767,8 @@
           this.loading = true;
           try {
             await this.apiPost('delete', { id: registro.id });
-            this.banco = this.banco.filter(r => Number(r.id) !== Number(registro.id));
+            this.bancoTodos = this.bancoTodos.filter(r => Number(r.id) !== Number(registro.id));
+            this.removerMeuRegistroId(registro.id);
             if (this.page > this.totalPages) this.page = this.totalPages;
           } catch (e) {
             alert('Erro ao excluir: ' + e.message);
@@ -1621,6 +1778,11 @@
         },
 
         async resetBanco() {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode apagar todos os registros.');
+            return;
+          }
+
           const senha = prompt('Informe a senha para APAGAR TODOS os registros:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1632,8 +1794,9 @@
           this.loading = true;
           try {
             await this.apiPost('delete_all', {});
-            this.banco = [];
+            this.bancoTodos = [];
             this.page = 1;
+            localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify([]));
           } catch (e) {
             alert('Erro ao apagar tudo: ' + e.message);
           } finally {
@@ -1642,6 +1805,11 @@
         },
 
         async insertEvento() {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode inserir eventos.');
+            return;
+          }
+
           this.eventosLoading = true;
           try {
             const created = await this.apiPost('insert_event', this.novoEvento);
@@ -1672,10 +1840,15 @@
         },
 
         viewDetalhesEvento(ev) {
+          if (!this.isAdmin) return;
           this.detalhesEvento = ev;
         },
 
         openEditEvento(ev) {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode editar eventos.');
+            return;
+          }
           this.editEventoBuffer = JSON.parse(JSON.stringify(ev));
           this.editEventoModal = true;
         },
@@ -1686,6 +1859,11 @@
         },
 
         async saveEditEvento() {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode editar eventos.');
+            return;
+          }
+
           this.eventosLoading = true;
           try {
             const upd = await this.apiPost('update_event', this.editEventoBuffer);
@@ -1707,6 +1885,11 @@
         },
 
         async deleteEvento(evento) {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode excluir eventos.');
+            return;
+          }
+
           const senha = prompt('Informe a senha para excluir o evento:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1728,6 +1911,11 @@
         },
 
         async resetEventos() {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode apagar todos os eventos.');
+            return;
+          }
+
           const senha = prompt('Informe a senha para APAGAR TODOS os eventos:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1766,6 +1954,7 @@
       },
 
       mounted() {
+        this.carregarAdminLocal();
         this.carregarGaleriaLocal();
         this.load();
         this.loadEventos();

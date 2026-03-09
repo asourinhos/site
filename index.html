@@ -55,7 +55,7 @@
     .reduce-motion * { animation: none !important; transition: none !important; }
     @media (prefers-reduced-motion: reduce) { .atividade { opacity: 1 !important; transform: none !important; animation: none !important; } }
     .reduce-motion .atividade { opacity: 1 !important; transform: none !important; animation: none !important; cursor: default; }
-    .reduce-motion .galeria-img { cursor: default; }
+    .reduce-motion .mural-foto-img { cursor: default; }
 
     nav {
       position: fixed; top: 0; left: 0; right: 0; background: #fff;
@@ -132,55 +132,107 @@
       box-shadow: var(--sombra);
     }
 
-    .galeria-topo {
+    .mural-topo {
       width: 100%;
-      max-width: 1100px;
+      max-width: 1150px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
       margin-top: 24px;
+      margin-bottom: 14px;
     }
 
-    .galeria {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    .mural-area {
       width: 100%;
-      gap: 16px;
-      margin-top: 1.25rem;
-    }
-
-    .galeria-card {
-      background: rgba(255,255,255,0.75);
-      border-radius: 18px;
-      overflow: hidden;
+      max-width: 1150px;
+      background:
+        linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)),
+        repeating-linear-gradient(
+          90deg,
+          #c69c6d 0px,
+          #c69c6d 18px,
+          #b88e62 18px,
+          #b88e62 36px
+        );
+      border-radius: 26px;
+      padding: 28px;
       box-shadow: var(--sombra);
       position: relative;
+      overflow: hidden;
+      border: 8px solid rgba(255,255,255,0.55);
     }
 
-    .galeria-img {
+    .mural-area::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 18%),
+        radial-gradient(circle at 80% 25%, rgba(255,255,255,0.12), transparent 16%),
+        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.12), transparent 18%);
+      pointer-events: none;
+    }
+
+    .mural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 22px 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mural-foto {
+      position: relative;
+      background: #fff;
+      padding: 10px 10px 16px;
+      border-radius: 4px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+      transform-origin: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mural-foto:nth-child(odd) { transform: rotate(-4deg); }
+    .mural-foto:nth-child(even) { transform: rotate(3deg); }
+    .mural-foto:nth-child(3n) { transform: rotate(-2deg); }
+
+    .mural-foto:hover {
+      transform: scale(1.03) rotate(0deg);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.22);
+    }
+
+    .mural-foto::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle at 30% 30%, #fff6b0, #f0c419 70%);
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 3;
+    }
+
+    .mural-foto-img {
       width: 100%;
-      height: 220px;
+      height: 150px;
       object-fit: cover;
       display: block;
       cursor: pointer;
-      transition: transform 0.3s, opacity 0.3s;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
     }
-    .galeria-img:hover, .galeria-img:focus { transform: scale(1.02); opacity: 0.95; }
 
-    .galeria-acoes {
+    .mural-foto-rodape {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 12px;
       gap: 10px;
-      background: #fff;
-    }
-
-    .galeria-acoes span {
-      font-size: 0.92rem;
-      font-weight: 600;
+      margin-top: 10px;
+      font-size: 0.88rem;
       color: #555;
     }
 
@@ -189,9 +241,10 @@
       background: #dc3545;
       color: #fff;
       border-radius: 8px;
-      padding: 8px 10px;
+      padding: 7px 10px;
       cursor: pointer;
       font-weight: bold;
+      font-size: 0.85rem;
     }
 
     .modal {
@@ -253,6 +306,13 @@
       opacity: 0;
       animation: slideUp 0.5s forwards;
       min-height: 100%;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .atividade:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(0,0,0,0.14);
     }
 
     .atividade-topo {
@@ -261,6 +321,7 @@
       justify-content: space-between;
       gap: 10px;
       margin-bottom: 8px;
+      flex-wrap: wrap;
     }
 
     .atividade h3 {
@@ -280,8 +341,20 @@
     }
 
     .atividade-resumo {
-      margin: 6px 0 14px;
+      margin: 6px 0 10px;
       color: #555;
+    }
+
+    .atividade-preview {
+      font-size: 0.94rem;
+      color: #666;
+      font-weight: 600;
+    }
+
+    .atividade-detalhes {
+      margin-top: 14px;
+      border-top: 1px solid #eee;
+      padding-top: 14px;
     }
 
     .atividade-lista {
@@ -613,6 +686,8 @@
       section { font-size: 1rem; }
       .evento-card-topo { flex-direction: column; align-items: flex-start; }
       .evento-data-box { min-width: 92px; }
+      .mural-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+      .mural-foto-img { height: 125px; }
     }
   </style>
 </head>
@@ -646,46 +721,42 @@
         <h2 id="titulo-quem-somos">Quem Somos</h2>
         <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
 
-        <div class="galeria-topo">
+        <div class="mural-topo">
           <div>
-            <strong>Galeria da associação</strong><br>
-            <span style="color:#555; font-size:0.95rem;">Limite de até 6 fotos</span>
+            <strong>Mural de fotos da associação</strong><br>
+            <span style="color:#555; font-size:0.95rem;">Limite de até 10 fotos</span>
           </div>
 
-          <div style="display:flex; gap:10px; flex-wrap:wrap;">
-            <label class="botao-formulario" style="cursor:pointer;">
-              <i class="fas fa-image"></i> Inserir foto
-              <input
-                type="file"
-                accept="image/*"
-                @change="handleImageUpload"
-                style="display:none;"
-              >
-            </label>
-
-            <button class="botao-secundario" type="button" @click="resetGaleria">
-              <i class="fas fa-rotate-left"></i> Restaurar padrão
-            </button>
-          </div>
+          <label class="botao-formulario" style="cursor:pointer;">
+            <i class="fas fa-image"></i> Inserir foto
+            <input
+              type="file"
+              accept="image/*"
+              @change="handleImageUpload"
+              style="display:none;"
+            >
+          </label>
         </div>
 
-        <div class="galeria" role="list" aria-label="Galeria de fotos da ASO">
-          <div class="galeria-card" v-for="(img,i) in imagens" :key="img + '-' + i">
-            <img
-              :src="img"
-              class="galeria-img"
-              :alt="'Foto da ASO número ' + (i+1)"
-              :role="reduceMotionActive ? null : 'button'"
-              :tabindex="reduceMotionActive ? -1 : 0"
-              @click="!reduceMotionActive && openModal(i)"
-              @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
-              @keydown.space.prevent="!reduceMotionActive && openModal(i)"
-            />
-            <div class="galeria-acoes">
-              <span>Foto {{ i + 1 }}</span>
-              <button class="btn-remover-foto" type="button" @click="removerFoto(i)">
-                <i class="fas fa-trash"></i> Excluir
-              </button>
+        <div class="mural-area">
+          <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
+            <div class="mural-foto" v-for="(img,i) in imagens" :key="img + '-' + i">
+              <img
+                :src="img"
+                class="mural-foto-img"
+                :alt="'Foto da ASO número ' + (i+1)"
+                :role="reduceMotionActive ? null : 'button'"
+                :tabindex="reduceMotionActive ? -1 : 0"
+                @click="!reduceMotionActive && openModal(i)"
+                @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
+                @keydown.space.prevent="!reduceMotionActive && openModal(i)"
+              />
+              <div class="mural-foto-rodape">
+                <span>Foto {{ i + 1 }}</span>
+                <button class="btn-remover-foto" type="button" @click="removerFoto(i)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -695,36 +766,52 @@
         <h2 id="titulo-atividades">Atividades</h2>
 
         <div class="atividades-grid">
-          <article class="atividade" v-for="(item, nome) in atividades" :key="nome">
+          <article
+            class="atividade"
+            v-for="(item, nome) in atividades"
+            :key="nome"
+            @click="!reduceMotionActive && toggle(nome)"
+            @keydown.enter.prevent="!reduceMotionActive && toggle(nome)"
+            @keydown.space.prevent="!reduceMotionActive && toggle(nome)"
+            :aria-expanded="(reduceMotionActive || active===nome) ? 'true' : 'false'"
+            :role="reduceMotionActive ? null : 'button'"
+            :tabindex="reduceMotionActive ? -1 : 0"
+          >
             <div class="atividade-topo">
               <h3>{{ nome }}</h3>
               <span class="atividade-badge">{{ item.localPadrao }}</span>
             </div>
 
             <p class="atividade-resumo">{{ item.resumo }}</p>
+            <p class="atividade-preview">
+              {{ item.agenda.length }} horário(s) disponível(is) • clique para {{ active===nome ? 'recolher' : 'expandir' }}
+            </p>
 
-            <div class="atividade-lista">
-              <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
-                <div class="atividade-item-linha1">
-                  <span class="atividade-dia">{{ linha.dia }}</span>
-                  <span class="atividade-hora">{{ linha.horas.join(' • ') }}</span>
-                </div>
-                <div class="atividade-local">
-                  <i class="fas fa-location-dot"></i> {{ linha.local || item.localPadrao }}
+            <div class="atividade-detalhes" v-if="reduceMotionActive || active===nome">
+              <div class="atividade-lista">
+                <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
+                  <div class="atividade-item-linha1">
+                    <span class="atividade-dia">{{ linha.dia }}</span>
+                    <span class="atividade-hora">{{ linha.horas.join(' • ') }}</span>
+                  </div>
+                  <div class="atividade-local">
+                    <i class="fas fa-location-dot"></i> {{ linha.local || item.localPadrao }}
+                  </div>
                 </div>
               </div>
+
+              <p v-if="item.extra" class="atividade-extra">{{ item.extra }}</p>
+
+              <a
+                class="link-info"
+                :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
+                target="_blank"
+                rel="noopener noreferrer"
+                @click.stop
+              >
+                Mais informações
+              </a>
             </div>
-
-            <p v-if="item.extra" class="atividade-extra">{{ item.extra }}</p>
-
-            <a
-              class="link-info"
-              :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Mais informações
-            </a>
           </article>
         </div>
       </section>
@@ -1043,7 +1130,7 @@
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_galeria_customizada_v1';
+    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v2';
     const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
 
     new Vue({
@@ -1160,7 +1247,6 @@
 
         eventosFiltrados() {
           if (!this.filtroEventos) return this.eventosBanco;
-
           const f = this.filtroEventos.toLowerCase();
           return this.eventosBanco.filter(ev =>
             (ev.nomeEvento || '').toLowerCase().includes(f) ||
@@ -1193,18 +1279,18 @@
             if (!salvo) return;
             const parsed = JSON.parse(salvo);
             if (Array.isArray(parsed) && parsed.length) {
-              this.imagens = parsed.slice(0, 6);
+              this.imagens = parsed.slice(0, 10);
             }
           } catch (e) {
-            console.error('Erro ao carregar galeria local:', e);
+            console.error('Erro ao carregar mural local:', e);
           }
         },
 
         salvarGaleriaLocal() {
           try {
-            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 6)));
+            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 10)));
           } catch (e) {
-            console.error('Erro ao salvar galeria local:', e);
+            console.error('Erro ao salvar mural local:', e);
             alert('Não consegui salvar as fotos neste navegador. Talvez o arquivo seja grande demais.');
           }
         },
@@ -1213,8 +1299,8 @@
           const file = event.target.files && event.target.files[0];
           if (!file) return;
 
-          if (this.imagens.length >= 6) {
-            alert('O limite é de 6 fotos. Exclua uma antes de inserir outra.');
+          if (this.imagens.length >= 10) {
+            alert('O limite do mural é de 10 fotos. Exclua uma antes de inserir outra.');
             event.target.value = '';
             return;
           }
@@ -1235,14 +1321,15 @@
         },
 
         removerFoto(index) {
-          if (!confirm('Deseja realmente excluir esta foto da galeria?')) return;
-          this.imagens.splice(index, 1);
-          this.salvarGaleriaLocal();
-        },
+          const senha = prompt('Informe a senha para excluir a foto:');
+          if (senha === null) return;
+          if (senha !== '1234') {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente excluir esta foto do mural?')) return;
 
-        resetGaleria() {
-          if (!confirm('Deseja restaurar as 6 fotos padrão da galeria?')) return;
-          this.imagens = [...GALERIA_PADRAO];
+          this.imagens.splice(index, 1);
           this.salvarGaleriaLocal();
         },
 
@@ -1300,11 +1387,6 @@
           return `${partes[2]}/${partes[1]}/${partes[0]}`;
         },
 
-        resumirTexto(texto, limite) {
-          if (!texto) return '—';
-          return texto.length > limite ? texto.slice(0, limite) + '...' : texto;
-        },
-
         openModal(i) {
           this.modalIndex = i;
           this.modalImage = this.imagens[i];
@@ -1344,7 +1426,7 @@
         },
 
         toggle(nome) {
-          this.active = this.active === nome ? null : nome;
+          this.active = this.active===nome ? null : nome;
         },
 
         async load() {

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>ASO - Associação Amigos dos Surdos de Ourinhos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+  <style>
+    :root { --cor-primaria: #1b2845; --cor-secundaria: #00b351; }
+    html { font-size: 100%; }
+    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; scroll-behavior: smooth; color:#333; background:#fff; line-height: 1.5; }
+    * { box-sizing: border-box; }
+
+    .skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link:focus { position: fixed; left: 12px; top: 12px; padding:10px 14px; background:#000; color:#fff; z-index: 2001; border-radius:8px; }
+
+    .a11y-toolbar { position: fixed; right: 10px; bottom: 10px; z-index: 1200; display:flex; gap:6px; flex-wrap:wrap; }
+    .a11y-toolbar button { padding:0.5rem 0.625rem; border-radius:8px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.875rem; }
+    .a11y-toolbar button:focus { outline: 3px solid #005fcc; outline-offset:2px; }
+
+    a, button, [role="button"], .atividade { outline-offset:2px; }
+    a:focus, button:focus, [role="button"]:focus, .atividade:focus { outline: 3px solid #005fcc; }
+
+    .high-contrast, .high-contrast * { color: #fff !important; background: #000 !important; border-color:#fff !important; }
+    .extra-spacing { letter-spacing: 0.3px; line-height: 1.8; }
+
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+    .reduce-motion * { animation: none !important; transition: none !important; }
+    @media (prefers-reduced-motion: reduce) { .atividade { opacity: 1 !important; transform: none !important; animation: none !important; } }
+    .reduce-motion .atividade { opacity: 1 !important; transform: none !important; animation: none !important; cursor: default; }
+    .reduce-motion .galeria-img { cursor: default; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; background: #fff; padding: 0.9375rem 1.5625rem;
+      z-index: 1000; display: flex; gap: 1.375rem; white-space: nowrap; overflow-x: auto;
+      -webkit-overflow-scrolling: touch; align-items: center; justify-content: flex-start;
+    }
+    nav a { text-decoration: none; color: #333; font-weight: bold; font-size: 1.03125rem; transition: color 0.3s, transform 0.3s; }
+    nav a:hover, nav a:focus { color: var(--cor-secundaria); transform: scale(1.05); }
+    @media (max-width: 480px) {
+      nav { padding: 0.59375rem 0.84375rem; gap: 0.84375rem; }
+      nav a { font-size: 0.90625rem; }
+    }
+
+    header { height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #fff; }
+    header img.logo { width: 320px; max-width: 80%; }
+
+    section {
+      padding: 5rem 1.25rem; font-size: 1.25rem; display: flex; flex-direction: column;
+      justify-content: center; align-items: center; text-align: center; min-height: 100vh;
+    }
+    #quem-somos { background-color: #e0f7fa; }
+    #atividades { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+    #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+    #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
+
+    .botao-formulario {
+      display: inline-block; padding: 0.75rem 1.5rem; background-color: var(--cor-primaria);
+      color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s; border:none; cursor:pointer; font-size: 1rem;
+    }
+    .botao-formulario:hover, .botao-formulario:focus { background-color: var(--cor-secundaria); transform: scale(1.05); }
+
+    .galeria { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9375rem; margin-top: 1.875rem; }
+    .galeria-img {
+      width: 13.75rem; height: 10rem; object-fit: cover; border-radius: 10px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.3s, opacity 0.3s;
+    }
+    .galeria-img:hover, .galeria-img:focus { transform: scale(1.05); opacity: 0.9; }
+
+    .modal {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); display:flex; justify-content:center;
+      align-items:center; z-index:2000; opacity: 0; animation: fadeIn 0.25s forwards; flex-direction: column; padding: 12px;
+    }
+    .modal-card { background:#fff; padding:24px; border-radius:12px; max-width:1000px; width:95%; text-align:left; }
+    .modal-img { max-width:90%; max-height:80%; border-radius:12px; }
+    .modal-controls { margin-top: 20px; display:flex; gap:10px; }
+    .modal-controls button {
+      padding: 12px 20px; margin: 0 10px; font-size: 16px; border: none; border-radius: 8px;
+      cursor: pointer; background-color: var(--cor-primaria); color: #fff; transition: background-color 0.3s;
+    }
+    .modal-controls button:hover, .modal-controls button:focus { background-color: var(--cor-secundaria); }
+
+    .atividade {
+      background: #fff; padding: 1.5625rem 1.25rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      min-width: 15.625rem; max-width: 17.5rem; display: flex; flex-direction: column; align-items: center;
+      transition: transform 0.3s, opacity 0.4s; cursor: pointer; opacity: 0; animation: slideUp 0.5s forwards; text-align: center;
+    }
+    .atividade h3 { color: var(--cor-secundaria); margin-bottom: 0.75rem; }
+
+    @keyframes fadeIn { to { opacity:1; } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+    .form-db {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px;
+      width: 100%; max-width: 1100px; margin-top: 20px;
+    }
+    .form-db input, .form-db select, .form-db textarea {
+      padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; font-size: 1rem;
+    }
+    .form-db textarea { grid-column: 1 / -1; resize: none; height: 90px; }
+    input[required], select[required], textarea[required] { border-left: 4px solid #007bff; }
+
+    .table-wrap { width:100%; overflow-x:auto; margin-top: 30px; }
+    .table-db { width:100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+    .table-db caption { text-align:left; padding:10px; font-weight:bold; }
+    .table-db th, .table-db td { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.08); text-align: left; font-size: 0.9375rem; }
+    .table-db th { background: var(--cor-primaria); color: #fff; }
+    .table-db tr:hover td { background: rgba(0,0,0,0.05); }
+    .table-actions button { margin-right:8px; margin-bottom:6px; }
+
+    .pagination { margin-top: 15px; display: flex; justify-content: center; gap: 15px; align-items:center; }
+    .pagination button {
+      background: var(--cor-primaria); color: #fff; border: none; border-radius: 6px;
+      padding: 8px 14px; cursor: pointer; transition: background 0.3s; font-size: 1rem;
+    }
+    .pagination button:disabled { opacity: .5; cursor: default; }
+    .pagination button:hover:not(:disabled), .pagination button:focus:not(:disabled) { background: var(--cor-secundaria); }
+
+    footer {
+      text-align: center; padding: 50px 20px; color: #333; border-top: 3px solid var(--cor-secundaria);
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+    }
+    footer h2 { color: var(--cor-secundaria); font-size: 2.625rem; margin-bottom: 25px; }
+    footer p { margin: 12px 0; font-size: 1.375rem; }
+    footer .social a { color: #E4405F; font-size: 3.75rem; margin: 0 15px; transition: transform 0.3s ease, opacity 0.3s ease; }
+    footer .social a:hover, footer .social a:focus { transform: scale(1.2); opacity: 0.8; }
+    .badge { margin-top:10px; font-size:0.875rem; color:#555; }
+
+    .contact-link { color: inherit; text-decoration: none; }
+    .contact-link:hover, .contact-link:focus { text-decoration: underline; }
+
+    .visually-hidden {
+      position:absolute !important; left:-10000px !important; top:auto !important; width:1px !important;
+      height:1px !important; overflow:hidden !important;
+    }
+
+    .table-db thead th:first-child,
+    .table-db tbody td:first-child {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo</a>
+
+  <div class="a11y-toolbar" aria-label="Ferramentas de acessibilidade">
+    <button type="button" id="btn-contrast" title="Ativar/Desativar alto contraste">Contraste</button>
+    <button type="button" id="btn-font+" title="Aumentar tamanho do texto">A+</button>
+    <button type="button" id="btn-font-" title="Diminuir tamanho do texto">A−</button>
+    <button type="button" id="btn-spacing" title="Aumentar espaçamento de linhas e letras">Espaçamento</button>
+    <button type="button" id="btn-motion" title="Reduzir animações e expandir tudo">Menos animação</button>
+  </div>
+
+  <nav role="navigation" aria-label="Principal">
+    <a href="#topo">ASO</a>
+    <a href="#quem-somos">Quem Somos</a>
+    <a href="#atividades">Atividades</a>
+    <a href="#banco-dados">Cadastro</a>
+    <a href="#contato">Contato</a>
+  </nav>
+
+  <main id="conteudo-principal">
+    <div id="app">
+      <header id="topo" aria-label="Início">
+        <img alt="Logo da ASO, Associação Amigos dos Surdos de Ourinhos" class="logo" src="logo.jpg"/>
+      </header>
+
+      <section id="quem-somos" aria-labelledby="titulo-quem-somos">
+        <h2 id="titulo-quem-somos">Quem Somos</h2>
+        <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
+
+        <div class="galeria" role="list" aria-label="Galeria de fotos da ASO">
+          <img
+            v-for="(img,i) in imagens"
+            :key="img"
+            :src="img"
+            class="galeria-img"
+            :alt="'Foto da ASO número ' + (i+1)"
+            :role="reduceMotionActive ? null : 'button'"
+            :tabindex="reduceMotionActive ? -1 : 0"
+            @click="!reduceMotionActive && openModal(i)"
+            @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
+            @keydown.space.prevent="!reduceMotionActive && openModal(i)"
+          />
+        </div>
+      </section>
+
+      <section id="atividades" aria-labelledby="titulo-atividades">
+        <h2 id="titulo-atividades">Atividades</h2>
+
+        <div class="atividades-carousel" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+          <div
+            class="atividade"
+            v-for="(item, nome) in atividades"
+            :key="nome"
+            @click="!reduceMotionActive && toggle(nome)"
+            @keydown.enter.prevent="!reduceMotionActive && toggle(nome)"
+            @keydown.space.prevent="!reduceMotionActive && toggle(nome)"
+            :aria-expanded="(reduceMotionActive || active===nome) ? 'true' : 'false'"
+            :role="reduceMotionActive ? null : 'button'"
+            :tabindex="reduceMotionActive ? -1 : 0"
+            :aria-controls="'detalhes-'+nome"
+          >
+            <h3 style="margin-bottom:6px">{{ nome }}</h3>
+            <p style="margin:0 0 8px">{{ item.resumo }}</p>
+
+            <div
+              v-if="reduceMotionActive || active===nome"
+              :id="'detalhes-'+nome"
+              style="margin-top:10px; text-align:left; width:100%;"
+            >
+              <ul style="padding-left:18px; margin:0 0 8px;">
+                <li v-for="(linha, i) in item.agenda" :key="i">
+                  <strong>{{ linha.dia }}:</strong>
+                  <span>{{ linha.horas.join(', ') }}</span>
+                  <span v-if="linha.local"> • {{ linha.local }}</span>
+                </li>
+              </ul>
+              <p v-if="item.extra" style="margin:8px 0 0; font-size:0.875rem; opacity:.9;">{{ item.extra }}</p>
+              <p style="margin:10px 0 0;">
+                <a
+                  :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style="text-decoration: underline;"
+                  @click.stop
+                >
+                  Mais informações
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="banco-dados" aria-labelledby="titulo-cadastro">
+        <h2 id="titulo-cadastro">Cadastro</h2>
+        <div class="badge" role="status" aria-live="polite">
+          🔗 Status da API: <strong>{{ apiStatus }}</strong>
+        </div>
+
+        <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
+          <p id="dica-form" class="visually-hidden">
+            Todos os campos marcados como obrigatórios precisam ser preenchidos.
+          </p>
+
+          <input v-model="novo.nome" id="nome" placeholder="Nome" required aria-label="Nome">
+          <input v-model="novo.email" id="email" type="email" placeholder="E-mail" required aria-label="E-mail">
+          <input v-model="novo.celular" id="celular" placeholder="Celular" required aria-label="Celular">
+          <input v-model="novo.logradouro" id="logradouro" placeholder="Logradouro" required aria-label="Logradouro">
+          <input v-model="novo.numero" id="numero" placeholder="Número" required aria-label="Número">
+          <input v-model="novo.bairro" id="bairro" placeholder="Bairro" required aria-label="Bairro">
+          <input v-model="novo.complemento" id="complemento" placeholder="Complemento" aria-label="Complemento">
+          <input v-model="novo.cidade" id="cidade" placeholder="Cidade" required aria-label="Cidade">
+          <input v-model.number="novo.idade" id="idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
+
+          <select v-model="novo.modalidade" required aria-label="Modalidade">
+            <option disabled value="">Modalidade</option>
+            <option>Curso de Libras</option>
+            <option>Atendimento Social</option>
+            <option>Evento</option>
+            <option>Voluntário</option>
+            <option>Outro</option>
+          </select>
+
+          <textarea v-model="novo.observacoes" id="observacoes" placeholder="Observações" aria-label="Observações"></textarea>
+
+          <button type="submit" class="botao-formulario" :disabled="loading">INSERT</button>
+          <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
+        </form>
+
+        <div style="margin-top:20px; width:100%; max-width:900px;">
+          <input
+            v-model="filtro"
+            placeholder="Buscar por nome, e-mail, cidade ou modalidade..."
+            style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"
+            aria-label="Buscar cadastro"
+          >
+          <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table-db" aria-describedby="legenda-tabela">
+            <caption id="legenda-tabela">Lista de cadastros com ações de ver, editar e excluir</caption>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nº</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Idade</th>
+                <th scope="col">Cidade</th>
+                <th scope="col">Modalidade</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(r, i) in paginated" :key="r.id">
+                <td>{{ r.id }}</td>
+                <td>{{ (page - 1) * perPage + i + 1 }}</td>
+                <td>{{ r.nome }}</td>
+                <td>{{ r.idade }}</td>
+                <td>{{ r.cidade }}</td>
+                <td>{{ r.modalidade }}</td>
+                <td class="table-actions">
+                  <button
+                    @click="viewDetalhes(r)"
+                    class="botao-formulario"
+                    style="background:#6c757d;"
+                    :aria-label="'Ver detalhes do cadastro de ' + r.nome"
+                  >
+                    🔍 Ver detalhes
+                  </button>
+
+                  <button
+                    @click="openEdit(r)"
+                    class="botao-formulario"
+                    style="background:#007bff;"
+                    :aria-label="'Editar cadastro de ' + r.nome"
+                  >
+                    🖋️ Editar
+                  </button>
+
+                  <button
+                    @click="deleteRegistro(r)"
+                    class="botao-formulario"
+                    style="background:#dc3545;"
+                    :aria-label="'Excluir cadastro de ' + r.nome"
+                  >
+                    🗑️ Excluir
+                  </button>
+                </td>
+              </tr>
+
+              <tr v-if="!loading && paginated.length === 0">
+                <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum registro encontrado.</td>
+              </tr>
+
+              <tr v-if="loading">
+                <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros">
+          <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
+          <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
+          <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+        </div>
+      </section>
+
+      <footer id="contato" aria-labelledby="titulo-contato">
+        <h2 id="titulo-contato">Contato</h2>
+        <p>
+          <a href="tel:+5514997795812" class="contact-link" title="Ligar para ASO">
+            <i class="fas fa-phone" aria-hidden="true"></i>
+            <span aria-label="Telefone">+55 (14) 99779-5812</span>
+          </a>
+        </p>
+        <p>
+          <a href="mailto:aso.ourinhos01@email.com" class="contact-link" title="Enviar e-mail para ASO">
+            <i class="fas fa-envelope" aria-hidden="true"></i>
+            <span aria-label="E-mail">aso.ourinhos01@email.com</span>
+          </a>
+        </p>
+        <p>📍 Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP</p>
+        <div class="social">
+          <a href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+        </div>
+      </footer>
+
+      <div v-if="modalOpen" class="modal" role="dialog" aria-modal="true" aria-label="Visualização de imagem da galeria" @click="closeModal">
+        <img :src="modalImage" class="modal-img" alt="Imagem ampliada" @click.stop/>
+        <div class="modal-controls" @click.stop>
+          <button ref="firstModalBtn" @click.stop="prevImage">⟨ Anterior</button>
+          <button @click.stop="nextImage">Próximo ⟩</button>
+          <button @click.stop="closeModal">Fechar ✕</button>
+        </div>
+      </div>
+
+      <div v-if="detalhes" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-detalhes" @click="detalhes=null">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-detalhes" style="margin-top:0; color:var(--cor-secundaria);">Detalhes do Cadastro</h3>
+          <p><b>Nome:</b> {{ detalhes.nome }}</p>
+          <p><b>E-mail:</b> {{ detalhes.email }}</p>
+          <p><b>Celular:</b> {{ detalhes.celular }}</p>
+          <p><b>Endereço:</b> {{ detalhes.logradouro }}, nº {{ detalhes.numero }} - {{ detalhes.bairro }} ({{ detalhes.cidade }})</p>
+          <p v-if="detalhes.complemento"><b>Complemento:</b> {{ detalhes.complemento }}</p>
+          <p><b>Idade:</b> {{ detalhes.idade }} anos</p>
+          <p><b>Modalidade:</b> {{ detalhes.modalidade }}</p>
+          <p><b>Observações:</b> {{ detalhes.observacoes || '—' }}</p>
+          <div style="text-align:right; margin-top:10px;">
+            <button class="botao-formulario" @click="detalhes=null">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar" @click="closeEdit">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-editar" style="margin-top:0; color:var(--cor-secundaria);">Editar cadastro</h3>
+
+          <div class="form-db">
+            <input v-model="editBuffer.nome" placeholder="Nome" required aria-label="Nome">
+            <input v-model="editBuffer.email" type="email" placeholder="E-mail" required aria-label="E-mail">
+            <input v-model="editBuffer.celular" placeholder="Celular" required aria-label="Celular">
+            <input v-model="editBuffer.logradouro" placeholder="Logradouro" required aria-label="Logradouro">
+            <input v-model="editBuffer.numero" placeholder="Número" required aria-label="Número">
+            <input v-model="editBuffer.bairro" placeholder="Bairro" required aria-label="Bairro">
+            <input v-model="editBuffer.complemento" placeholder="Complemento" aria-label="Complemento">
+            <input v-model="editBuffer.cidade" placeholder="Cidade" required aria-label="Cidade">
+            <input v-model.number="editBuffer.idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
+
+            <select v-model="editBuffer.modalidade" required aria-label="Modalidade">
+              <option>Curso de Libras</option>
+              <option>Atendimento Social</option>
+              <option>Evento</option>
+              <option>Voluntário</option>
+              <option>Outro</option>
+            </select>
+
+            <textarea v-model="editBuffer.observacoes" placeholder="Observações" aria-label="Observações"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px;">
+            <button class="botao-formulario" style="background:#28a745;" @click="saveEdit">💾 Salvar</button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="closeEdit">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API = 'https://script.google.com/macros/s/AKfycbxn370Nf1MiQT0tYa5Qnza5Ahpl4_PBRWHGiGkVsoexsi6C75KVi2tRN_qPVnideGcG/exec';
+
+    new Vue({
+      el: '#app',
+      data: {
+        textoQuemSomos: [
+          'A Associação Amigos dos Surdos de Ourinhos (ASO) é uma organização social dedicada à promoção da inclusão, acessibilidade e valorização da comunidade surda na região de Ourinhos.',
+          'A associação atua no desenvolvimento de ações que buscam ampliar a participação das pessoas surdas na sociedade, incentivando o respeito às diferenças e a igualdade de oportunidades.',
+          'Entre suas iniciativas estão a promoção de cursos de Libras, eventos de conscientização e atividades voltadas à integração entre a comunidade surda e a sociedade.'
+        ],
+        atividades: {
+          'Curso de Libras': {
+            resumo: 'Aprendizado de Libras para comunidade e familiares.',
+            localPadrao: 'Sede da ASO',
+            extra: 'Turmas abertas conforme disponibilidade.',
+            agenda: [
+              { dia: 'Seg', horas: ['19:00'], local: 'Sede da ASO' },
+              { dia: 'Qua', horas: ['19:00'], local: 'Sede da ASO' }
+            ]
+          },
+          'Atendimento Social': {
+            resumo: 'Apoio e orientação à comunidade surda.',
+            localPadrao: 'Sede da ASO',
+            extra: 'Atendimento mediante agendamento.',
+            agenda: [
+              { dia: 'Ter', horas: ['14:00–17:00'], local: 'Sede da ASO' },
+              { dia: 'Qui', horas: ['14:00–17:00'], local: 'Sede da ASO' }
+            ]
+          },
+          'Eventos': {
+            resumo: 'Ações de integração, cultura e conscientização.',
+            localPadrao: 'Ourinhos/SP',
+            extra: 'Datas divulgadas nas redes sociais.',
+            agenda: [
+              { dia: 'Mensal', horas: ['A confirmar'], local: 'Ourinhos/SP' }
+            ]
+          },
+          'Voluntariado': {
+            resumo: 'Participe apoiando as ações da associação.',
+            localPadrao: 'Sede da ASO',
+            extra: 'Entre em contato para participar.',
+            agenda: [
+              { dia: 'Sob consulta', horas: ['A combinar'], local: 'Sede da ASO' }
+            ]
+          }
+        },
+        imagens: ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'],
+        active: null,
+        reduceMotionActive: false,
+        banco: [],
+        novo: {
+          nome: '',
+          email: '',
+          celular: '',
+          logradouro: '',
+          numero: '',
+          bairro: '',
+          complemento: '',
+          cidade: '',
+          idade: '',
+          modalidade: '',
+          observacoes: ''
+        },
+        filtro: '',
+        page: 1,
+        perPage: 5,
+        loading: false,
+        apiStatus: 'desconectado',
+        modalOpen: false,
+        modalIndex: 0,
+        modalImage: '',
+        detalhes: null,
+        editModal: false,
+        editBuffer: null
+      },
+
+      computed: {
+        registrosFiltrados() {
+          if (!this.filtro) return this.banco;
+          const f = this.filtro.toLowerCase();
+          return this.banco.filter(r =>
+            (r.nome || '').toLowerCase().includes(f) ||
+            (r.email || '').toLowerCase().includes(f) ||
+            (r.cidade || '').toLowerCase().includes(f) ||
+            (r.modalidade || '').toLowerCase().includes(f)
+          );
+        },
+        totalPages() {
+          return Math.ceil(this.registrosFiltrados.length / this.perPage) || 1;
+        },
+        paginated() {
+          const start = (this.page - 1) * this.perPage;
+          return this.registrosFiltrados.slice(start, start + this.perPage);
+        }
+      },
+
+      watch: {
+        filtro() {
+          this.page = 1;
+        }
+      },
+
+      methods: {
+        async apiGetList() {
+          const url = API + '?action=list';
+          const r = await fetch(url, { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar');
+          const data = await r.json();
+          this.banco = Array.isArray(data) ? data : (data.data || []);
+        },
+
+        async apiPost(action, payload) {
+          const r = await fetch(API + '?action=' + action, {
+            method: 'POST',
+            body: JSON.stringify(payload || {})
+          });
+          const json = await r.json();
+          if (!r.ok || json.ok === false) throw new Error(json.error || 'Erro');
+          return json.data;
+        },
+
+        setStatus(ok) {
+          this.apiStatus = ok ? 'conectado' : 'desconectado';
+        },
+
+        openModal(i) {
+          this.modalIndex = i;
+          this.modalImage = this.imagens[i];
+          this.modalOpen = true;
+          this.$nextTick(() => { this.$refs.firstModalBtn?.focus(); });
+          document.addEventListener('keydown', this.handleModalKeys);
+        },
+
+        closeModal() {
+          this.modalOpen = false;
+          document.removeEventListener('keydown', this.handleModalKeys);
+        },
+
+        handleModalKeys(ev) {
+          if (ev.key === 'Escape') {
+            this.closeModal();
+            ev.preventDefault();
+          }
+          if (ev.key === 'ArrowRight') {
+            this.nextImage();
+            ev.preventDefault();
+          }
+          if (ev.key === 'ArrowLeft') {
+            this.prevImage();
+            ev.preventDefault();
+          }
+        },
+
+        prevImage() {
+          this.modalIndex = (this.modalIndex - 1 + this.imagens.length) % this.imagens.length;
+          this.modalImage = this.imagens[this.modalIndex];
+        },
+
+        nextImage() {
+          this.modalIndex = (this.modalIndex + 1) % this.imagens.length;
+          this.modalImage = this.imagens[this.modalIndex];
+        },
+
+        toggle(nome) {
+          this.active = this.active === nome ? null : nome;
+        },
+
+        async load() {
+          this.loading = true;
+          try {
+            await this.apiGetList();
+            this.setStatus(true);
+          } catch (e) {
+            console.error(e);
+            this.setStatus(false);
+            alert('Não consegui conectar à API. Verifique a URL do Google Apps Script.');
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async insertRegistro() {
+          this.loading = true;
+          try {
+            const created = await this.apiPost('insert', this.novo);
+            this.banco.push(created);
+            this.novo = {
+              nome: '',
+              email: '',
+              celular: '',
+              logradouro: '',
+              numero: '',
+              bairro: '',
+              complemento: '',
+              cidade: '',
+              idade: '',
+              modalidade: '',
+              observacoes: ''
+            };
+            this.$nextTick(() => {
+              document.querySelector('#banco-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
+            });
+            this.page = this.totalPages;
+          } catch (e) {
+            alert('Erro ao inserir: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        viewDetalhes(r) {
+          this.detalhes = r;
+        },
+
+        openEdit(r) {
+          this.editBuffer = JSON.parse(JSON.stringify(r));
+          this.editModal = true;
+        },
+
+        closeEdit() {
+          this.editModal = false;
+          this.editBuffer = null;
+        },
+
+        async saveEdit() {
+          this.loading = true;
+          try {
+            const upd = await this.apiPost('update', this.editBuffer);
+            const idx = this.banco.findIndex(x => Number(x.id) === Number(upd.id));
+            if (idx !== -1) this.$set(this.banco, idx, upd);
+            this.closeEdit();
+          } catch (e) {
+            alert('Erro ao salvar: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async deleteRegistro(registro) {
+          const senha = prompt('Informe a senha para excluir o registro:');
+          if (senha === null) return;
+          if (senha !== '1234') {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente excluir este registro?')) return;
+
+          this.loading = true;
+          try {
+            await this.apiPost('delete', { id: registro.id });
+            this.banco = this.banco.filter(r => Number(r.id) !== Number(registro.id));
+            if (this.page > this.totalPages) this.page = this.totalPages;
+          } catch (e) {
+            alert('Erro ao excluir: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async resetBanco() {
+          const senha = prompt('Informe a senha para APAGAR TODOS os registros:');
+          if (senha === null) return;
+          if (senha !== '1234') {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente apagar todos os registros?')) return;
+
+          this.loading = true;
+          try {
+            await this.apiPost('delete_all', {});
+            this.banco = [];
+            this.page = 1;
+          } catch (e) {
+            alert('Erro ao apagar tudo: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        prevPage() {
+          if (this.page > 1) this.page--;
+        },
+
+        nextPage() {
+          if (this.page < this.totalPages) this.page++;
+        }
+      },
+
+      mounted() {
+        this.load();
+
+        const body = document.body;
+        const btnContrast = document.getElementById('btn-contrast');
+        const btnFontPlus = document.getElementById('btn-font+');
+        const btnFontMinus = document.getElementById('btn-font-');
+        const btnSpacing = document.getElementById('btn-spacing');
+        const btnMotion = document.getElementById('btn-motion');
+
+        btnContrast.addEventListener('click', () => body.classList.toggle('high-contrast'));
+        btnSpacing.addEventListener('click', () => body.classList.toggle('extra-spacing'));
+
+        btnMotion.addEventListener('click', () => {
+          body.classList.toggle('reduce-motion');
+          this.reduceMotionActive = body.classList.contains('reduce-motion');
+          if (this.reduceMotionActive) this.active = '__ALL__';
+          if (!this.reduceMotionActive) this.active = null;
+        });
+
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          body.classList.add('reduce-motion');
+          this.reduceMotionActive = true;
+          this.active = '__ALL__';
+        }
+
+        let fontScale = 100;
+        const applyFontScale = () => {
+          document.documentElement.style.fontSize = fontScale + '%';
+        };
+
+        btnFontPlus.addEventListener('click', () => {
+          fontScale = Math.min(180, fontScale + 10);
+          applyFontScale();
+        });
+
+        btnFontMinus.addEventListener('click', () => {
+          fontScale = Math.max(80, fontScale - 10);
+          applyFontScale();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

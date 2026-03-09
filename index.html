@@ -134,9 +134,9 @@
 
     .mural-topo {
       width: 100%;
-      max-width: 1150px;
+      max-width: 1220px;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
@@ -146,9 +146,9 @@
 
     .mural-area {
       width: 100%;
-      max-width: 1150px;
+      max-width: 1220px;
       background:
-        linear-gradient(rgba(255,255,255,0.25), rgba(255,255,255,0.25)),
+        linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)),
         repeating-linear-gradient(
           90deg,
           #c69c6d 0px,
@@ -157,7 +157,7 @@
           #b88e62 36px
         );
       border-radius: 26px;
-      padding: 28px;
+      padding: 54px 28px 28px;
       box-shadow: var(--sombra);
       position: relative;
       overflow: hidden;
@@ -169,15 +169,28 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), transparent 18%),
-        radial-gradient(circle at 80% 25%, rgba(255,255,255,0.12), transparent 16%),
-        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.12), transparent 18%);
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 18%),
+        radial-gradient(circle at 80% 25%, rgba(255,255,255,0.10), transparent 16%),
+        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.10), transparent 18%);
       pointer-events: none;
+    }
+
+    .mural-titulo-interno {
+      position: absolute;
+      top: 12px;
+      left: 18px;
+      font-size: 1.4rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.78);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      z-index: 2;
+      user-select: none;
     }
 
     .mural-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 22px 18px;
       position: relative;
       z-index: 1;
@@ -196,6 +209,7 @@
     .mural-foto:nth-child(odd) { transform: rotate(-4deg); }
     .mural-foto:nth-child(even) { transform: rotate(3deg); }
     .mural-foto:nth-child(3n) { transform: rotate(-2deg); }
+    .mural-foto:nth-child(5n) { transform: rotate(2deg); }
 
     .mural-foto:hover {
       transform: scale(1.03) rotate(0deg);
@@ -218,7 +232,7 @@
 
     .mural-foto-img {
       width: 100%;
-      height: 150px;
+      height: 145px;
       object-fit: cover;
       display: block;
       cursor: pointer;
@@ -454,7 +468,6 @@
       overflow: hidden;
       box-shadow: 0 8px 22px rgba(0,0,0,0.08);
     }
-    .table-db caption { text-align:left; padding:10px; font-weight:bold; }
     .table-db th, .table-db td {
       padding: 10px;
       border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -519,9 +532,32 @@
       font-size: 1.6rem;
     }
 
+    .eventos-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .eventos-nav button {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: none;
+      background: var(--cor-primaria);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.16);
+    }
+    .eventos-nav button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
     .eventos-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 22px;
       width: 100%;
     }
@@ -535,6 +571,7 @@
       display: flex;
       flex-direction: column;
       text-align: left;
+      min-height: 100%;
     }
 
     .evento-card-topo {
@@ -590,6 +627,7 @@
       color: #555;
       font-size: 0.98rem;
       line-height: 1.55;
+      white-space: pre-line;
     }
 
     .evento-acoes {
@@ -682,12 +720,22 @@
       display: none;
     }
 
+    @media (max-width: 1100px) {
+      .mural-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .eventos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
     @media (max-width: 768px) {
       section { font-size: 1rem; }
       .evento-card-topo { flex-direction: column; align-items: flex-start; }
       .evento-data-box { min-width: 92px; }
-      .mural-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+      .mural-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .mural-foto-img { height: 125px; }
+      .eventos-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .mural-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -722,11 +770,6 @@
         <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
 
         <div class="mural-topo">
-          <div>
-            <strong>Mural de fotos da associação</strong><br>
-            <span style="color:#555; font-size:0.95rem;">Limite de até 10 fotos</span>
-          </div>
-
           <label class="botao-formulario" style="cursor:pointer;">
             <i class="fas fa-image"></i> Inserir foto
             <input
@@ -739,6 +782,8 @@
         </div>
 
         <div class="mural-area">
+          <div class="mural-titulo-interno">MURAL</div>
+
           <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
             <div class="mural-foto" v-for="(img,i) in imagens" :key="img + '-' + i">
               <img
@@ -867,8 +912,7 @@
           </div>
 
           <div class="table-wrap">
-            <table class="table-db" aria-describedby="legenda-tabela">
-              <caption id="legenda-tabela">Lista de cadastros de pessoas com ações de ver, editar e excluir</caption>
+            <table class="table-db" aria-label="Tabela de cadastros de pessoas">
               <thead>
                 <tr>
                   <th scope="col">ID</th>
@@ -963,7 +1007,7 @@
           <div style="margin-top:20px; width:100%; max-width:900px;">
             <input
               v-model="filtroEventos"
-              placeholder="Buscar por nome do evento, data ou descrição..."
+              placeholder="Buscar por nome ou descrição do evento..."
               style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
               aria-label="Buscar evento"
             >
@@ -973,11 +1017,16 @@
 
         <div class="eventos-vitrine-wrap">
           <div class="eventos-vitrine-head">
-            <h3>Próximos eventos</h3>
-            <div class="pagination" v-if="eventosTotalPages > 1" role="navigation" aria-label="Paginação de eventos">
-              <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Página anterior de eventos">⟨ Anterior</button>
+            <h3>Eventos</h3>
+
+            <div class="eventos-nav" v-if="eventosTotalPages > 1">
+              <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Voltar eventos">
+                <i class="fas fa-chevron-left"></i>
+              </button>
               <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
-              <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Próxima página de eventos">Próximo ⟩</button>
+              <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Avançar eventos">
+                <i class="fas fa-chevron-right"></i>
+              </button>
             </div>
           </div>
 
@@ -1130,8 +1179,9 @@
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v2';
+    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v3';
     const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
+    const SENHA_EXCLUSAO = '1234';
 
     new Vue({
       el: '#app',
@@ -1214,7 +1264,7 @@
         },
         filtroEventos: '',
         eventosPage: 1,
-        eventosPerPage: 6,
+        eventosPerPage: 3,
         eventosLoading: false,
         eventosApiStatus: 'desconectado',
         detalhesEvento: null,
@@ -1229,17 +1279,20 @@
       computed: {
         registrosFiltrados() {
           if (!this.filtro) return this.banco;
-          const f = this.filtro.toLowerCase();
+          const f = this.normalizarTexto(this.filtro);
+
           return this.banco.filter(r =>
-            (r.nome || '').toLowerCase().includes(f) ||
-            (r.email || '').toLowerCase().includes(f) ||
-            (r.cidade || '').toLowerCase().includes(f) ||
-            (r.modalidade || '').toLowerCase().includes(f)
+            this.normalizarTexto(r.nome).includes(f) ||
+            this.normalizarTexto(r.email).includes(f) ||
+            this.normalizarTexto(r.cidade).includes(f) ||
+            this.normalizarTexto(r.modalidade).includes(f)
           );
         },
+
         totalPages() {
           return Math.ceil(this.registrosFiltrados.length / this.perPage) || 1;
         },
+
         paginated() {
           const start = (this.page - 1) * this.perPage;
           return this.registrosFiltrados.slice(start, start + this.perPage);
@@ -1247,16 +1300,19 @@
 
         eventosFiltrados() {
           if (!this.filtroEventos) return this.eventosBanco;
-          const f = this.filtroEventos.toLowerCase();
+
+          const f = this.normalizarTexto(this.filtroEventos);
+
           return this.eventosBanco.filter(ev =>
-            (ev.nomeEvento || '').toLowerCase().includes(f) ||
-            (ev.dataEvento || '').toLowerCase().includes(f) ||
-            (ev.descricao || '').toLowerCase().includes(f)
+            this.normalizarTexto(ev.nomeEvento).includes(f) ||
+            this.normalizarTexto(ev.descricao).includes(f)
           );
         },
+
         eventosTotalPages() {
           return Math.ceil(this.eventosFiltrados.length / this.eventosPerPage) || 1;
         },
+
         eventosPaginados() {
           const start = (this.eventosPage - 1) * this.eventosPerPage;
           return this.eventosFiltrados.slice(start, start + this.eventosPerPage);
@@ -1273,13 +1329,32 @@
       },
 
       methods: {
+        normalizarTexto(valor) {
+          return String(valor || '')
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .trim();
+        },
+
+        normalizarDataEvento(data) {
+          if (!data) return '';
+          const str = String(data).trim();
+
+          if (str.includes('T')) {
+            return str.split('T')[0];
+          }
+
+          return str.length >= 10 ? str.slice(0, 10) : str;
+        },
+
         carregarGaleriaLocal() {
           try {
             const salvo = localStorage.getItem(GALERIA_STORAGE_KEY);
             if (!salvo) return;
             const parsed = JSON.parse(salvo);
             if (Array.isArray(parsed) && parsed.length) {
-              this.imagens = parsed.slice(0, 10);
+              this.imagens = parsed.slice(0, 25);
             }
           } catch (e) {
             console.error('Erro ao carregar mural local:', e);
@@ -1288,7 +1363,7 @@
 
         salvarGaleriaLocal() {
           try {
-            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 10)));
+            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 25)));
           } catch (e) {
             console.error('Erro ao salvar mural local:', e);
             alert('Não consegui salvar as fotos neste navegador. Talvez o arquivo seja grande demais.');
@@ -1299,8 +1374,8 @@
           const file = event.target.files && event.target.files[0];
           if (!file) return;
 
-          if (this.imagens.length >= 10) {
-            alert('O limite do mural é de 10 fotos. Exclua uma antes de inserir outra.');
+          if (this.imagens.length >= 25) {
+            alert('O limite do mural é de 25 fotos. Exclua uma antes de inserir outra.');
             event.target.value = '';
             return;
           }
@@ -1323,7 +1398,7 @@
         removerFoto(index) {
           const senha = prompt('Informe a senha para excluir a foto:');
           if (senha === null) return;
-          if (senha !== '1234') {
+          if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
           }
@@ -1334,15 +1409,27 @@
         },
 
         getDiaEvento(data) {
-          if (!data || String(data).split('-').length !== 3) return '--';
-          return String(data).split('-')[2];
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return '--';
+          return normalizada.split('-')[2];
         },
 
         getMesAnoEvento(data) {
-          if (!data || String(data).split('-').length !== 3) return 'sem data';
-          const [ano, mes] = String(data).split('-');
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'sem data';
+
+          const [ano, mes] = normalizada.split('-');
           const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
           return `${meses[Number(mes) - 1] || mes}/${ano}`;
+        },
+
+        formatarData(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada) return '';
+
+          const partes = normalizada.split('-');
+          if (partes.length !== 3) return normalizada;
+          return `${partes[2]}/${partes[1]}/${partes[0]}`;
         },
 
         async apiGetList() {
@@ -1359,7 +1446,12 @@
           if (!r.ok) throw new Error('Falha ao listar eventos');
           const data = await r.json();
           this.eventosBanco = Array.isArray(data) ? data : (data.data || []);
-          this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
+
+          this.eventosBanco.sort((a, b) => {
+            const da = this.normalizarDataEvento(a.dataEvento);
+            const db = this.normalizarDataEvento(b.dataEvento);
+            return db.localeCompare(da);
+          });
         },
 
         async apiPost(action, payload) {
@@ -1378,13 +1470,6 @@
 
         setEventosStatus(ok) {
           this.eventosApiStatus = ok ? 'conectado' : 'desconectado';
-        },
-
-        formatarData(data) {
-          if (!data) return '';
-          const partes = String(data).split('-');
-          if (partes.length !== 3) return data;
-          return `${partes[2]}/${partes[1]}/${partes[0]}`;
         },
 
         openModal(i) {
@@ -1517,7 +1602,7 @@
         async deleteRegistro(registro) {
           const senha = prompt('Informe a senha para excluir o registro:');
           if (senha === null) return;
-          if (senha !== '1234') {
+          if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
           }
@@ -1538,7 +1623,7 @@
         async resetBanco() {
           const senha = prompt('Informe a senha para APAGAR TODOS os registros:');
           if (senha === null) return;
-          if (senha !== '1234') {
+          if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
           }
@@ -1561,16 +1646,24 @@
           try {
             const created = await this.apiPost('insert_event', this.novoEvento);
             this.eventosBanco.push(created);
-            this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
+
+            this.eventosBanco.sort((a, b) => {
+              const da = this.normalizarDataEvento(a.dataEvento);
+              const db = this.normalizarDataEvento(b.dataEvento);
+              return db.localeCompare(da);
+            });
+
             this.novoEvento = {
               dataEvento: '',
               nomeEvento: '',
               descricao: ''
             };
+
+            this.eventosPage = 1;
+
             this.$nextTick(() => {
               document.querySelector('#eventos-dados .eventos-vitrine-wrap')?.scrollIntoView({ behavior:'smooth' });
             });
-            this.eventosPage = this.eventosTotalPages;
           } catch (e) {
             alert('Erro ao inserir evento: ' + e.message);
           } finally {
@@ -1598,7 +1691,13 @@
             const upd = await this.apiPost('update_event', this.editEventoBuffer);
             const idx = this.eventosBanco.findIndex(x => Number(x.id) === Number(upd.id));
             if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
-            this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
+
+            this.eventosBanco.sort((a, b) => {
+              const da = this.normalizarDataEvento(a.dataEvento);
+              const db = this.normalizarDataEvento(b.dataEvento);
+              return db.localeCompare(da);
+            });
+
             this.closeEditEvento();
           } catch (e) {
             alert('Erro ao salvar evento: ' + e.message);
@@ -1610,7 +1709,7 @@
         async deleteEvento(evento) {
           const senha = prompt('Informe a senha para excluir o evento:');
           if (senha === null) return;
-          if (senha !== '1234') {
+          if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
           }
@@ -1631,7 +1730,7 @@
         async resetEventos() {
           const senha = prompt('Informe a senha para APAGAR TODOS os eventos:');
           if (senha === null) return;
-          if (senha !== '1234') {
+          if (senha !== SENHA_EXCLUSAO) {
             alert('Senha incorreta.');
             return;
           }

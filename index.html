@@ -8,16 +8,39 @@
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 
   <style>
-    :root { --cor-primaria: #1b2845; --cor-secundaria: #00b351; }
+    :root {
+      --cor-primaria: #1b2845;
+      --cor-secundaria: #00b351;
+      --cor-clara: #f7fafc;
+      --sombra: 0 10px 30px rgba(0,0,0,0.12);
+      --radius: 18px;
+    }
+
     html { font-size: 100%; }
-    body { margin: 0; font-family: "Segoe UI", Arial, sans-serif; scroll-behavior: smooth; color:#333; background:#fff; line-height: 1.5; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      scroll-behavior: smooth;
+      color:#333;
+      background:#fff;
+      line-height: 1.5;
+    }
     * { box-sizing: border-box; }
 
     .skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
-    .skip-link:focus { position: fixed; left: 12px; top: 12px; padding:10px 14px; background:#000; color:#fff; z-index: 2001; border-radius:8px; }
+    .skip-link:focus {
+      position: fixed; left: 12px; top: 12px; padding:10px 14px;
+      background:#000; color:#fff; z-index: 2001; border-radius:8px;
+    }
 
-    .a11y-toolbar { position: fixed; right: 10px; bottom: 10px; z-index: 1200; display:flex; gap:6px; flex-wrap:wrap; }
-    .a11y-toolbar button { padding:0.5rem 0.625rem; border-radius:8px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:0.875rem; }
+    .a11y-toolbar {
+      position: fixed; right: 10px; bottom: 10px; z-index: 1200;
+      display:flex; gap:6px; flex-wrap:wrap;
+    }
+    .a11y-toolbar button {
+      padding:0.5rem 0.625rem; border-radius:8px; border:1px solid #ccc;
+      background:#fff; cursor:pointer; font-size:0.875rem;
+    }
     .a11y-toolbar button:focus { outline: 3px solid #005fcc; outline-offset:2px; }
 
     a, button, [role="button"], .atividade { outline-offset:2px; }
@@ -35,104 +58,537 @@
     .reduce-motion .galeria-img { cursor: default; }
 
     nav {
-      position: fixed; top: 0; left: 0; right: 0; background: #fff; padding: 0.9375rem 1.5625rem;
-      z-index: 1000; display: flex; gap: 1.375rem; white-space: nowrap; overflow-x: auto;
-      -webkit-overflow-scrolling: touch; align-items: center; justify-content: flex-start;
+      position: fixed; top: 0; left: 0; right: 0; background: #fff;
+      padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.375rem;
+      white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      align-items: center; justify-content: flex-start;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
-    nav a { text-decoration: none; color: #333; font-weight: bold; font-size: 1.03125rem; transition: color 0.3s, transform 0.3s; }
+    nav a {
+      text-decoration: none; color: #333; font-weight: bold;
+      font-size: 1.03125rem; transition: color 0.3s, transform 0.3s;
+    }
     nav a:hover, nav a:focus { color: var(--cor-secundaria); transform: scale(1.05); }
+
     @media (max-width: 480px) {
       nav { padding: 0.59375rem 0.84375rem; gap: 0.84375rem; }
       nav a { font-size: 0.90625rem; }
     }
 
-    header { height: 100vh; display: flex; justify-content: center; align-items: center; background-color: #fff; }
+    header {
+      height: 100vh; display: flex; justify-content: center; align-items: center;
+      background-color: #fff;
+    }
     header img.logo { width: 320px; max-width: 80%; }
 
     section {
-      padding: 5rem 1.25rem; font-size: 1.25rem; display: flex; flex-direction: column;
-      justify-content: center; align-items: center; text-align: center; min-height: 100vh;
+      padding: 5rem 1.25rem;
+      font-size: 1.15rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
     }
+
     #quem-somos { background-color: #e0f7fa; }
     #atividades { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
     #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
     #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
     #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
 
-    .botao-formulario {
-      display: inline-block; padding: 0.75rem 1.5rem; background-color: var(--cor-primaria);
-      color: white; text-decoration: none; border-radius: 8px; font-weight: bold;
-      transition: background-color 0.3s, transform 0.2s; border:none; cursor:pointer; font-size: 1rem;
+    .botao-formulario, .botao-secundario {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.75rem 1.2rem;
+      background-color: var(--cor-primaria);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: bold;
+      transition: background-color 0.3s, transform 0.2s;
+      border:none;
+      cursor:pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
-    .botao-formulario:hover, .botao-formulario:focus { background-color: var(--cor-secundaria); transform: scale(1.05); }
+    .botao-formulario:hover, .botao-formulario:focus,
+    .botao-secundario:hover, .botao-secundario:focus {
+      background-color: var(--cor-secundaria);
+      transform: translateY(-1px);
+    }
+    .botao-secundario { background: #6c757d; }
 
-    .galeria { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.9375rem; margin-top: 1.875rem; }
-    .galeria-img {
-      width: 13.75rem; height: 10rem; object-fit: cover; border-radius: 10px;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.3s, opacity 0.3s;
+    .bloco-admin {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(6px);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--sombra);
     }
-    .galeria-img:hover, .galeria-img:focus { transform: scale(1.05); opacity: 0.9; }
+
+    .galeria-topo {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      width: 100%;
+      gap: 16px;
+      margin-top: 1.25rem;
+    }
+
+    .galeria-card {
+      background: rgba(255,255,255,0.75);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: var(--sombra);
+      position: relative;
+    }
+
+    .galeria-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+    .galeria-img:hover, .galeria-img:focus { transform: scale(1.02); opacity: 0.95; }
+
+    .galeria-acoes {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      gap: 10px;
+      background: #fff;
+    }
+
+    .galeria-acoes span {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .btn-remover-foto {
+      border: none;
+      background: #dc3545;
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
 
     .modal {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.85); display:flex; justify-content:center;
-      align-items:center; z-index:2000; opacity: 0; animation: fadeIn 0.25s forwards; flex-direction: column; padding: 12px;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      z-index:2000;
+      opacity: 0;
+      animation: fadeIn 0.25s forwards;
+      flex-direction: column;
+      padding: 12px;
     }
-    .modal-card { background:#fff; padding:24px; border-radius:12px; max-width:1000px; width:95%; text-align:left; }
+
+    .modal-card {
+      background:#fff;
+      padding:24px;
+      border-radius:12px;
+      max-width:1000px;
+      width:95%;
+      text-align:left;
+    }
+
     .modal-img { max-width:90%; max-height:80%; border-radius:12px; }
-    .modal-controls { margin-top: 20px; display:flex; gap:10px; }
+    .modal-controls { margin-top: 20px; display:flex; gap:10px; flex-wrap: wrap; }
     .modal-controls button {
-      padding: 12px 20px; margin: 0 10px; font-size: 16px; border: none; border-radius: 8px;
-      cursor: pointer; background-color: var(--cor-primaria); color: #fff; transition: background-color 0.3s;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: var(--cor-primaria);
+      color: #fff;
+      transition: background-color 0.3s;
     }
-    .modal-controls button:hover, .modal-controls button:focus { background-color: var(--cor-secundaria); }
+    .modal-controls button:hover,
+    .modal-controls button:focus { background-color: var(--cor-secundaria); }
+
+    .atividades-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 22px;
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 28px;
+    }
 
     .atividade {
-      background: #fff; padding: 1.5625rem 1.25rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-      min-width: 15.625rem; max-width: 17.5rem; display: flex; flex-direction: column; align-items: center;
-      transition: transform 0.3s, opacity 0.4s; cursor: pointer; opacity: 0; animation: slideUp 0.5s forwards; text-align: center;
+      background: #fff;
+      padding: 1.35rem;
+      border-radius: 18px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: left;
+      opacity: 0;
+      animation: slideUp 0.5s forwards;
+      min-height: 100%;
     }
-    .atividade h3 { color: var(--cor-secundaria); margin-bottom: 0.75rem; }
+
+    .atividade-topo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .atividade h3 {
+      color: var(--cor-primaria);
+      margin: 0;
+      font-size: 1.3rem;
+    }
+
+    .atividade-badge {
+      background: #e9f8ef;
+      color: #087f3e;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .atividade-resumo {
+      margin: 6px 0 14px;
+      color: #555;
+    }
+
+    .atividade-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .atividade-item {
+      background: #f8fafc;
+      border: 1px solid #e6edf5;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .atividade-item-linha1 {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+    }
+
+    .atividade-dia {
+      font-weight: 800;
+      color: var(--cor-primaria);
+      font-size: 0.98rem;
+    }
+
+    .atividade-hora {
+      background: #eef5ff;
+      color: #234;
+      border-radius: 999px;
+      padding: 4px 9px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .atividade-local {
+      font-size: 0.92rem;
+      color: #666;
+    }
+
+    .atividade-extra {
+      margin: 12px 0 0;
+      font-size: 0.9rem;
+      color: #666;
+      border-top: 1px dashed #ddd;
+      padding-top: 10px;
+    }
+
+    .link-info {
+      margin-top: 14px;
+      display: inline-block;
+      font-weight: 700;
+      color: var(--cor-primaria);
+      text-decoration: underline;
+    }
 
     @keyframes fadeIn { to { opacity:1; } }
-    @keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity:0; }
+      to { transform: translateY(0); opacity:1; }
+    }
 
     .form-db {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 15px;
-      width: 100%; max-width: 1100px; margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 20px;
     }
+
     .form-db input, .form-db select, .form-db textarea {
-      padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; font-size: 1rem;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+      background: #fff;
     }
     .form-db textarea { grid-column: 1 / -1; resize: none; height: 110px; }
-    input[required], select[required], textarea[required] { border-left: 4px solid #007bff; }
+
+    input[required], select[required], textarea[required] {
+      border-left: 4px solid #007bff;
+    }
 
     .table-wrap { width:100%; overflow-x:auto; margin-top: 30px; }
-    .table-db { width:100%; border-collapse: collapse; background: #fff; border-radius: 12px; overflow: hidden; }
+    .table-db {
+      width:100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+    }
     .table-db caption { text-align:left; padding:10px; font-weight:bold; }
-    .table-db th, .table-db td { padding: 10px; border-bottom: 1px solid rgba(0,0,0,0.08); text-align: left; font-size: 0.9375rem; }
+    .table-db th, .table-db td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      text-align: left;
+      font-size: 0.9375rem;
+    }
     .table-db th { background: var(--cor-primaria); color: #fff; }
     .table-db tr:hover td { background: rgba(0,0,0,0.05); }
     .table-actions button { margin-right:8px; margin-bottom:6px; }
 
-    .pagination { margin-top: 15px; display: flex; justify-content: center; gap: 15px; align-items:center; }
+    .pagination {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
     .pagination button {
-      background: var(--cor-primaria); color: #fff; border: none; border-radius: 6px;
-      padding: 8px 14px; cursor: pointer; transition: background 0.3s; font-size: 1rem;
+      background: var(--cor-primaria);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 1rem;
     }
     .pagination button:disabled { opacity: .5; cursor: default; }
-    .pagination button:hover:not(:disabled), .pagination button:focus:not(:disabled) { background: var(--cor-secundaria); }
+    .pagination button:hover:not(:disabled), .pagination button:focus:not(:disabled) {
+      background: var(--cor-secundaria);
+    }
+
+    .eventos-admin {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.72);
+      border-radius: 18px;
+      box-shadow: var(--sombra);
+      padding: 22px;
+      margin-bottom: 30px;
+    }
+
+    .eventos-vitrine-wrap {
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 10px;
+    }
+
+    .eventos-vitrine-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .eventos-vitrine-head h3 {
+      margin: 0;
+      color: var(--cor-primaria);
+      font-size: 1.6rem;
+    }
+
+    .eventos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 22px;
+      width: 100%;
+    }
+
+    .evento-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,245,255,0.98));
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(55, 35, 90, 0.15);
+      border: 1px solid rgba(255,255,255,0.7);
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .evento-card-topo {
+      padding: 18px 18px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .evento-data-box {
+      background: var(--cor-primaria);
+      color: #fff;
+      min-width: 78px;
+      border-radius: 16px;
+      padding: 12px 10px;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(27,40,69,0.24);
+    }
+
+    .evento-dia-num {
+      display: block;
+      font-size: 1.6rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .evento-mes-ano {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .evento-card-conteudo {
+      padding: 0 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .evento-titulo {
+      margin: 0;
+      color: var(--cor-primaria);
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .evento-descricao {
+      margin: 0;
+      color: #555;
+      font-size: 0.98rem;
+      line-height: 1.55;
+    }
+
+    .evento-acoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .evento-acoes .mini-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: var(--cor-primaria);
+    }
+
+    .evento-acoes .mini-btn.editar { background: #007bff; }
+    .evento-acoes .mini-btn.excluir { background: #dc3545; }
+    .evento-acoes .mini-btn.ver { background: #6c757d; }
+
+    .evento-vazio {
+      width: 100%;
+      background: rgba(255,255,255,0.8);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+      color: #666;
+    }
 
     footer {
-      text-align: center; padding: 50px 20px; color: #333; border-top: 3px solid var(--cor-secundaria);
-      min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+      text-align: center;
+      padding: 50px 20px;
+      color: #333;
+      border-top: 3px solid var(--cor-secundaria);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
-    footer h2 { color: var(--cor-secundaria); font-size: 2.625rem; margin-bottom: 25px; }
+
+    footer h2 {
+      color: var(--cor-secundaria);
+      font-size: 2.625rem;
+      margin-bottom: 25px;
+    }
+
     footer p { margin: 12px 0; font-size: 1.375rem; }
-    footer .social { display:flex; gap:22px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:14px; }
-    footer .social a { font-size: 3.2rem; transition: transform 0.3s ease, opacity 0.3s ease; }
+
+    footer .social {
+      display:flex;
+      gap:22px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    footer .social a {
+      font-size: 3.2rem;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
     footer .social a.instagram { color: #E4405F; }
     footer .social a.facebook { color: #1877F2; }
     footer .social a:hover, footer .social a:focus { transform: scale(1.2); opacity: 0.8; }
+
     .badge { margin-top:10px; font-size:0.875rem; color:#555; }
     .status-wrap { display:flex; flex-direction:column; gap:8px; align-items:center; }
 
@@ -140,13 +596,23 @@
     .contact-link:hover, .contact-link:focus { text-decoration: underline; }
 
     .visually-hidden {
-      position:absolute !important; left:-10000px !important; top:auto !important; width:1px !important;
-      height:1px !important; overflow:hidden !important;
+      position:absolute !important;
+      left:-10000px !important;
+      top:auto !important;
+      width:1px !important;
+      height:1px !important;
+      overflow:hidden !important;
     }
 
     .table-db thead th:first-child,
     .table-db tbody td:first-child {
       display: none;
+    }
+
+    @media (max-width: 768px) {
+      section { font-size: 1rem; }
+      .evento-card-topo { flex-direction: column; align-items: flex-start; }
+      .evento-data-box { min-width: 92px; }
     }
   </style>
 </head>
@@ -165,8 +631,8 @@
     <a href="#topo">ASO</a>
     <a href="#quem-somos">Quem Somos</a>
     <a href="#atividades">Atividades</a>
-    <a href="#banco-dados">Cadastro de Pessoas</a>
-    <a href="#eventos-dados">Cadastro de Eventos</a>
+    <a href="#banco-dados">Participe</a>
+    <a href="#eventos-dados">Eventos</a>
     <a href="#contato">Contato</a>
   </nav>
 
@@ -180,72 +646,91 @@
         <h2 id="titulo-quem-somos">Quem Somos</h2>
         <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
 
+        <div class="galeria-topo">
+          <div>
+            <strong>Galeria da associação</strong><br>
+            <span style="color:#555; font-size:0.95rem;">Limite de até 6 fotos</span>
+          </div>
+
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <label class="botao-formulario" style="cursor:pointer;">
+              <i class="fas fa-image"></i> Inserir foto
+              <input
+                type="file"
+                accept="image/*"
+                @change="handleImageUpload"
+                style="display:none;"
+              >
+            </label>
+
+            <button class="botao-secundario" type="button" @click="resetGaleria">
+              <i class="fas fa-rotate-left"></i> Restaurar padrão
+            </button>
+          </div>
+        </div>
+
         <div class="galeria" role="list" aria-label="Galeria de fotos da ASO">
-          <img
-            v-for="(img,i) in imagens"
-            :key="img"
-            :src="img"
-            class="galeria-img"
-            :alt="'Foto da ASO número ' + (i+1)"
-            :role="reduceMotionActive ? null : 'button'"
-            :tabindex="reduceMotionActive ? -1 : 0"
-            @click="!reduceMotionActive && openModal(i)"
-            @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
-            @keydown.space.prevent="!reduceMotionActive && openModal(i)"
-          />
+          <div class="galeria-card" v-for="(img,i) in imagens" :key="img + '-' + i">
+            <img
+              :src="img"
+              class="galeria-img"
+              :alt="'Foto da ASO número ' + (i+1)"
+              :role="reduceMotionActive ? null : 'button'"
+              :tabindex="reduceMotionActive ? -1 : 0"
+              @click="!reduceMotionActive && openModal(i)"
+              @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
+              @keydown.space.prevent="!reduceMotionActive && openModal(i)"
+            />
+            <div class="galeria-acoes">
+              <span>Foto {{ i + 1 }}</span>
+              <button class="btn-remover-foto" type="button" @click="removerFoto(i)">
+                <i class="fas fa-trash"></i> Excluir
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
       <section id="atividades" aria-labelledby="titulo-atividades">
         <h2 id="titulo-atividades">Atividades</h2>
 
-        <div class="atividades-carousel" style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
-          <div
-            class="atividade"
-            v-for="(item, nome) in atividades"
-            :key="nome"
-            @click="!reduceMotionActive && toggle(nome)"
-            @keydown.enter.prevent="!reduceMotionActive && toggle(nome)"
-            @keydown.space.prevent="!reduceMotionActive && toggle(nome)"
-            :aria-expanded="(reduceMotionActive || active===nome) ? 'true' : 'false'"
-            :role="reduceMotionActive ? null : 'button'"
-            :tabindex="reduceMotionActive ? -1 : 0"
-            :aria-controls="'detalhes-'+nome"
-          >
-            <h3 style="margin-bottom:6px">{{ nome }}</h3>
-            <p style="margin:0 0 8px">{{ item.resumo }}</p>
-
-            <div
-              v-if="reduceMotionActive || active===nome"
-              :id="'detalhes-'+nome"
-              style="margin-top:10px; text-align:left; width:100%;"
-            >
-              <ul style="padding-left:18px; margin:0 0 8px;">
-                <li v-for="(linha, i) in item.agenda" :key="i">
-                  <strong>{{ linha.dia }}:</strong>
-                  <span>{{ linha.horas.join(', ') }}</span>
-                  <span v-if="linha.local"> • {{ linha.local }}</span>
-                </li>
-              </ul>
-              <p v-if="item.extra" style="margin:8px 0 0; font-size:0.875rem; opacity:.9;">{{ item.extra }}</p>
-              <p style="margin:10px 0 0;">
-                <a
-                  :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style="text-decoration: underline;"
-                  @click.stop
-                >
-                  Mais informações
-                </a>
-              </p>
+        <div class="atividades-grid">
+          <article class="atividade" v-for="(item, nome) in atividades" :key="nome">
+            <div class="atividade-topo">
+              <h3>{{ nome }}</h3>
+              <span class="atividade-badge">{{ item.localPadrao }}</span>
             </div>
-          </div>
+
+            <p class="atividade-resumo">{{ item.resumo }}</p>
+
+            <div class="atividade-lista">
+              <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
+                <div class="atividade-item-linha1">
+                  <span class="atividade-dia">{{ linha.dia }}</span>
+                  <span class="atividade-hora">{{ linha.horas.join(' • ') }}</span>
+                </div>
+                <div class="atividade-local">
+                  <i class="fas fa-location-dot"></i> {{ linha.local || item.localPadrao }}
+                </div>
+              </div>
+            </div>
+
+            <p v-if="item.extra" class="atividade-extra">{{ item.extra }}</p>
+
+            <a
+              class="link-info"
+              :href="'https://www.google.com/search?q='+encodeURIComponent(nome+' '+(item.localPadrao||''))"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Mais informações
+            </a>
+          </article>
         </div>
       </section>
 
       <section id="banco-dados" aria-labelledby="titulo-cadastro">
-        <h2 id="titulo-cadastro">Cadastro de Pessoas</h2>
+        <h2 id="titulo-cadastro">Participe</h2>
 
         <div class="status-wrap">
           <div class="badge" role="status" aria-live="polite">
@@ -253,118 +738,120 @@
           </div>
         </div>
 
-        <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
-          <p id="dica-form" class="visually-hidden">
-            Todos os campos marcados como obrigatórios precisam ser preenchidos.
-          </p>
+        <div class="bloco-admin">
+          <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
+            <p id="dica-form" class="visually-hidden">
+              Todos os campos marcados como obrigatórios precisam ser preenchidos.
+            </p>
 
-          <input v-model="novo.nome" id="nome" placeholder="Nome" required aria-label="Nome">
-          <input v-model="novo.email" id="email" type="email" placeholder="E-mail" required aria-label="E-mail">
-          <input v-model="novo.celular" id="celular" placeholder="Celular" required aria-label="Celular">
-          <input v-model="novo.logradouro" id="logradouro" placeholder="Logradouro" required aria-label="Logradouro">
-          <input v-model="novo.numero" id="numero" placeholder="Número" required aria-label="Número">
-          <input v-model="novo.bairro" id="bairro" placeholder="Bairro" required aria-label="Bairro">
-          <input v-model="novo.complemento" id="complemento" placeholder="Complemento" aria-label="Complemento">
-          <input v-model="novo.cidade" id="cidade" placeholder="Cidade" required aria-label="Cidade">
-          <input v-model.number="novo.idade" id="idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
+            <input v-model="novo.nome" id="nome" placeholder="Nome" required aria-label="Nome">
+            <input v-model="novo.email" id="email" type="email" placeholder="E-mail" required aria-label="E-mail">
+            <input v-model="novo.celular" id="celular" placeholder="Celular" required aria-label="Celular">
+            <input v-model="novo.logradouro" id="logradouro" placeholder="Logradouro" required aria-label="Logradouro">
+            <input v-model="novo.numero" id="numero" placeholder="Número" required aria-label="Número">
+            <input v-model="novo.bairro" id="bairro" placeholder="Bairro" required aria-label="Bairro">
+            <input v-model="novo.complemento" id="complemento" placeholder="Complemento" aria-label="Complemento">
+            <input v-model="novo.cidade" id="cidade" placeholder="Cidade" required aria-label="Cidade">
+            <input v-model.number="novo.idade" id="idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
 
-          <select v-model="novo.modalidade" required aria-label="Modalidade">
-            <option disabled value="">Modalidade</option>
-            <option>Curso de Libras</option>
-            <option>Atendimento Social</option>
-            <option>Evento</option>
-            <option>Voluntário</option>
-            <option>Outro</option>
-          </select>
+            <select v-model="novo.modalidade" required aria-label="Modalidade">
+              <option disabled value="">Modalidade</option>
+              <option>Curso de Libras</option>
+              <option>Atendimento Social</option>
+              <option>Evento</option>
+              <option>Voluntário</option>
+              <option>Outro</option>
+            </select>
 
-          <textarea v-model="novo.observacoes" id="observacoes" placeholder="Observações" aria-label="Observações"></textarea>
+            <textarea v-model="novo.observacoes" id="observacoes" placeholder="Observações" aria-label="Observações"></textarea>
 
-          <button type="submit" class="botao-formulario" :disabled="loading">INSERT</button>
-          <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
-        </form>
+            <button type="submit" class="botao-formulario" :disabled="loading">INSERT</button>
+            <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
+          </form>
 
-        <div style="margin-top:20px; width:100%; max-width:900px;">
-          <input
-            v-model="filtro"
-            placeholder="Buscar por nome, e-mail, cidade ou modalidade..."
-            style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"
-            aria-label="Buscar cadastro"
-          >
-          <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
-        </div>
+          <div style="margin-top:20px; width:100%; max-width:900px;">
+            <input
+              v-model="filtro"
+              placeholder="Buscar por nome, e-mail, cidade ou modalidade..."
+              style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
+              aria-label="Buscar cadastro"
+            >
+            <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
+          </div>
 
-        <div class="table-wrap">
-          <table class="table-db" aria-describedby="legenda-tabela">
-            <caption id="legenda-tabela">Lista de cadastros de pessoas com ações de ver, editar e excluir</caption>
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nº</th>
-                <th scope="col">Nome</th>
-                <th scope="col">Idade</th>
-                <th scope="col">Cidade</th>
-                <th scope="col">Modalidade</th>
-                <th scope="col">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(r, i) in paginated" :key="r.id">
-                <td>{{ r.id }}</td>
-                <td>{{ (page - 1) * perPage + i + 1 }}</td>
-                <td>{{ r.nome }}</td>
-                <td>{{ r.idade }}</td>
-                <td>{{ r.cidade }}</td>
-                <td>{{ r.modalidade }}</td>
-                <td class="table-actions">
-                  <button
-                    @click="viewDetalhes(r)"
-                    class="botao-formulario"
-                    style="background:#6c757d;"
-                    :aria-label="'Ver detalhes do cadastro de ' + r.nome"
-                  >
-                    🔍 Ver detalhes
-                  </button>
+          <div class="table-wrap">
+            <table class="table-db" aria-describedby="legenda-tabela">
+              <caption id="legenda-tabela">Lista de cadastros de pessoas com ações de ver, editar e excluir</caption>
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Nº</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Idade</th>
+                  <th scope="col">Cidade</th>
+                  <th scope="col">Modalidade</th>
+                  <th scope="col">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(r, i) in paginated" :key="r.id">
+                  <td>{{ r.id }}</td>
+                  <td>{{ (page - 1) * perPage + i + 1 }}</td>
+                  <td>{{ r.nome }}</td>
+                  <td>{{ r.idade }}</td>
+                  <td>{{ r.cidade }}</td>
+                  <td>{{ r.modalidade }}</td>
+                  <td class="table-actions">
+                    <button
+                      @click="viewDetalhes(r)"
+                      class="botao-formulario"
+                      style="background:#6c757d;"
+                      :aria-label="'Ver detalhes do cadastro de ' + r.nome"
+                    >
+                      🔍 Ver detalhes
+                    </button>
 
-                  <button
-                    @click="openEdit(r)"
-                    class="botao-formulario"
-                    style="background:#007bff;"
-                    :aria-label="'Editar cadastro de ' + r.nome"
-                  >
-                    🖋️ Editar
-                  </button>
+                    <button
+                      @click="openEdit(r)"
+                      class="botao-formulario"
+                      style="background:#007bff;"
+                      :aria-label="'Editar cadastro de ' + r.nome"
+                    >
+                      🖋️ Editar
+                    </button>
 
-                  <button
-                    @click="deleteRegistro(r)"
-                    class="botao-formulario"
-                    style="background:#dc3545;"
-                    :aria-label="'Excluir cadastro de ' + r.nome"
-                  >
-                    🗑️ Excluir
-                  </button>
-                </td>
-              </tr>
+                    <button
+                      @click="deleteRegistro(r)"
+                      class="botao-formulario"
+                      style="background:#dc3545;"
+                      :aria-label="'Excluir cadastro de ' + r.nome"
+                    >
+                      🗑️ Excluir
+                    </button>
+                  </td>
+                </tr>
 
-              <tr v-if="!loading && paginated.length === 0">
-                <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum registro encontrado.</td>
-              </tr>
+                <tr v-if="!loading && paginated.length === 0">
+                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum registro encontrado.</td>
+                </tr>
 
-              <tr v-if="loading">
-                <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <tr v-if="loading">
+                  <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
 
-        <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
-          <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
-          <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
-          <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+          <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
+            <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
+            <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
+            <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+          </div>
         </div>
       </section>
 
       <section id="eventos-dados" aria-labelledby="titulo-cadastro-eventos">
-        <h2 id="titulo-cadastro-eventos">Cadastro de Eventos</h2>
+        <h2 id="titulo-cadastro-eventos">Eventos</h2>
 
         <div class="status-wrap">
           <div class="badge" role="status" aria-live="polite">
@@ -372,94 +859,68 @@
           </div>
         </div>
 
-        <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
-          <p id="dica-form-eventos" class="visually-hidden">
-            Preencha os campos obrigatórios para cadastrar um evento.
-          </p>
+        <div class="eventos-admin">
+          <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
+            <p id="dica-form-eventos" class="visually-hidden">
+              Preencha os campos obrigatórios para cadastrar um evento.
+            </p>
 
-          <input v-model="novoEvento.dataEvento" type="date" required aria-label="Data do evento">
-          <input v-model="novoEvento.nomeEvento" type="text" placeholder="Nome do evento" required aria-label="Nome do evento">
-          <textarea v-model="novoEvento.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
+            <input v-model="novoEvento.dataEvento" type="date" required aria-label="Data do evento">
+            <input v-model="novoEvento.nomeEvento" type="text" placeholder="Nome do evento" required aria-label="Nome do evento">
+            <textarea v-model="novoEvento.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
 
-          <button type="submit" class="botao-formulario" :disabled="eventosLoading">INSERT EVENTO</button>
-          <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetEventos" :disabled="eventosLoading">DELETE ALL EVENTOS</button>
-        </form>
+            <button type="submit" class="botao-formulario" :disabled="eventosLoading">INSERT EVENTO</button>
+            <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetEventos" :disabled="eventosLoading">DELETE ALL EVENTOS</button>
+          </form>
 
-        <div style="margin-top:20px; width:100%; max-width:900px;">
-          <input
-            v-model="filtroEventos"
-            placeholder="Buscar por nome do evento, data ou descrição..."
-            style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"
-            aria-label="Buscar evento"
-          >
-          <p style="margin:10px 0 0 0;"><strong>{{ eventosFiltrados.length }} eventos encontrados</strong></p>
+          <div style="margin-top:20px; width:100%; max-width:900px;">
+            <input
+              v-model="filtroEventos"
+              placeholder="Buscar por nome do evento, data ou descrição..."
+              style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
+              aria-label="Buscar evento"
+            >
+            <p style="margin:10px 0 0 0;"><strong>{{ eventosFiltrados.length }} eventos encontrados</strong></p>
+          </div>
         </div>
 
-        <div class="table-wrap">
-          <table class="table-db" aria-describedby="legenda-tabela-eventos">
-            <caption id="legenda-tabela-eventos">Lista de eventos com ações de ver, editar e excluir</caption>
-            <thead>
-              <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Nº</th>
-                <th scope="col">Data</th>
-                <th scope="col">Evento</th>
-                <th scope="col">Descrição</th>
-                <th scope="col">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(ev, i) in eventosPaginados" :key="'ev-'+ev.id">
-                <td>{{ ev.id }}</td>
-                <td>{{ (eventosPage - 1) * eventosPerPage + i + 1 }}</td>
-                <td>{{ formatarData(ev.dataEvento) }}</td>
-                <td>{{ ev.nomeEvento }}</td>
-                <td>{{ resumirTexto(ev.descricao, 80) }}</td>
-                <td class="table-actions">
-                  <button
-                    @click="viewDetalhesEvento(ev)"
-                    class="botao-formulario"
-                    style="background:#6c757d;"
-                    :aria-label="'Ver detalhes do evento ' + ev.nomeEvento"
-                  >
-                    🔍 Ver detalhes
-                  </button>
+        <div class="eventos-vitrine-wrap">
+          <div class="eventos-vitrine-head">
+            <h3>Próximos eventos</h3>
+            <div class="pagination" v-if="eventosTotalPages > 1" role="navigation" aria-label="Paginação de eventos">
+              <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Página anterior de eventos">⟨ Anterior</button>
+              <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
+              <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Próxima página de eventos">Próximo ⟩</button>
+            </div>
+          </div>
 
-                  <button
-                    @click="openEditEvento(ev)"
-                    class="botao-formulario"
-                    style="background:#007bff;"
-                    :aria-label="'Editar evento ' + ev.nomeEvento"
-                  >
-                    🖋️ Editar
-                  </button>
+          <div v-if="eventosLoading" class="evento-vazio">Carregando eventos…</div>
 
-                  <button
-                    @click="deleteEvento(ev)"
-                    class="botao-formulario"
-                    style="background:#dc3545;"
-                    :aria-label="'Excluir evento ' + ev.nomeEvento"
-                  >
-                    🗑️ Excluir
-                  </button>
-                </td>
-              </tr>
+          <div v-else-if="eventosPaginados.length === 0" class="evento-vazio">
+            Nenhum evento encontrado no momento.
+          </div>
 
-              <tr v-if="!eventosLoading && eventosPaginados.length === 0">
-                <td colspan="6" style="padding:12px; text-align:center; color:#666;">Nenhum evento encontrado.</td>
-              </tr>
+          <div v-else class="eventos-grid">
+            <article class="evento-card" v-for="ev in eventosPaginados" :key="'ev-'+ev.id">
+              <div class="evento-card-topo">
+                <div class="evento-data-box">
+                  <span class="evento-dia-num">{{ getDiaEvento(ev.dataEvento) }}</span>
+                  <span class="evento-mes-ano">{{ getMesAnoEvento(ev.dataEvento) }}</span>
+                </div>
+              </div>
 
-              <tr v-if="eventosLoading">
-                <td colspan="6" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <div class="evento-card-conteudo">
+                <h4 class="evento-titulo">{{ ev.nomeEvento }}</h4>
+                <p class="evento-descricao">{{ ev.descricao || 'Sem descrição.' }}</p>
 
-        <div class="pagination" v-if="eventosTotalPages > 1" role="navigation" aria-label="Paginação de eventos">
-          <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Página anterior de eventos">⟨ Anterior</button>
-          <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
-          <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Próxima página de eventos">Próximo ⟩</button>
+                <div class="evento-acoes">
+                  <button class="mini-btn ver" type="button" @click="viewDetalhesEvento(ev)">Ver detalhes</button>
+                  <button class="mini-btn editar" type="button" @click="openEditEvento(ev)">Editar</button>
+                  <button class="mini-btn excluir" type="button" @click="deleteEvento(ev)">Excluir</button>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
       </section>
 
@@ -542,7 +1003,7 @@
             <textarea v-model="editBuffer.observacoes" placeholder="Observações" aria-label="Observações"></textarea>
           </div>
 
-          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px;">
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap;">
             <button class="botao-formulario" style="background:#28a745;" @click="saveEdit">💾 Salvar</button>
             <button class="botao-formulario" style="background:#6c757d;" @click="closeEdit">Cancelar</button>
           </div>
@@ -571,7 +1032,7 @@
             <textarea v-model="editEventoBuffer.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
           </div>
 
-          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px;">
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap;">
             <button class="botao-formulario" style="background:#28a745;" @click="saveEditEvento">💾 Salvar</button>
             <button class="botao-formulario" style="background:#6c757d;" @click="closeEditEvento">Cancelar</button>
           </div>
@@ -582,6 +1043,8 @@
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
+    const GALERIA_STORAGE_KEY = 'aso_galeria_customizada_v1';
+    const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
 
     new Vue({
       el: '#app',
@@ -591,14 +1054,15 @@
           'A associação atua no desenvolvimento de ações que buscam ampliar a participação das pessoas surdas na sociedade, incentivando o respeito às diferenças e a igualdade de oportunidades.',
           'Entre suas iniciativas estão a promoção de cursos de Libras, eventos de conscientização e atividades voltadas à integração entre a comunidade surda e a sociedade.'
         ],
+
         atividades: {
           'Curso de Libras': {
             resumo: 'Aprendizado de Libras para comunidade e familiares.',
             localPadrao: 'Sede da ASO',
             extra: 'Turmas abertas conforme disponibilidade.',
             agenda: [
-              { dia: 'Seg', horas: ['19:00'], local: 'Sede da ASO' },
-              { dia: 'Qua', horas: ['19:00'], local: 'Sede da ASO' }
+              { dia: 'Segunda-feira', horas: ['19:00'], local: 'Sede da ASO' },
+              { dia: 'Quarta-feira', horas: ['19:00'], local: 'Sede da ASO' }
             ]
           },
           'Atendimento Social': {
@@ -606,29 +1070,29 @@
             localPadrao: 'Sede da ASO',
             extra: 'Atendimento mediante agendamento.',
             agenda: [
-              { dia: 'Ter', horas: ['14:00–17:00'], local: 'Sede da ASO' },
-              { dia: 'Qui', horas: ['14:00–17:00'], local: 'Sede da ASO' }
+              { dia: 'Terça-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' },
+              { dia: 'Quinta-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' }
             ]
           },
-          'Eventos': {
-            resumo: 'Ações de integração, cultura e conscientização.',
+          'Eventos e Encontros': {
+            resumo: 'Ações de integração, cultura, convivência e conscientização.',
             localPadrao: 'Ourinhos/SP',
-            extra: 'Datas divulgadas nas redes sociais.',
+            extra: 'As datas são divulgadas pelas redes sociais e nos canais da associação.',
             agenda: [
-              { dia: 'Mensal', horas: ['A confirmar'], local: 'Ourinhos/SP' }
+              { dia: 'Programação mensal', horas: ['Datas variáveis'], local: 'Ourinhos/SP' }
             ]
           },
           'Voluntariado': {
-            resumo: 'Participe apoiando as ações da associação.',
+            resumo: 'Participe apoiando as ações da associação e fortalecendo a inclusão.',
             localPadrao: 'Sede da ASO',
-            extra: 'Entre em contato para participar.',
+            extra: 'Entre em contato para saber como colaborar.',
             agenda: [
-              { dia: 'Sob consulta', horas: ['A combinar'], local: 'Sede da ASO' }
+              { dia: 'Sob consulta', horas: ['Horário combinado'], local: 'Sede da ASO' }
             ]
           }
         },
 
-        imagens: ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'],
+        imagens: [...GALERIA_PADRAO],
         active: null,
         reduceMotionActive: false,
 
@@ -663,7 +1127,7 @@
         },
         filtroEventos: '',
         eventosPage: 1,
-        eventosPerPage: 5,
+        eventosPerPage: 6,
         eventosLoading: false,
         eventosApiStatus: 'desconectado',
         detalhesEvento: null,
@@ -696,6 +1160,7 @@
 
         eventosFiltrados() {
           if (!this.filtroEventos) return this.eventosBanco;
+
           const f = this.filtroEventos.toLowerCase();
           return this.eventosBanco.filter(ev =>
             (ev.nomeEvento || '').toLowerCase().includes(f) ||
@@ -722,6 +1187,77 @@
       },
 
       methods: {
+        carregarGaleriaLocal() {
+          try {
+            const salvo = localStorage.getItem(GALERIA_STORAGE_KEY);
+            if (!salvo) return;
+            const parsed = JSON.parse(salvo);
+            if (Array.isArray(parsed) && parsed.length) {
+              this.imagens = parsed.slice(0, 6);
+            }
+          } catch (e) {
+            console.error('Erro ao carregar galeria local:', e);
+          }
+        },
+
+        salvarGaleriaLocal() {
+          try {
+            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 6)));
+          } catch (e) {
+            console.error('Erro ao salvar galeria local:', e);
+            alert('Não consegui salvar as fotos neste navegador. Talvez o arquivo seja grande demais.');
+          }
+        },
+
+        handleImageUpload(event) {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+
+          if (this.imagens.length >= 6) {
+            alert('O limite é de 6 fotos. Exclua uma antes de inserir outra.');
+            event.target.value = '';
+            return;
+          }
+
+          if (!file.type.startsWith('image/')) {
+            alert('Selecione um arquivo de imagem.');
+            event.target.value = '';
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imagens.push(e.target.result);
+            this.salvarGaleriaLocal();
+          };
+          reader.readAsDataURL(file);
+          event.target.value = '';
+        },
+
+        removerFoto(index) {
+          if (!confirm('Deseja realmente excluir esta foto da galeria?')) return;
+          this.imagens.splice(index, 1);
+          this.salvarGaleriaLocal();
+        },
+
+        resetGaleria() {
+          if (!confirm('Deseja restaurar as 6 fotos padrão da galeria?')) return;
+          this.imagens = [...GALERIA_PADRAO];
+          this.salvarGaleriaLocal();
+        },
+
+        getDiaEvento(data) {
+          if (!data || String(data).split('-').length !== 3) return '--';
+          return String(data).split('-')[2];
+        },
+
+        getMesAnoEvento(data) {
+          if (!data || String(data).split('-').length !== 3) return 'sem data';
+          const [ano, mes] = String(data).split('-');
+          const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+          return `${meses[Number(mes) - 1] || mes}/${ano}`;
+        },
+
         async apiGetList() {
           const url = API + '?action=list';
           const r = await fetch(url, { method: 'GET' });
@@ -736,6 +1272,7 @@
           if (!r.ok) throw new Error('Falha ao listar eventos');
           const data = await r.json();
           this.eventosBanco = Array.isArray(data) ? data : (data.data || []);
+          this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
         },
 
         async apiPost(action, payload) {
@@ -942,13 +1479,14 @@
           try {
             const created = await this.apiPost('insert_event', this.novoEvento);
             this.eventosBanco.push(created);
+            this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
             this.novoEvento = {
               dataEvento: '',
               nomeEvento: '',
               descricao: ''
             };
             this.$nextTick(() => {
-              document.querySelector('#eventos-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
+              document.querySelector('#eventos-dados .eventos-vitrine-wrap')?.scrollIntoView({ behavior:'smooth' });
             });
             this.eventosPage = this.eventosTotalPages;
           } catch (e) {
@@ -978,6 +1516,7 @@
             const upd = await this.apiPost('update_event', this.editEventoBuffer);
             const idx = this.eventosBanco.findIndex(x => Number(x.id) === Number(upd.id));
             if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
+            this.eventosBanco.sort((a, b) => String(a.dataEvento || '').localeCompare(String(b.dataEvento || '')));
             this.closeEditEvento();
           } catch (e) {
             alert('Erro ao salvar evento: ' + e.message);
@@ -1046,6 +1585,7 @@
       },
 
       mounted() {
+        this.carregarGaleriaLocal();
         this.load();
         this.loadEventos();
 

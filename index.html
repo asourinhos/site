@@ -23,7 +23,7 @@
       scroll-behavior: smooth;
       color:#333;
       background:#fff;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     * { box-sizing: border-box; }
 
@@ -58,7 +58,8 @@
     .reduce-motion .mural-foto-img { cursor: default; }
 
     nav {
-      position: fixed; top: 0; left: 0; right: 0; background: #fff;
+      position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
       padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.1rem;
       white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
       align-items: center;
@@ -81,14 +82,33 @@
     }
 
     header {
-      height: 100vh; display: flex; justify-content: center; align-items: center;
-      background-color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background:
+        radial-gradient(circle at top, rgba(0,179,81,0.06), transparent 25%),
+        radial-gradient(circle at bottom, rgba(27,40,69,0.08), transparent 30%),
+        #fff;
+      padding: 110px 20px 40px;
     }
-    header img.logo { width: 320px; max-width: 80%; }
+    .hero-box {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+    }
+    header img.logo {
+      width: min(78vw, 760px);
+      max-width: 100%;
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,0.14));
+    }
 
     section {
       padding: 5rem 1.25rem;
-      font-size: 1.15rem;
+      font-size: 1.08rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -102,6 +122,30 @@
     #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
     #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
     #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
+
+    h2 {
+      font-size: 2.25rem;
+      margin-bottom: 18px;
+      color: var(--cor-primaria);
+    }
+
+    .quem-box {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      box-shadow: var(--sombra);
+      padding: 28px;
+      text-align: left;
+    }
+
+    .quem-box p {
+      font-size: 1.12rem;
+      line-height: 1.9;
+      margin: 0 0 16px;
+      color: #334;
+    }
 
     .botao-formulario, .botao-secundario {
       display: inline-flex;
@@ -167,6 +211,7 @@
       position: relative;
       overflow: hidden;
       border: 8px solid rgba(255,255,255,0.55);
+      margin-top: 24px;
     }
 
     .mural-area::before {
@@ -305,13 +350,64 @@
     .modal-controls button:hover,
     .modal-controls button:focus { background-color: var(--cor-secundaria); }
 
+    .atividades-admin {
+      width: 100%;
+      max-width: 1250px;
+      background: rgba(255,255,255,0.72);
+      border-radius: 18px;
+      box-shadow: var(--sombra);
+      padding: 22px;
+      margin-bottom: 28px;
+    }
+
+    .agenda-admin-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 10px;
+      text-align: left;
+    }
+
+    .admin-subtitulo {
+      color: var(--cor-primaria);
+      font-weight: 800;
+      margin: 18px 0 8px;
+      text-align: left;
+      width: 100%;
+    }
+
+    .atividades-carousel-wrap {
+      width: 100%;
+      max-width: 1280px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .atividade-nav-btn {
+      width: 52px;
+      height: 52px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      border: none;
+      background: var(--cor-primaria);
+      color: #fff;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.16);
+    }
+    .atividade-nav-btn:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
     .atividades-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 22px;
       width: 100%;
-      max-width: 1200px;
-      margin-top: 28px;
       align-items: start;
     }
 
@@ -328,9 +424,10 @@
       animation: slideUp 0.5s forwards;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: auto;
+      min-height: 330px;
       height: auto;
       align-self: start;
+      position: relative;
     }
 
     .atividade:hover {
@@ -338,19 +435,43 @@
       box-shadow: 0 12px 26px rgba(0,0,0,0.14);
     }
 
+    .atividade-admin-icons {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+
+    .atividade-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+    .atividade-icon-btn.edit { background: #007bff; }
+    .atividade-icon-btn.delete { background: #dc3545; }
+
     .atividade-topo {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 8px;
       margin-bottom: 8px;
-      flex-wrap: wrap;
+      padding-right: 84px;
     }
 
     .atividade h3 {
       color: var(--cor-primaria);
       margin: 0;
-      font-size: 1.3rem;
+      font-size: 1.28rem;
+      line-height: 1.3;
     }
 
     .atividade-badge {
@@ -360,18 +481,21 @@
       padding: 6px 10px;
       font-size: 0.82rem;
       font-weight: 700;
-      white-space: nowrap;
+      white-space: normal;
+      display: inline-block;
     }
 
     .atividade-resumo {
       margin: 6px 0 10px;
       color: #555;
+      min-height: 92px;
     }
 
     .atividade-preview {
       font-size: 0.94rem;
       color: #666;
       font-weight: 600;
+      margin-top: auto;
     }
 
     .atividade-detalhes {
@@ -439,37 +563,38 @@
       text-decoration: underline;
     }
 
-    .atividades-admin {
+    .sede-box {
       width: 100%;
-      max-width: 1200px;
+      max-width: 1250px;
       background: rgba(255,255,255,0.72);
       border-radius: 18px;
       box-shadow: var(--sombra);
       padding: 22px;
       margin-bottom: 28px;
+      text-align: left;
     }
 
-    .agenda-admin-item {
+    .sede-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .sede-card {
       background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 10px;
-      text-align: left;
+      border-radius: 16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+      padding: 18px;
+      height: 100%;
     }
 
-    .admin-subtitulo {
-      color: var(--cor-primaria);
-      font-weight: 800;
-      margin: 18px 0 8px;
-      text-align: left;
+    .mapa-embed {
       width: 100%;
-    }
-
-    @keyframes fadeIn { to { opacity:1; } }
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity:0; }
-      to { transform: translateY(0); opacity:1; }
+      height: 100%;
+      min-height: 320px;
+      border: none;
+      border-radius: 16px;
     }
 
     .form-db {
@@ -753,13 +878,34 @@
       margin-bottom: 25px;
     }
 
-    footer p { margin: 12px 0; font-size: 1.375rem; }
+    .footer-grid {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+
+    .footer-card {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(6px);
+      border-radius: 22px;
+      box-shadow: var(--sombra);
+      padding: 24px;
+      text-align: left;
+      height: 100%;
+    }
+
+    .footer-card p { margin: 12px 0; font-size: 1.2rem; }
+    .footer-card h3 { margin-top: 0; color: var(--cor-primaria); }
 
     footer .social {
       display:flex;
       gap:22px;
       align-items:center;
-      justify-content:center;
+      justify-content:flex-start;
       flex-wrap:wrap;
       margin-top:14px;
     }
@@ -772,6 +918,14 @@
     footer .social a.instagram { color: #E4405F; }
     footer .social a.facebook { color: #1877F2; }
     footer .social a:hover, footer .social a:focus { transform: scale(1.2); opacity: 0.8; }
+
+    .footer-mapa {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      border: none;
+      border-radius: 16px;
+    }
 
     .badge { margin-top:10px; font-size:0.875rem; color:#555; }
     .status-wrap { display:flex; flex-direction:column; gap:8px; align-items:center; }
@@ -793,9 +947,11 @@
       display: none;
     }
 
-    @media (max-width: 1100px) {
+    @media (max-width: 1200px) {
       .mural-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .atividades-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .eventos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sede-grid, .footer-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
@@ -803,7 +959,10 @@
       .mural-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .mural-foto-img { height: 125px; }
       .eventos-grid { grid-template-columns: 1fr; }
+      .atividades-grid { grid-template-columns: 1fr; }
       .evento-card-topo { align-items: flex-start; }
+      .atividades-carousel-wrap { gap: 8px; }
+      .atividade-nav-btn { width: 42px; height: 42px; }
     }
 
     @media (max-width: 480px) {
@@ -838,12 +997,17 @@
 
     <main id="conteudo-principal">
       <header id="topo" aria-label="Início">
-        <img alt="Logo da ASO, Associação Amigos dos Surdos de Ourinhos" class="logo" src="logo.jpg"/>
+        <div class="hero-box">
+          <img alt="Logo da ASO, Associação Amigos dos Surdos de Ourinhos" class="logo" src="logo.jpg"/>
+        </div>
       </header>
 
       <section id="quem-somos" aria-labelledby="titulo-quem-somos">
         <h2 id="titulo-quem-somos">Quem Somos</h2>
-        <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
+
+        <div class="quem-box">
+          <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
+        </div>
 
         <div class="mural-topo" v-if="isAdmin">
           <label class="botao-formulario" style="cursor:pointer;">
@@ -881,6 +1045,39 @@
       <section id="atividades" aria-labelledby="titulo-atividades">
         <h2 id="titulo-atividades">Atividades</h2>
 
+        <div class="sede-box" v-if="isAdmin">
+          <h3 style="margin-top:0; color:var(--cor-primaria);">Gerenciar sede e localização</h3>
+          <div class="form-db">
+            <input v-model="sede.endereco" placeholder="Endereço completo da sede" aria-label="Endereço da sede">
+            <input v-model="sede.lat" placeholder="Latitude" aria-label="Latitude">
+            <input v-model="sede.lng" placeholder="Longitude" aria-label="Longitude">
+            <input v-model="sede.nome" placeholder="Nome do local" aria-label="Nome da sede">
+          </div>
+          <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px;">
+            <button class="botao-formulario" type="button" @click="salvarSede">Salvar sede</button>
+          </div>
+        </div>
+
+        <div class="sede-box">
+          <div class="sede-grid">
+            <div class="sede-card">
+              <h3 style="margin-top:0; color:var(--cor-primaria);">{{ sede.nome }}</h3>
+              <p style="font-size:1.05rem; color:#555;">Base de apoio da associação para cursos, atendimentos, encontros e ações de inclusão.</p>
+              <p><strong>Endereço:</strong><br>{{ sede.endereco }}</p>
+              <p><strong>Localização:</strong><br>Latitude {{ sede.lat }} | Longitude {{ sede.lng }}</p>
+              <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:18px;">
+                <a class="botao-formulario" :href="googleMapsLink" target="_blank" rel="noopener noreferrer">
+                  <i class="fas fa-location-dot"></i> Abrir no Google Maps
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <iframe class="mapa-embed" :src="googleMapsEmbed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+          </div>
+        </div>
+
         <div class="atividades-admin" v-if="isAdmin">
           <h3 style="margin-top:0; color:var(--cor-primaria);">Gerenciar atividades</h3>
 
@@ -910,82 +1107,79 @@
             <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarAtividade">Salvar atividade</button>
             <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
           </div>
-
-          <div style="margin-top:20px; text-align:left;">
-            <strong>Atividades cadastradas:</strong>
-            <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:10px;">
-              <button
-                v-for="(item, idx) in atividades"
-                :key="'admin-atividade-'+idx"
-                class="botao-formulario"
-                type="button"
-                style="background:#007bff;"
-                @click="editarAtividade(idx)"
-              >
-                Editar {{ item.titulo }}
-              </button>
-              <button
-                v-for="(item, idx) in atividades"
-                :key="'admin-del-atividade-'+idx"
-                class="botao-formulario"
-                type="button"
-                style="background:#dc3545;"
-                @click="excluirAtividade(idx)"
-              >
-                Excluir {{ item.titulo }}
-              </button>
-            </div>
-          </div>
         </div>
 
-        <div class="atividades-grid">
-          <article
-            class="atividade"
-            v-for="(item, idx) in atividades"
-            :key="item.titulo + '-' + idx"
-            @click="!reduceMotionActive && toggle(idx)"
-            @keydown.enter.prevent="!reduceMotionActive && toggle(idx)"
-            @keydown.space.prevent="!reduceMotionActive && toggle(idx)"
-            :aria-expanded="(reduceMotionActive || active===idx) ? 'true' : 'false'"
-            :role="reduceMotionActive ? null : 'button'"
-            :tabindex="reduceMotionActive ? -1 : 0"
-          >
-            <div class="atividade-topo">
-              <h3>{{ item.titulo }}</h3>
-              <span class="atividade-badge">{{ item.localPadrao }}</span>
-            </div>
+        <div class="atividades-carousel-wrap">
+          <button class="atividade-nav-btn" @click="prevAtividadesPage" :disabled="atividadesPage===1" aria-label="Atividades anteriores">
+            <i class="fas fa-chevron-left"></i>
+          </button>
 
-            <p class="atividade-resumo">{{ item.resumo }}</p>
-            <p class="atividade-preview">
-              {{ item.agenda.length }} horário(s) disponível(is) • clique para {{ active===idx ? 'recolher' : 'expandir' }}
-            </p>
-
-            <div class="atividade-detalhes" v-if="reduceMotionActive || active===idx">
-              <div class="atividade-lista">
-                <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
-                  <div class="atividade-item-linha1">
-                    <span class="atividade-dia">{{ linha.dia }}</span>
-                    <span class="atividade-hora">{{ linha.horas.join(' • ') }}</span>
-                  </div>
-                  <div class="atividade-local">
-                    <i class="fas fa-location-dot"></i> {{ linha.local || item.localPadrao }}
-                  </div>
-                </div>
+          <div class="atividades-grid">
+            <article
+              class="atividade"
+              v-for="(item, idxLocal) in atividadesPaginadas"
+              :key="item.titulo + '-' + idxLocal + '-' + atividadesPage"
+              @click="!reduceMotionActive && toggle(item._originalIndex)"
+              @keydown.enter.prevent="!reduceMotionActive && toggle(item._originalIndex)"
+              @keydown.space.prevent="!reduceMotionActive && toggle(item._originalIndex)"
+              :aria-expanded="(reduceMotionActive || active===item._originalIndex) ? 'true' : 'false'"
+              :role="reduceMotionActive ? null : 'button'"
+              :tabindex="reduceMotionActive ? -1 : 0"
+            >
+              <div class="atividade-admin-icons" v-if="isAdmin">
+                <button class="atividade-icon-btn edit" type="button" @click.stop="editarAtividade(item._originalIndex)" aria-label="Editar atividade">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="atividade-icon-btn delete" type="button" @click.stop="excluirAtividade(item._originalIndex)" aria-label="Excluir atividade">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
 
-              <p v-if="item.extra" class="atividade-extra">{{ item.extra }}</p>
+              <div class="atividade-topo">
+                <h3>{{ item.titulo }}</h3>
+                <span class="atividade-badge">{{ item.localPadrao }}</span>
+              </div>
 
-              <a
-                class="link-info"
-                :href="item.link || ('https://www.google.com/search?q='+encodeURIComponent(item.titulo+' '+(item.localPadrao||'')))"
-                target="_blank"
-                rel="noopener noreferrer"
-                @click.stop
-              >
-                Mais informações
-              </a>
-            </div>
-          </article>
+              <p class="atividade-resumo">{{ item.resumo }}</p>
+              <p class="atividade-preview">
+                {{ item.agenda.length }} horário(s) disponível(is) • clique para {{ active===item._originalIndex ? 'recolher' : 'expandir' }}
+              </p>
+
+              <div class="atividade-detalhes" v-if="reduceMotionActive || active===item._originalIndex">
+                <div class="atividade-lista">
+                  <div class="atividade-item" v-for="(linha, i) in item.agenda" :key="i">
+                    <div class="atividade-item-linha1">
+                      <span class="atividade-dia">{{ linha.dia }}</span>
+                      <span class="atividade-hora">{{ linha.horas.join(' • ') }}</span>
+                    </div>
+                    <div class="atividade-local">
+                      <i class="fas fa-location-dot"></i> {{ linha.local || item.localPadrao }}
+                    </div>
+                  </div>
+                </div>
+
+                <p v-if="item.extra" class="atividade-extra">{{ item.extra }}</p>
+
+                <a
+                  class="link-info"
+                  :href="item.link || ('https://www.google.com/search?q='+encodeURIComponent(item.titulo+' '+(item.localPadrao||'')))"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  @click.stop
+                >
+                  Mais informações
+                </a>
+              </div>
+            </article>
+          </div>
+
+          <button class="atividade-nav-btn" @click="nextAtividadesPage" :disabled="atividadesPage===atividadesTotalPages" aria-label="Próximas atividades">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="badge" style="margin-top:14px;">
+          Página {{ atividadesPage }} / {{ atividadesTotalPages }}
         </div>
       </section>
 
@@ -1175,28 +1369,48 @@
 
       <footer id="contato" aria-labelledby="titulo-contato">
         <h2 id="titulo-contato">Contato</h2>
-        <p>
-          <a href="tel:+5514997795812" class="contact-link" title="Ligar para ASO">
-            <i class="fas fa-phone" aria-hidden="true"></i>
-            <span aria-label="Telefone">+55 (14) 99779-5812</span>
-          </a>
-        </p>
-        <p>
-          <a href="mailto:aso.ourinhos01@email.com" class="contact-link" title="Enviar e-mail para ASO">
-            <i class="fas fa-envelope" aria-hidden="true"></i>
-            <span aria-label="E-mail">aso.ourinhos01@email.com</span>
-          </a>
-        </p>
-        <p>📍 Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP</p>
 
-        <div class="social">
-          <a class="instagram" href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
-            <i class="fab fa-instagram" aria-hidden="true"></i>
-          </a>
+        <div class="footer-grid">
+          <div class="footer-card">
+            <h3>Fale com a ASO</h3>
 
-          <a class="facebook" href="https://www.facebook.com/AssociacaoAmigosDosSurdosOurinhoseRegiao/" target="_blank" rel="noopener noreferrer" title="Facebook da ASO" aria-label="Abrir Facebook da ASO">
-            <i class="fab fa-facebook-square" aria-hidden="true"></i>
-          </a>
+            <p>
+              <a href="tel:+5514997795812" class="contact-link" title="Ligar para ASO">
+                <i class="fas fa-phone" aria-hidden="true"></i>
+                <span aria-label="Telefone"> +55 (14) 99779-5812</span>
+              </a>
+            </p>
+
+            <p>
+              <a href="mailto:aso.ourinhos01@email.com" class="contact-link" title="Enviar e-mail para ASO">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+                <span aria-label="E-mail"> aso.ourinhos01@email.com</span>
+              </a>
+            </p>
+
+            <p><i class="fas fa-location-dot" aria-hidden="true"></i> {{ sede.endereco }}</p>
+
+            <div style="margin-top:18px;">
+              <a class="botao-formulario" :href="googleMapsLink" target="_blank" rel="noopener noreferrer">
+                <i class="fas fa-map-location-dot"></i> Ver no Google Maps
+              </a>
+            </div>
+
+            <div class="social">
+              <a class="instagram" href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
+                <i class="fab fa-instagram" aria-hidden="true"></i>
+              </a>
+
+              <a class="facebook" href="https://www.facebook.com/AssociacaoAmigosDosSurdosOurinhoseRegiao/" target="_blank" rel="noopener noreferrer" title="Facebook da ASO" aria-label="Abrir Facebook da ASO">
+                <i class="fab fa-facebook-square" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-card">
+            <h3>Localização</h3>
+            <iframe class="footer-mapa" :src="googleMapsEmbed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
         </div>
       </footer>
 
@@ -1292,19 +1506,20 @@
 
   <script>
     const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v5';
+    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v6';
     const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
     const SENHA_EXCLUSAO = '1234';
     const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
     const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
-    const ATIVIDADES_STORAGE_KEY = 'aso_atividades_custom_v1';
+    const ATIVIDADES_STORAGE_KEY = 'aso_atividades_custom_v2';
+    const SEDE_STORAGE_KEY = 'aso_sede_v1';
 
     const ATIVIDADES_PADRAO = [
       {
         titulo: 'Curso de Libras',
-        resumo: 'Aprendizado de Libras para comunidade e familiares.',
+        resumo: 'Aprendizado de Libras para comunidade, familiares, profissionais e pessoas interessadas em ampliar a comunicação acessível.',
         localPadrao: 'Sede da ASO',
-        extra: 'Turmas abertas conforme disponibilidade.',
+        extra: 'Turmas abertas conforme disponibilidade e divulgação da associação.',
         link: '',
         agenda: [
           { dia: 'Segunda-feira', horas: ['19:00'], local: 'Sede da ASO' },
@@ -1313,9 +1528,9 @@
       },
       {
         titulo: 'Atendimento Social',
-        resumo: 'Apoio e orientação à comunidade surda.',
+        resumo: 'Apoio, orientação e acolhimento à comunidade surda e às famílias, fortalecendo autonomia, direitos e inclusão.',
         localPadrao: 'Sede da ASO',
-        extra: 'Atendimento mediante agendamento.',
+        extra: 'Atendimento mediante agendamento prévio.',
         link: '',
         agenda: [
           { dia: 'Terça-feira', horas: ['14:00 às 17:00'], local: 'Sede da ASO' },
@@ -1324,9 +1539,9 @@
       },
       {
         titulo: 'Eventos e Encontros',
-        resumo: 'Ações de integração, cultura, convivência e conscientização.',
+        resumo: 'Ações de integração, cultura surda, convivência, rodas de conversa e atividades de conscientização.',
         localPadrao: 'Ourinhos/SP',
-        extra: 'As datas são divulgadas pelas redes sociais e nos canais da associação.',
+        extra: 'Datas divulgadas nas redes sociais e canais da associação.',
         link: '',
         agenda: [
           { dia: 'Programação mensal', horas: ['Datas variáveis'], local: 'Ourinhos/SP' }
@@ -1334,9 +1549,9 @@
       },
       {
         titulo: 'Voluntariado',
-        resumo: 'Participe apoiando as ações da associação e fortalecendo a inclusão.',
+        resumo: 'Espaço para quem deseja colaborar com a associação em ações, eventos, apoio logístico e fortalecimento da inclusão.',
         localPadrao: 'Sede da ASO',
-        extra: 'Entre em contato para saber como colaborar.',
+        extra: 'Entre em contato para saber como participar.',
         link: '',
         agenda: [
           { dia: 'Sob consulta', horas: ['Horário combinado'], local: 'Sede da ASO' }
@@ -1344,16 +1559,25 @@
       }
     ];
 
+    const SEDE_PADRAO = {
+      nome: 'Sede da ASO',
+      endereco: 'Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP',
+      lat: '-22.9792',
+      lng: '-49.8700'
+    };
+
     new Vue({
       el: '#app',
       data: {
         isAdmin: false,
 
         textoQuemSomos: [
-          'A Associação Amigos dos Surdos de Ourinhos (ASO) é uma organização social dedicada à promoção da inclusão, acessibilidade e valorização da comunidade surda na região de Ourinhos.',
-          'A associação atua no desenvolvimento de ações que buscam ampliar a participação das pessoas surdas na sociedade, incentivando o respeito às diferenças e a igualdade de oportunidades.',
-          'Entre suas iniciativas estão a promoção de cursos de Libras, eventos de conscientização e atividades voltadas à integração entre a comunidade surda e a sociedade.'
+          'A Associação Amigos dos Surdos de Ourinhos e Região (ASO) é uma organização voltada à promoção da inclusão, da acessibilidade e do fortalecimento da comunidade surda em Ourinhos e municípios próximos. Seu trabalho busca ampliar a participação social das pessoas surdas, valorizar a Libras e construir relações mais respeitosas entre a comunidade surda, as famílias, os serviços públicos e a sociedade em geral.',
+          'Entre as ações desenvolvidas pela associação estão cursos e práticas de Libras, encontros comunitários, atividades de conscientização, apoio social e iniciativas que aproximam pessoas surdas, ouvintes e instituições da cidade. A atuação da ASO também aparece em parcerias locais para melhorar o atendimento acessível, inclusive com apoio à comunicação em serviços públicos e ações de inclusão no município.',
+          'Mais do que oferecer atividades, a ASO ajuda a criar espaços de convivência, pertencimento e cidadania. A associação contribui para difundir a cultura surda, incentivar a autonomia das pessoas surdas e ampliar o acesso à informação, à comunicação e aos direitos, fortalecendo uma cidade mais humana, acessível e preparada para acolher as diferenças.'
         ],
+
+        sede: JSON.parse(JSON.stringify(SEDE_PADRAO)),
 
         atividades: JSON.parse(JSON.stringify(ATIVIDADES_PADRAO)),
         atividadeForm: {
@@ -1367,6 +1591,8 @@
             { dia: '', horasTexto: '', local: '' }
           ]
         },
+        atividadesPage: 1,
+        atividadesPerPage: 4,
 
         imagens: [...GALERIA_PADRAO],
         active: null,
@@ -1426,6 +1652,26 @@
           }
         },
 
+        googleMapsLink() {
+          return `https://www.google.com/maps?q=${encodeURIComponent(this.sede.lat + ',' + this.sede.lng)}`;
+        },
+
+        googleMapsEmbed() {
+          return `https://www.google.com/maps?q=${encodeURIComponent(this.sede.lat + ',' + this.sede.lng)}&z=16&output=embed`;
+        },
+
+        atividadesTotalPages() {
+          return Math.ceil(this.atividades.length / this.atividadesPerPage) || 1;
+        },
+
+        atividadesPaginadas() {
+          const start = (this.atividadesPage - 1) * this.atividadesPerPage;
+          return this.atividades.slice(start, start + this.atividadesPerPage).map((item, idx) => ({
+            ...item,
+            _originalIndex: start + idx
+          }));
+        },
+
         registrosBase() {
           if (this.isAdmin) return this.bancoTodos;
           const ids = new Set(this.meusIds);
@@ -1474,15 +1720,9 @@
       },
 
       watch: {
-        filtro() {
-          this.page = 1;
-        },
-        filtroEventos() {
-          this.eventosPage = 1;
-        },
-        isAdmin() {
-          this.page = 1;
-        }
+        filtro() { this.page = 1; },
+        filtroEventos() { this.eventosPage = 1; },
+        isAdmin() { this.page = 1; }
       },
 
       methods: {
@@ -1538,6 +1778,28 @@
           } catch (e) {
             console.error('Erro ao salvar atividades:', e);
             alert('Não consegui salvar as atividades no navegador.');
+          }
+        },
+
+        carregarSedeLocal() {
+          try {
+            const salvo = localStorage.getItem(SEDE_STORAGE_KEY);
+            if (!salvo) return;
+            const parsed = JSON.parse(salvo);
+            if (parsed && typeof parsed === 'object') this.sede = { ...SEDE_PADRAO, ...parsed };
+          } catch (e) {
+            console.error('Erro ao carregar sede:', e);
+          }
+        },
+
+        salvarSede() {
+          if (!this.isAdmin) return;
+          try {
+            localStorage.setItem(SEDE_STORAGE_KEY, JSON.stringify(this.sede));
+            alert('Sede salva com sucesso.');
+          } catch (e) {
+            console.error('Erro ao salvar sede:', e);
+            alert('Não consegui salvar a sede no navegador.');
           }
         },
 
@@ -1602,6 +1864,10 @@
           if (this.active === idx) this.active = null;
           if (this.active > idx) this.active--;
           this.limparAtividadeForm();
+
+          if (this.atividadesPage > this.atividadesTotalPages) {
+            this.atividadesPage = this.atividadesTotalPages;
+          }
         },
 
         salvarAtividade() {
@@ -1640,6 +1906,14 @@
 
           this.salvarAtividadesLocal();
           this.limparAtividadeForm();
+        },
+
+        prevAtividadesPage() {
+          if (this.atividadesPage > 1) this.atividadesPage--;
+        },
+
+        nextAtividadesPage() {
+          if (this.atividadesPage < this.atividadesTotalPages) this.atividadesPage++;
         },
 
         handleImageUpload(event) {
@@ -1892,12 +2166,6 @@
             };
 
             if (this.isAdmin) this.page = this.totalPages;
-
-            this.$nextTick(() => {
-              if (this.isAdmin) {
-                document.querySelector('#banco-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
-              }
-            });
           } catch (e) {
             alert('Erro ao inserir: ' + e.message);
           } finally {
@@ -2010,7 +2278,6 @@
           try {
             const created = await this.apiPost('insert_event', this.novoEvento);
             this.eventosBanco.push(created);
-
             this.eventosBanco.sort((a, b) => {
               const da = this.normalizarDataEvento(a.dataEvento);
               const db = this.normalizarDataEvento(b.dataEvento);
@@ -2149,6 +2416,7 @@
         this.carregarAdminLocal();
         this.carregarGaleriaLocal();
         this.carregarAtividadesLocal();
+        this.carregarSedeLocal();
         this.load();
         this.loadEventos();
 
@@ -2165,8 +2433,11 @@
         btnMotion.addEventListener('click', () => {
           body.classList.toggle('reduce-motion');
           this.reduceMotionActive = body.classList.contains('reduce-motion');
-          if (this.reduceMotionActive) this.active = '__ALL__';
-          if (!this.reduceMotionActive) this.active = null;
+          if (this.reduceMotionActive) {
+            this.active = '__ALL__';
+          } else {
+            this.active = null;
+          }
         });
 
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

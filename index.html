@@ -56,6 +56,7 @@
     #quem-somos { background-color: #e0f7fa; }
     #atividades { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
     #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+    #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
     #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
 
     .botao-formulario {
@@ -102,7 +103,7 @@
     .form-db input, .form-db select, .form-db textarea {
       padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 100%; font-size: 1rem;
     }
-    .form-db textarea { grid-column: 1 / -1; resize: none; height: 90px; }
+    .form-db textarea { grid-column: 1 / -1; resize: none; height: 110px; }
     input[required], select[required], textarea[required] { border-left: 4px solid #007bff; }
 
     .table-wrap { width:100%; overflow-x:auto; margin-top: 30px; }
@@ -127,9 +128,13 @@
     }
     footer h2 { color: var(--cor-secundaria); font-size: 2.625rem; margin-bottom: 25px; }
     footer p { margin: 12px 0; font-size: 1.375rem; }
-    footer .social a { color: #E4405F; font-size: 3.75rem; margin: 0 15px; transition: transform 0.3s ease, opacity 0.3s ease; }
+    footer .social { display:flex; gap:22px; align-items:center; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+    footer .social a { font-size: 3.2rem; transition: transform 0.3s ease, opacity 0.3s ease; }
+    footer .social a.instagram { color: #E4405F; }
+    footer .social a.facebook { color: #1877F2; }
     footer .social a:hover, footer .social a:focus { transform: scale(1.2); opacity: 0.8; }
     .badge { margin-top:10px; font-size:0.875rem; color:#555; }
+    .status-wrap { display:flex; flex-direction:column; gap:8px; align-items:center; }
 
     .contact-link { color: inherit; text-decoration: none; }
     .contact-link:hover, .contact-link:focus { text-decoration: underline; }
@@ -160,7 +165,8 @@
     <a href="#topo">ASO</a>
     <a href="#quem-somos">Quem Somos</a>
     <a href="#atividades">Atividades</a>
-    <a href="#banco-dados">Cadastro</a>
+    <a href="#banco-dados">Cadastro de Pessoas</a>
+    <a href="#eventos-dados">Cadastro de Eventos</a>
     <a href="#contato">Contato</a>
   </nav>
 
@@ -239,9 +245,12 @@
       </section>
 
       <section id="banco-dados" aria-labelledby="titulo-cadastro">
-        <h2 id="titulo-cadastro">Cadastro</h2>
-        <div class="badge" role="status" aria-live="polite">
-          🔗 Status da API: <strong>{{ apiStatus }}</strong>
+        <h2 id="titulo-cadastro">Cadastro de Pessoas</h2>
+
+        <div class="status-wrap">
+          <div class="badge" role="status" aria-live="polite">
+            🔗 Status da API Pessoas: <strong>{{ apiStatus }}</strong>
+          </div>
         </div>
 
         <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
@@ -286,7 +295,7 @@
 
         <div class="table-wrap">
           <table class="table-db" aria-describedby="legenda-tabela">
-            <caption id="legenda-tabela">Lista de cadastros com ações de ver, editar e excluir</caption>
+            <caption id="legenda-tabela">Lista de cadastros de pessoas com ações de ver, editar e excluir</caption>
             <thead>
               <tr>
                 <th scope="col">ID</th>
@@ -347,10 +356,110 @@
           </table>
         </div>
 
-        <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros">
+        <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
           <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
           <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
           <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+        </div>
+      </section>
+
+      <section id="eventos-dados" aria-labelledby="titulo-cadastro-eventos">
+        <h2 id="titulo-cadastro-eventos">Cadastro de Eventos</h2>
+
+        <div class="status-wrap">
+          <div class="badge" role="status" aria-live="polite">
+            📅 Status da API Eventos: <strong>{{ eventosApiStatus }}</strong>
+          </div>
+        </div>
+
+        <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
+          <p id="dica-form-eventos" class="visually-hidden">
+            Preencha os campos obrigatórios para cadastrar um evento.
+          </p>
+
+          <input v-model="novoEvento.dataEvento" type="date" required aria-label="Data do evento">
+          <input v-model="novoEvento.nomeEvento" type="text" placeholder="Nome do evento" required aria-label="Nome do evento">
+          <textarea v-model="novoEvento.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
+
+          <button type="submit" class="botao-formulario" :disabled="eventosLoading">INSERT EVENTO</button>
+          <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetEventos" :disabled="eventosLoading">DELETE ALL EVENTOS</button>
+        </form>
+
+        <div style="margin-top:20px; width:100%; max-width:900px;">
+          <input
+            v-model="filtroEventos"
+            placeholder="Buscar por nome do evento, data ou descrição..."
+            style="width:100%; padding:10px; border-radius:8px; border:1px solid #ccc;"
+            aria-label="Buscar evento"
+          >
+          <p style="margin:10px 0 0 0;"><strong>{{ eventosFiltrados.length }} eventos encontrados</strong></p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="table-db" aria-describedby="legenda-tabela-eventos">
+            <caption id="legenda-tabela-eventos">Lista de eventos com ações de ver, editar e excluir</caption>
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nº</th>
+                <th scope="col">Data</th>
+                <th scope="col">Evento</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(ev, i) in eventosPaginados" :key="'ev-'+ev.id">
+                <td>{{ ev.id }}</td>
+                <td>{{ (eventosPage - 1) * eventosPerPage + i + 1 }}</td>
+                <td>{{ formatarData(ev.dataEvento) }}</td>
+                <td>{{ ev.nomeEvento }}</td>
+                <td>{{ resumirTexto(ev.descricao, 80) }}</td>
+                <td class="table-actions">
+                  <button
+                    @click="viewDetalhesEvento(ev)"
+                    class="botao-formulario"
+                    style="background:#6c757d;"
+                    :aria-label="'Ver detalhes do evento ' + ev.nomeEvento"
+                  >
+                    🔍 Ver detalhes
+                  </button>
+
+                  <button
+                    @click="openEditEvento(ev)"
+                    class="botao-formulario"
+                    style="background:#007bff;"
+                    :aria-label="'Editar evento ' + ev.nomeEvento"
+                  >
+                    🖋️ Editar
+                  </button>
+
+                  <button
+                    @click="deleteEvento(ev)"
+                    class="botao-formulario"
+                    style="background:#dc3545;"
+                    :aria-label="'Excluir evento ' + ev.nomeEvento"
+                  >
+                    🗑️ Excluir
+                  </button>
+                </td>
+              </tr>
+
+              <tr v-if="!eventosLoading && eventosPaginados.length === 0">
+                <td colspan="6" style="padding:12px; text-align:center; color:#666;">Nenhum evento encontrado.</td>
+              </tr>
+
+              <tr v-if="eventosLoading">
+                <td colspan="6" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination" v-if="eventosTotalPages > 1" role="navigation" aria-label="Paginação de eventos">
+          <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Página anterior de eventos">⟨ Anterior</button>
+          <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
+          <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Próxima página de eventos">Próximo ⟩</button>
         </div>
       </section>
 
@@ -369,9 +478,14 @@
           </a>
         </p>
         <p>📍 Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP</p>
+
         <div class="social">
-          <a href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
+          <a class="instagram" href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
             <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+
+          <a class="facebook" href="https://www.facebook.com/AssociacaoAmigosDosSurdosOurinhoseRegiao/" target="_blank" rel="noopener noreferrer" title="Facebook da ASO" aria-label="Abrir Facebook da ASO">
+            <i class="fab fa-facebook-square" aria-hidden="true"></i>
           </a>
         </div>
       </footer>
@@ -434,11 +548,40 @@
           </div>
         </div>
       </div>
+
+      <div v-if="detalhesEvento" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-detalhes-evento" @click="detalhesEvento=null">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-detalhes-evento" style="margin-top:0; color:var(--cor-secundaria);">Detalhes do Evento</h3>
+          <p><b>Data do evento:</b> {{ formatarData(detalhesEvento.dataEvento) }}</p>
+          <p><b>Nome do evento:</b> {{ detalhesEvento.nomeEvento }}</p>
+          <p><b>Descrição:</b> {{ detalhesEvento.descricao || '—' }}</p>
+          <div style="text-align:right; margin-top:10px;">
+            <button class="botao-formulario" @click="detalhesEvento=null">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="editEventoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-evento" @click="closeEditEvento">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-editar-evento" style="margin-top:0; color:var(--cor-secundaria);">Editar evento</h3>
+
+          <div class="form-db">
+            <input v-model="editEventoBuffer.dataEvento" type="date" required aria-label="Data do evento">
+            <input v-model="editEventoBuffer.nomeEvento" placeholder="Nome do evento" required aria-label="Nome do evento">
+            <textarea v-model="editEventoBuffer.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px;">
+            <button class="botao-formulario" style="background:#28a745;" @click="saveEditEvento">💾 Salvar</button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="closeEditEvento">Cancelar</button>
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
   <script>
-    const API = 'https://script.google.com/macros/s/AKfycbxn370Nf1MiQT0tYa5Qnza5Ahpl4_PBRWHGiGkVsoexsi6C75KVi2tRN_qPVnideGcG/exec';
+    const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
 
     new Vue({
       el: '#app',
@@ -484,9 +627,11 @@
             ]
           }
         },
+
         imagens: ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'],
         active: null,
         reduceMotionActive: false,
+
         banco: [],
         novo: {
           nome: '',
@@ -506,12 +651,28 @@
         perPage: 5,
         loading: false,
         apiStatus: 'desconectado',
-        modalOpen: false,
-        modalIndex: 0,
-        modalImage: '',
         detalhes: null,
         editModal: false,
-        editBuffer: null
+        editBuffer: null,
+
+        eventosBanco: [],
+        novoEvento: {
+          dataEvento: '',
+          nomeEvento: '',
+          descricao: ''
+        },
+        filtroEventos: '',
+        eventosPage: 1,
+        eventosPerPage: 5,
+        eventosLoading: false,
+        eventosApiStatus: 'desconectado',
+        detalhesEvento: null,
+        editEventoModal: false,
+        editEventoBuffer: null,
+
+        modalOpen: false,
+        modalIndex: 0,
+        modalImage: ''
       },
 
       computed: {
@@ -531,12 +692,32 @@
         paginated() {
           const start = (this.page - 1) * this.perPage;
           return this.registrosFiltrados.slice(start, start + this.perPage);
+        },
+
+        eventosFiltrados() {
+          if (!this.filtroEventos) return this.eventosBanco;
+          const f = this.filtroEventos.toLowerCase();
+          return this.eventosBanco.filter(ev =>
+            (ev.nomeEvento || '').toLowerCase().includes(f) ||
+            (ev.dataEvento || '').toLowerCase().includes(f) ||
+            (ev.descricao || '').toLowerCase().includes(f)
+          );
+        },
+        eventosTotalPages() {
+          return Math.ceil(this.eventosFiltrados.length / this.eventosPerPage) || 1;
+        },
+        eventosPaginados() {
+          const start = (this.eventosPage - 1) * this.eventosPerPage;
+          return this.eventosFiltrados.slice(start, start + this.eventosPerPage);
         }
       },
 
       watch: {
         filtro() {
           this.page = 1;
+        },
+        filtroEventos() {
+          this.eventosPage = 1;
         }
       },
 
@@ -547,6 +728,14 @@
           if (!r.ok) throw new Error('Falha ao listar');
           const data = await r.json();
           this.banco = Array.isArray(data) ? data : (data.data || []);
+        },
+
+        async apiGetEventosList() {
+          const url = API + '?action=list_events';
+          const r = await fetch(url, { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar eventos');
+          const data = await r.json();
+          this.eventosBanco = Array.isArray(data) ? data : (data.data || []);
         },
 
         async apiPost(action, payload) {
@@ -561,6 +750,22 @@
 
         setStatus(ok) {
           this.apiStatus = ok ? 'conectado' : 'desconectado';
+        },
+
+        setEventosStatus(ok) {
+          this.eventosApiStatus = ok ? 'conectado' : 'desconectado';
+        },
+
+        formatarData(data) {
+          if (!data) return '';
+          const partes = String(data).split('-');
+          if (partes.length !== 3) return data;
+          return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        },
+
+        resumirTexto(texto, limite) {
+          if (!texto) return '—';
+          return texto.length > limite ? texto.slice(0, limite) + '...' : texto;
         },
 
         openModal(i) {
@@ -613,9 +818,23 @@
           } catch (e) {
             console.error(e);
             this.setStatus(false);
-            alert('Não consegui conectar à API. Verifique a URL do Google Apps Script.');
+            alert('Não consegui conectar à API de pessoas. Verifique a URL do Google Apps Script.');
           } finally {
             this.loading = false;
+          }
+        },
+
+        async loadEventos() {
+          this.eventosLoading = true;
+          try {
+            await this.apiGetEventosList();
+            this.setEventosStatus(true);
+          } catch (e) {
+            console.error(e);
+            this.setEventosStatus(false);
+            alert('A API de eventos ainda não está pronta no Google Apps Script. Depois de atualizar o GS, esta área vai funcionar.');
+          } finally {
+            this.eventosLoading = false;
           }
         },
 
@@ -718,17 +937,117 @@
           }
         },
 
+        async insertEvento() {
+          this.eventosLoading = true;
+          try {
+            const created = await this.apiPost('insert_event', this.novoEvento);
+            this.eventosBanco.push(created);
+            this.novoEvento = {
+              dataEvento: '',
+              nomeEvento: '',
+              descricao: ''
+            };
+            this.$nextTick(() => {
+              document.querySelector('#eventos-dados .table-wrap')?.scrollIntoView({ behavior:'smooth' });
+            });
+            this.eventosPage = this.eventosTotalPages;
+          } catch (e) {
+            alert('Erro ao inserir evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        viewDetalhesEvento(ev) {
+          this.detalhesEvento = ev;
+        },
+
+        openEditEvento(ev) {
+          this.editEventoBuffer = JSON.parse(JSON.stringify(ev));
+          this.editEventoModal = true;
+        },
+
+        closeEditEvento() {
+          this.editEventoModal = false;
+          this.editEventoBuffer = null;
+        },
+
+        async saveEditEvento() {
+          this.eventosLoading = true;
+          try {
+            const upd = await this.apiPost('update_event', this.editEventoBuffer);
+            const idx = this.eventosBanco.findIndex(x => Number(x.id) === Number(upd.id));
+            if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
+            this.closeEditEvento();
+          } catch (e) {
+            alert('Erro ao salvar evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        async deleteEvento(evento) {
+          const senha = prompt('Informe a senha para excluir o evento:');
+          if (senha === null) return;
+          if (senha !== '1234') {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente excluir este evento?')) return;
+
+          this.eventosLoading = true;
+          try {
+            await this.apiPost('delete_event', { id: evento.id });
+            this.eventosBanco = this.eventosBanco.filter(ev => Number(ev.id) !== Number(evento.id));
+            if (this.eventosPage > this.eventosTotalPages) this.eventosPage = this.eventosTotalPages;
+          } catch (e) {
+            alert('Erro ao excluir evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        async resetEventos() {
+          const senha = prompt('Informe a senha para APAGAR TODOS os eventos:');
+          if (senha === null) return;
+          if (senha !== '1234') {
+            alert('Senha incorreta.');
+            return;
+          }
+          if (!confirm('Deseja realmente apagar todos os eventos?')) return;
+
+          this.eventosLoading = true;
+          try {
+            await this.apiPost('delete_all_events', {});
+            this.eventosBanco = [];
+            this.eventosPage = 1;
+          } catch (e) {
+            alert('Erro ao apagar todos os eventos: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
         prevPage() {
           if (this.page > 1) this.page--;
         },
 
         nextPage() {
           if (this.page < this.totalPages) this.page++;
+        },
+
+        prevEventosPage() {
+          if (this.eventosPage > 1) this.eventosPage--;
+        },
+
+        nextEventosPage() {
+          if (this.eventosPage < this.eventosTotalPages) this.eventosPage++;
         }
       },
 
       mounted() {
         this.load();
+        this.loadEventos();
 
         const body = document.body;
         const btnContrast = document.getElementById('btn-contrast');

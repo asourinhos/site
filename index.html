@@ -18,6 +18,7 @@
     }
 
     html { font-size: 100%; }
+
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
@@ -26,59 +27,154 @@
       background:#fff;
       line-height: 1.6;
     }
+
     * { box-sizing: border-box; }
 
-    .skip-link { position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden; }
+    .skip-link {
+      position:absolute;
+      left:-9999px;
+      top:auto;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+    }
+
     .skip-link:focus {
-      position: fixed; left: 12px; top: 12px; padding:10px 14px;
-      background:#000; color:#fff; z-index: 2001; border-radius:8px;
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      padding:10px 14px;
+      background:#000;
+      color:#fff;
+      z-index: 2001;
+      border-radius:8px;
     }
 
     .a11y-toolbar {
-      position: fixed; right: 10px; bottom: 10px; z-index: 1200;
-      display:flex; gap:6px; flex-wrap:wrap;
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      z-index: 1200;
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
     }
+
     .a11y-toolbar button {
-      padding:0.5rem 0.625rem; border-radius:8px; border:1px solid #ccc;
-      background:#fff; cursor:pointer; font-size:0.875rem;
+      padding:0.5rem 0.625rem;
+      border-radius:8px;
+      border:1px solid #ccc;
+      background:#fff;
+      cursor:pointer;
+      font-size:0.875rem;
     }
-    .a11y-toolbar button:focus { outline: 3px solid #005fcc; outline-offset:2px; }
+
+    .a11y-toolbar button:focus {
+      outline: 3px solid #005fcc;
+      outline-offset:2px;
+    }
 
     a, button, [role="button"], .atividade { outline-offset:2px; }
-    a:focus, button:focus, [role="button"]:focus, .atividade:focus { outline: 3px solid #005fcc; }
 
-    .high-contrast, .high-contrast * { color: #fff !important; background: #000 !important; border-color:#fff !important; }
-    .extra-spacing { letter-spacing: 0.3px; line-height: 1.8; }
+    a:focus,
+    button:focus,
+    [role="button"]:focus,
+    .atividade:focus {
+      outline: 3px solid #005fcc;
+    }
+
+    .high-contrast,
+    .high-contrast * {
+      color: #fff !important;
+      background: #000 !important;
+      border-color:#fff !important;
+    }
+
+    .extra-spacing {
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+    }
 
     @media (prefers-reduced-motion: reduce) {
-      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
     }
-    .reduce-motion * { animation: none !important; transition: none !important; }
-    @media (prefers-reduced-motion: reduce) { .atividade { opacity: 1 !important; transform: none !important; animation: none !important; } }
-    .reduce-motion .atividade { opacity: 1 !important; transform: none !important; animation: none !important; cursor: default; }
-    .reduce-motion .mural-foto-img { cursor: default; }
+
+    .reduce-motion * {
+      animation: none !important;
+      transition: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .atividade {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+    }
+
+    .reduce-motion .atividade {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      cursor: default;
+    }
+
+    .reduce-motion .mural-foto-img {
+      cursor: default;
+    }
 
     nav {
-      position: fixed; top: 0; left: 0; right: 0; background: rgba(255,255,255,0.96);
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.96);
       backdrop-filter: blur(8px);
-      padding: 0.9375rem 1.5625rem; z-index: 1000; display: flex; gap: 1.1rem;
-      white-space: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch;
+      padding: 0.9375rem 1.5625rem;
+      z-index: 1000;
+      display: flex;
+      gap: 1.1rem;
+      white-space: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       align-items: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
+
     nav a, nav button {
-      text-decoration: none; color: #333; font-weight: bold;
-      font-size: 1.03125rem; transition: color 0.3s, transform 0.3s;
-      background: transparent; border: none; cursor: pointer; padding: 0;
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+      font-size: 1.03125rem;
+      transition: color 0.3s, transform 0.3s;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
       font-family: inherit;
       flex: 0 0 auto;
     }
-    nav a:hover, nav a:focus, nav button:hover, nav button:focus { color: var(--cor-secundaria); transform: scale(1.05); }
+
+    nav a:hover,
+    nav a:focus,
+    nav button:hover,
+    nav button:focus {
+      color: var(--cor-secundaria);
+      transform: scale(1.05);
+    }
+
     .admin-nav-btn.admin-on { color: #dc3545; }
     .nav-spacer { flex: 1 1 auto; }
 
     @media (max-width: 480px) {
-      nav { padding: 0.59375rem 0.84375rem; gap: 0.84375rem; }
+      nav {
+        padding: 0.59375rem 0.84375rem;
+        gap: 0.84375rem;
+      }
       nav a, nav button { font-size: 0.90625rem; }
     }
 
@@ -90,6 +186,7 @@
       background: #ffffff;
       padding: 110px 20px 40px;
     }
+
     .hero-box {
       width: 100%;
       max-width: 1280px;
@@ -98,6 +195,7 @@
       align-items: center;
       min-height: 70vh;
     }
+
     header img.logo {
       width: min(80vw, 780px);
       max-width: 100%;
@@ -130,7 +228,11 @@
       text-align: center;
     }
 
-    .quem-box {
+    .quem-box,
+    .bloco-admin,
+    .api-box,
+    .atividades-admin,
+    .eventos-admin {
       width: 100%;
       max-width: 1100px;
       background: rgba(255,255,255,0.72);
@@ -148,7 +250,9 @@
       color: #334;
     }
 
-    .botao-formulario, .botao-secundario, .btn-mini-acao {
+    .botao-formulario,
+    .botao-secundario,
+    .btn-mini-acao {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -165,23 +269,18 @@
       font-size: 1rem;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
-    .botao-formulario:hover, .botao-formulario:focus,
-    .botao-secundario:hover, .botao-secundario:focus,
-    .btn-mini-acao:hover, .btn-mini-acao:focus {
+
+    .botao-formulario:hover,
+    .botao-formulario:focus,
+    .botao-secundario:hover,
+    .botao-secundario:focus,
+    .btn-mini-acao:hover,
+    .btn-mini-acao:focus {
       background-color: var(--cor-secundaria);
       transform: translateY(-1px);
     }
-    .botao-secundario { background: #6c757d; }
 
-    .bloco-admin {
-      width: 100%;
-      max-width: 1100px;
-      background: rgba(255,255,255,0.72);
-      backdrop-filter: blur(6px);
-      border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: var(--sombra);
-    }
+    .botao-secundario { background: #6c757d; }
 
     .mural-topo {
       width: 100%;
@@ -314,6 +413,41 @@
       font-size: 0.85rem;
     }
 
+    .api-box {
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .api-box h3 {
+      margin-top: 0;
+      color: var(--cor-primaria);
+    }
+
+    .api-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .api-endpoints {
+      margin-top: 16px;
+      background: #f8fbff;
+      border: 1px solid #dbe8f5;
+      border-radius: 14px;
+      padding: 14px;
+      font-size: 0.95rem;
+      color: #334;
+      overflow-wrap: anywhere;
+    }
+
+    .api-endpoints code {
+      background: #eef4fb;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.92rem;
+    }
+
     .modal {
       position: fixed;
       inset: 0;
@@ -339,8 +473,20 @@
       overflow: auto;
     }
 
-    .modal-img { max-width:90%; max-height:80%; border-radius:12px; }
-    .modal-controls { margin-top: 20px; display:flex; gap:10px; flex-wrap: wrap; }
+    .modal-img {
+      max-width:90%;
+      max-height:80%;
+      border-radius:12px;
+      background: #fff;
+    }
+
+    .modal-controls {
+      margin-top: 20px;
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+    }
+
     .modal-controls button {
       padding: 12px 20px;
       font-size: 16px;
@@ -351,17 +497,10 @@
       color: #fff;
       transition: background-color 0.3s;
     }
-    .modal-controls button:hover,
-    .modal-controls button:focus { background-color: var(--cor-secundaria); }
 
-    .atividades-admin {
-      width: 100%;
-      max-width: 1200px;
-      background: rgba(255,255,255,0.72);
-      border-radius: 18px;
-      box-shadow: var(--sombra);
-      padding: 22px;
-      margin-bottom: 28px;
+    .modal-controls button:hover,
+    .modal-controls button:focus {
+      background-color: var(--cor-secundaria);
     }
 
     .agenda-multiplos-dias {
@@ -422,6 +561,7 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(0,0,0,0.16);
     }
+
     .atividade-nav-btn:disabled {
       opacity: .45;
       cursor: default;
@@ -500,6 +640,7 @@
       font-size: 0.9rem;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     }
+
     .atividade-icon-btn.edit { background: #007bff; }
     .atividade-icon-btn.delete { background: #dc3545; }
 
@@ -513,19 +654,6 @@
       position: relative;
       z-index: 1;
       padding-top: 10px;
-    }
-
-    .atividade-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(0,179,81,0.10);
-      color: var(--cor-secundaria);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 800;
-      letter-spacing: .2px;
     }
 
     .atividade h3 {
@@ -542,6 +670,7 @@
       font-size: 1rem;
       position: relative;
       z-index: 1;
+      white-space: pre-line;
     }
 
     .atividade-preview {
@@ -653,6 +782,7 @@
     }
 
     @keyframes fadeIn { to { opacity:1; } }
+
     @keyframes slideUp {
       from { transform: translateY(20px); opacity:0; }
       to { transform: translateY(0); opacity:1; }
@@ -667,7 +797,9 @@
       margin-top: 20px;
     }
 
-    .form-db input, .form-db select, .form-db textarea {
+    .form-db input,
+    .form-db select,
+    .form-db textarea {
       padding: 12px;
       border-radius: 10px;
       border: 1px solid #ccc;
@@ -675,13 +807,25 @@
       font-size: 1rem;
       background: #fff;
     }
-    .form-db textarea { grid-column: 1 / -1; resize: none; height: 110px; }
 
-    input[required], select[required], textarea[required] {
+    .form-db textarea {
+      grid-column: 1 / -1;
+      resize: none;
+      height: 110px;
+    }
+
+    input[required],
+    select[required],
+    textarea[required] {
       border-left: 4px solid #007bff;
     }
 
-    .table-wrap { width:100%; overflow-x:auto; margin-top: 30px; }
+    .table-wrap {
+      width:100%;
+      overflow-x:auto;
+      margin-top: 30px;
+    }
+
     .table-db {
       width:100%;
       border-collapse: collapse;
@@ -690,13 +834,16 @@
       overflow: hidden;
       box-shadow: 0 8px 22px rgba(0,0,0,0.08);
     }
-    .table-db th, .table-db td {
+
+    .table-db th,
+    .table-db td {
       padding: 10px;
       border-bottom: 1px solid rgba(0,0,0,0.08);
       text-align: left;
       font-size: 0.9375rem;
       vertical-align: top;
     }
+
     .table-db th { background: var(--cor-primaria); color: #fff; }
     .table-db tr:hover td { background: rgba(0,0,0,0.05); }
     .table-actions button { margin-right:8px; margin-bottom:6px; }
@@ -709,6 +856,7 @@
       align-items:center;
       flex-wrap: wrap;
     }
+
     .pagination button {
       background: var(--cor-primaria);
       color: #fff;
@@ -719,19 +867,12 @@
       transition: background 0.3s;
       font-size: 1rem;
     }
-    .pagination button:disabled { opacity: .5; cursor: default; }
-    .pagination button:hover:not(:disabled), .pagination button:focus:not(:disabled) {
-      background: var(--cor-secundaria);
-    }
 
-    .eventos-admin {
-      width: 100%;
-      max-width: 1100px;
-      background: rgba(255,255,255,0.72);
-      border-radius: 18px;
-      box-shadow: var(--sombra);
-      padding: 22px;
-      margin-bottom: 30px;
+    .pagination button:disabled { opacity: .5; cursor: default; }
+
+    .pagination button:hover:not(:disabled),
+    .pagination button:focus:not(:disabled) {
+      background: var(--cor-secundaria);
     }
 
     .eventos-vitrine-wrap {
@@ -773,6 +914,7 @@
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(0,0,0,0.16);
     }
+
     .eventos-nav button:disabled {
       opacity: .45;
       cursor: default;
@@ -973,7 +1115,12 @@
 
     footer .social a.instagram { color: #E4405F; }
     footer .social a.facebook { color: #1877F2; }
-    footer .social a:hover, footer .social a:focus { transform: scale(1.2); opacity: 0.8; }
+
+    footer .social a:hover,
+    footer .social a:focus {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
 
     .footer-mapa {
       width: 100%;
@@ -985,11 +1132,28 @@
       overflow: hidden;
     }
 
-    .badge { margin-top:10px; font-size:0.875rem; color:#555; }
-    .status-wrap { display:flex; flex-direction:column; gap:8px; align-items:center; }
+    .badge {
+      margin-top:10px;
+      font-size:0.875rem;
+      color:#555;
+    }
 
-    .contact-link { color: inherit; text-decoration: none; }
-    .contact-link:hover, .contact-link:focus { text-decoration: underline; }
+    .status-wrap {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      align-items:center;
+    }
+
+    .contact-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .contact-link:hover,
+    .contact-link:focus {
+      text-decoration: underline;
+    }
 
     .visually-hidden {
       position:absolute !important;
@@ -1043,7 +1207,7 @@
 
   <div id="app">
     <nav role="navigation" aria-label="Principal">
-      <a href="#topo">ASO</a>
+      <a href="#topo">Início</a>
       <a href="#quem-somos">Quem Somos</a>
       <a href="#atividades">Atividades</a>
       <a href="#banco-dados">Participe</a>
@@ -1072,7 +1236,7 @@
         <div class="mural-topo" v-if="isAdmin">
           <label class="botao-formulario" style="cursor:pointer;">
             <i class="fas fa-image"></i> Inserir foto
-            <input type="file" accept="image/*" @change="handleImageUpload" style="display:none;">
+            <input type="file" accept="image/*,.jfif,.jpeg,.jpg,.png,.webp" @change="handleImageUpload" style="display:none;">
           </label>
         </div>
 
@@ -1082,7 +1246,7 @@
           <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
             <div class="mural-foto" v-for="(img,i) in imagens" :key="(img.id || img.url || 'img') + '-' + i">
               <img
-                :src="img.url || img"
+                :src="resolverImagem(img)"
                 class="mural-foto-img"
                 :alt="'Foto da ASO número ' + (i+1)"
                 :role="reduceMotionActive ? null : 'button'"
@@ -1090,6 +1254,7 @@
                 @click="!reduceMotionActive && openModal(i)"
                 @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
                 @keydown.space.prevent="!reduceMotionActive && openModal(i)"
+                @error="handleImageError($event, img)"
               />
               <div class="mural-foto-rodape">
                 <span>Foto {{ i + 1 }}</span>
@@ -1130,11 +1295,7 @@
               v-for="(agenda, idxAgenda) in atividadeForm.agendamentos"
               :key="'agenda-'+idxAgenda"
             >
-              <input
-                v-model="agenda.data"
-                type="date"
-                aria-label="Dia da atividade"
-              >
+              <input v-model="agenda.data" type="date" aria-label="Dia da atividade">
 
               <select v-model="agenda.horaInicio" aria-label="Hora inicial">
                 <option value="">Hora inicial</option>
@@ -1175,7 +1336,13 @@
         </div>
 
         <div class="atividades-carousel-wrap">
-          <button class="atividade-nav-btn" @click="prevAtividadesPage" :disabled="atividadesPage<=1" aria-label="Atividades anteriores">
+          <button
+            type="button"
+            class="atividade-nav-btn"
+            @click="prevAtividadesPage"
+            :disabled="atividadesPage<=1 || atividadesTotalPages <= 1"
+            aria-label="Atividades anteriores"
+          >
             <i class="fas fa-chevron-left"></i>
           </button>
 
@@ -1203,9 +1370,6 @@
               </div>
 
               <div class="atividade-topo">
-                <div class="atividade-badge">
-                  <i class="fas fa-hands"></i> Atividade ASO
-                </div>
                 <h3>{{ item.titulo }}</h3>
               </div>
 
@@ -1235,17 +1399,10 @@
                   </div>
                 </div>
 
-                <div class="atividade-detalhe-bloco">
-                  <div class="atividade-detalhe-label">Local</div>
-                  <div class="atividade-detalhe-texto">
-                    {{ item.endereco || '—' }}
-                  </div>
-                </div>
-
                 <a
                   v-if="item.link"
                   class="link-info"
-                  :href="item.link"
+                  :href="normalizarLink(item.link)"
                   target="_blank"
                   rel="noopener noreferrer"
                   @click.stop
@@ -1256,7 +1413,13 @@
             </article>
           </div>
 
-          <button class="atividade-nav-btn" @click="nextAtividadesPage" :disabled="atividadesPage>=atividadesTotalPages" aria-label="Próximas atividades">
+          <button
+            type="button"
+            class="atividade-nav-btn"
+            @click="nextAtividadesPage"
+            :disabled="atividadesPage>=atividadesTotalPages || atividadesTotalPages <= 1"
+            aria-label="Próximas atividades"
+          >
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
@@ -1280,6 +1443,28 @@
             📚 Status das Atividades: <strong>{{ atividadesApiStatus }}</strong>
           </div>
           <div class="badge" v-if="isAdmin"><strong>Modo administrador ativo</strong></div>
+        </div>
+
+        <div class="api-box">
+          <h3>API do site</h3>
+          <div class="badge">Aqui você consegue copiar e testar a API publicada do Google Apps Script.</div>
+
+          <div class="api-actions">
+            <button type="button" class="botao-formulario" @click="copiarApiUrl">
+              <i class="fas fa-copy"></i> Copiar URL da API
+            </button>
+            <button type="button" class="botao-formulario" @click="abrirApiPing">
+              <i class="fas fa-plug"></i> Testar API
+            </button>
+            <button type="button" class="botao-formulario" @click="apiModal = true">
+              <i class="fas fa-code"></i> Ver endpoints
+            </button>
+          </div>
+
+          <div class="api-endpoints">
+            <div><strong>Base:</strong> <code>{{ API }}</code></div>
+            <div style="margin-top:8px;"><strong>Teste rápido:</strong> <code>{{ API }}?action=ping</code></div>
+          </div>
         </div>
 
         <div class="bloco-admin">
@@ -1497,7 +1682,7 @@
       </footer>
 
       <div v-if="modalOpen" class="modal" role="dialog" aria-modal="true" aria-label="Visualização de imagem da galeria" @click="closeModal">
-        <img :src="modalImage" class="modal-img" alt="Imagem ampliada" @click.stop/>
+        <img :src="modalImage" class="modal-img" alt="Imagem ampliada" @click.stop @error="handleModalImageError"/>
         <div class="modal-controls" @click.stop>
           <button ref="firstModalBtn" @click.stop="prevImage">⟨ Anterior</button>
           <button @click.stop="nextImage">Próximo ⟩</button>
@@ -1583,16 +1768,49 @@
           </div>
         </div>
       </div>
+
+      <div v-if="apiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-modal" @click="apiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-modal" style="margin-top:0; color:var(--cor-secundaria);">Endpoints da API</h3>
+
+          <p><b>Base:</b><br><code>{{ API }}</code></p>
+          <p><b>GET:</b></p>
+          <p><code>?action=ping</code></p>
+          <p><code>?action=list</code></p>
+          <p><code>?action=list_events</code></p>
+          <p><code>?action=list_activities</code></p>
+          <p><code>?action=list_photos</code></p>
+
+          <p><b>POST:</b></p>
+          <p><code>?action=insert</code></p>
+          <p><code>?action=update</code></p>
+          <p><code>?action=delete</code></p>
+          <p><code>?action=delete_all</code></p>
+          <p><code>?action=insert_event</code></p>
+          <p><code>?action=update_event</code></p>
+          <p><code>?action=delete_event</code></p>
+          <p><code>?action=delete_all_events</code></p>
+          <p><code>?action=insert_activity</code></p>
+          <p><code>?action=update_activity</code></p>
+          <p><code>?action=delete_activity</code></p>
+          <p><code>?action=upload_photo</code></p>
+          <p><code>?action=delete_photo</code></p>
+
+          <div style="text-align:right; margin-top:18px;">
+            <button class="botao-formulario" @click="apiModal=false">Fechar</button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
-  <!-- VLibras oficial -->
   <div vw class="enabled">
     <div vw-access-button class="active"></div>
     <div vw-plugin-wrapper>
       <div class="vw-plugin-top-wrapper"></div>
     </div>
   </div>
+
   <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
   <script>
     new window.VLibras.Widget('https://vlibras.gov.br/app');
@@ -1651,7 +1869,9 @@
     new Vue({
       el: '#app',
       data: {
+        API,
         isAdmin: false,
+        apiModal: false,
 
         textoQuemSomos: [
           'A Associação Amigos dos Surdos de Ourinhos e Região é uma organização voltada à promoção da inclusão, da acessibilidade e do fortalecimento da comunidade surda em Ourinhos e municípios próximos. Seu trabalho busca ampliar a participação social das pessoas surdas, valorizar a Libras e construir relações mais respeitosas entre a comunidade surda, as famílias, os serviços públicos e a sociedade em geral.',
@@ -1672,12 +1892,14 @@
             { data: '', horaInicio: '', horaFim: '' }
           ]
         },
+
         horasPredefinidas: [
           '06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30',
           '10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
           '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30',
           '18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00'
         ],
+
         atividadesPage: 1,
         atividadesPerPage: 4,
         atividadesApiStatus: 'desconectado',
@@ -1808,7 +2030,15 @@
       watch: {
         filtro() { this.page = 1; },
         filtroEventos() { this.eventosPage = 1; },
-        isAdmin() { this.page = 1; }
+        isAdmin() { this.page = 1; },
+        atividadesTotalPages(novoTotal) {
+          if (this.atividadesPage > novoTotal) this.atividadesPage = novoTotal;
+          if (this.atividadesPage < 1) this.atividadesPage = 1;
+        },
+        eventosTotalPages(novoTotal) {
+          if (this.eventosPage > novoTotal) this.eventosPage = novoTotal;
+          if (this.eventosPage < 1) this.eventosPage = 1;
+        }
       },
 
       methods: {
@@ -1818,6 +2048,13 @@
             .replace(/[\u0300-\u036f]/g, '')
             .toLowerCase()
             .trim();
+        },
+
+        normalizarLink(link) {
+          const s = String(link || '').trim();
+          if (!s) return '';
+          if (/^https?:\/\//i.test(s)) return s;
+          return 'https://' + s;
         },
 
         normalizarDataEvento(data) {
@@ -1881,6 +2118,86 @@
             });
         },
 
+        getDriveFileIdFromUrl(url) {
+          const s = String(url || '').trim();
+          if (!s) return '';
+
+          const patterns = [
+            /[?&]id=([^&]+)/i,
+            /\/d\/([^/]+)/i,
+            /\/uc\?.*id=([^&]+)/i,
+            /\/thumbnail\?id=([^&]+)/i,
+            /\/file\/d\/([^/]+)/i
+          ];
+
+          for (const rx of patterns) {
+            const m = s.match(rx);
+            if (m && m[1]) return m[1];
+          }
+
+          return '';
+        },
+
+        montarFallbacksImagem(url) {
+          const fileId = this.getDriveFileIdFromUrl(url);
+          const lista = [];
+
+          if (url) {
+            lista.push(url);
+          }
+
+          if (fileId) {
+            lista.push(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`);
+            lista.push(`https://drive.google.com/uc?export=view&id=${fileId}`);
+            lista.push(`https://lh3.googleusercontent.com/d/${fileId}=w1600`);
+          }
+
+          return [...new Set(lista.filter(Boolean))];
+        },
+
+        resolverImagem(img) {
+          const urlBase = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(urlBase);
+          return fallbacks[0] || '';
+        },
+
+        handleImageError(event, img) {
+          const el = event.target;
+          const atual = el.getAttribute('src') || '';
+          const baseUrl = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(baseUrl);
+
+          const idxAtual = fallbacks.indexOf(atual);
+          const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
+
+          if (proximo && proximo !== atual) {
+            el.src = proximo;
+            return;
+          }
+
+          el.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+              <rect width="100%" height="100%" fill="#f3f4f6"/>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6b7280" font-family="Arial" font-size="24">
+                Imagem indisponível
+              </text>
+            </svg>
+          `);
+        },
+
+        handleModalImageError(event) {
+          const atual = event.target.getAttribute('src') || '';
+          const img = this.imagens[this.modalIndex];
+          const baseUrl = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(baseUrl);
+          const idxAtual = fallbacks.indexOf(atual);
+          const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
+
+          if (proximo && proximo !== atual) {
+            this.modalImage = proximo;
+          }
+        },
+
         adicionarAgendamentoAtividade() {
           this.atividadeForm.agendamentos.push({
             data: '',
@@ -1926,11 +2243,13 @@
               horaFim: a.horaFim || ''
             }))
           };
+
           window.location.hash = '#atividades';
         },
 
         async excluirAtividade(idx) {
           if (!this.isAdmin) return;
+
           const senha = prompt('Informe a senha para excluir a atividade:');
           if (senha === null) return;
           if (senha !== SENHA_EXCLUSAO) {
@@ -1944,8 +2263,10 @@
           try {
             await this.apiPost('delete_activity', { id: item.id });
             this.atividades.splice(idx, 1);
+
             if (this.active === idx) this.active = null;
-            if (this.active > idx) this.active--;
+            if (typeof this.active === 'number' && this.active > idx) this.active--;
+
             this.limparAtividadeForm();
 
             if (this.atividadesPage > this.atividadesTotalPages) {
@@ -1998,6 +2319,7 @@
 
             this.ordenarAtividades();
             this.limparAtividadeForm();
+            this.atividadesPage = Math.min(this.atividadesPage, this.atividadesTotalPages);
             alert('Atividade salva com sucesso.');
           } catch (e) {
             alert('Erro ao salvar atividade: ' + e.message);
@@ -2015,38 +2337,41 @@
         },
 
         prevAtividadesPage() {
-          if (this.atividadesPage > 1) {
-            this.atividadesPage--;
-            this.active = null;
-          }
+          this.atividadesPage = Math.max(1, this.atividadesPage - 1);
+          this.active = null;
         },
 
         nextAtividadesPage() {
-          if (this.atividadesPage < this.atividadesTotalPages) {
-            this.atividadesPage++;
-            this.active = null;
-          }
+          this.atividadesPage = Math.min(this.atividadesTotalPages, this.atividadesPage + 1);
+          this.active = null;
         },
 
-        async compressImage(file, maxWidth = 1600, quality = 0.85) {
+        async compressImage(file, maxWidth = 1600, quality = 0.88) {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
+
             reader.onload = (e) => {
               const img = new Image();
+
               img.onload = () => {
                 const scale = Math.min(1, maxWidth / img.width);
                 const canvas = document.createElement('canvas');
                 canvas.width = Math.round(img.width * scale);
                 canvas.height = Math.round(img.height * scale);
                 const ctx = canvas.getContext('2d');
+
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
-                const dataUrl = canvas.toDataURL(mimeType, quality);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', quality);
                 resolve(dataUrl);
               };
+
               img.onerror = reject;
               img.src = e.target.result;
             };
+
             reader.onerror = reject;
             reader.readAsDataURL(file);
           });
@@ -2068,7 +2393,7 @@
             return;
           }
 
-          if (!file.type.startsWith('image/')) {
+          if (!file.type.startsWith('image/') && !/\.jfif$/i.test(file.name || '')) {
             alert('Selecione um arquivo de imagem.');
             event.target.value = '';
             return;
@@ -2079,8 +2404,8 @@
             const base64 = dataUrl.split(',')[1];
 
             const created = await this.apiPost('upload_photo', {
-              fileName: file.name,
-              mimeType: dataUrl.substring(dataUrl.indexOf(':') + 1, dataUrl.indexOf(';')),
+              fileName: (file.name || 'foto.jpg').replace(/\.jfif$/i, '.jpg'),
+              mimeType: 'image/jpeg',
               base64: base64
             });
 
@@ -2114,6 +2439,7 @@
               await this.apiPost('delete_photo', { id: foto.id });
             }
             this.imagens.splice(index, 1);
+            if (this.modalOpen && this.modalIndex === index) this.closeModal();
           } catch (e) {
             alert('Erro ao excluir foto: ' + e.message);
           }
@@ -2226,7 +2552,7 @@
           if (!r.ok) throw new Error('Falha ao listar fotos');
           const data = await r.json();
           const arr = Array.isArray(data) ? data : (data.data || []);
-          this.imagens = arr || [];
+          this.imagens = Array.isArray(arr) ? arr : [];
         },
 
         async apiPost(action, payload) {
@@ -2257,7 +2583,7 @@
 
         openModal(i) {
           this.modalIndex = i;
-          this.modalImage = this.imagens[i].url || this.imagens[i];
+          this.modalImage = this.resolverImagem(this.imagens[i]);
           this.modalOpen = true;
           this.$nextTick(() => { this.$refs.firstModalBtn?.focus(); });
           document.addEventListener('keydown', this.handleModalKeys);
@@ -2284,17 +2610,32 @@
         },
 
         prevImage() {
+          if (!this.imagens.length) return;
           this.modalIndex = (this.modalIndex - 1 + this.imagens.length) % this.imagens.length;
-          this.modalImage = this.imagens[this.modalIndex].url || this.imagens[this.modalIndex];
+          this.modalImage = this.resolverImagem(this.imagens[this.modalIndex]);
         },
 
         nextImage() {
+          if (!this.imagens.length) return;
           this.modalIndex = (this.modalIndex + 1) % this.imagens.length;
-          this.modalImage = this.imagens[this.modalIndex].url || this.imagens[this.modalIndex];
+          this.modalImage = this.resolverImagem(this.imagens[this.modalIndex]);
         },
 
         toggle(idx) {
-          this.active = this.active===idx ? null : idx;
+          this.active = this.active === idx ? null : idx;
+        },
+
+        async copiarApiUrl() {
+          try {
+            await navigator.clipboard.writeText(this.API);
+            alert('URL da API copiada.');
+          } catch (e) {
+            prompt('Copie manualmente a URL da API:', this.API);
+          }
+        },
+
+        abrirApiPing() {
+          window.open(this.API + '?action=ping', '_blank', 'noopener');
         },
 
         async load() {

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ASO - Associação Amigos dos Surdos de Ourinhos</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
@@ -14,39 +14,44 @@
       --cor-clara: #f7fafc;
       --cor-card-atividade: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.98));
       --sombra: 0 10px 30px rgba(0,0,0,0.12);
+      --nav-h: 76px;
+      --container: 1280px;
     }
 
     html { font-size: 100%; }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       scroll-behavior: smooth;
-      color:#333;
-      background:#fff;
+      color: #333;
+      background: #fff;
       line-height: 1.6;
     }
 
-    * { box-sizing: border-box; }
+    img { max-width: 100%; }
 
     .skip-link {
-      position:absolute;
-      left:-9999px;
-      top:auto;
-      width:1px;
-      height:1px;
-      overflow:hidden;
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
     }
 
     .skip-link:focus {
       position: fixed;
       left: 12px;
       top: 12px;
-      padding:10px 14px;
-      background:#000;
-      color:#fff;
+      width: auto;
+      height: auto;
+      padding: 10px 14px;
+      background: #000;
+      color: #fff;
       z-index: 2001;
-      border-radius:8px;
+      border-radius: 8px;
     }
 
     .a11y-toolbar {
@@ -54,39 +59,35 @@
       right: 10px;
       bottom: 10px;
       z-index: 1200;
-      display:flex;
-      gap:6px;
-      flex-wrap:wrap;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
     }
 
     .a11y-toolbar button {
-      padding:0.5rem 0.625rem;
-      border-radius:8px;
-      border:1px solid #ccc;
-      background:#fff;
-      cursor:pointer;
-      font-size:0.875rem;
+      padding: 0.5rem 0.625rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.875rem;
     }
 
-    .a11y-toolbar button:focus {
-      outline: 3px solid #005fcc;
-      outline-offset:2px;
-    }
-
-    a, button, [role="button"], .atividade { outline-offset:2px; }
-
+    .a11y-toolbar button:focus,
     a:focus,
     button:focus,
     [role="button"]:focus,
-    .atividade:focus {
+    .atividade:focus,
+    .evento-card:focus {
       outline: 3px solid #005fcc;
+      outline-offset: 2px;
     }
 
     .high-contrast,
     .high-contrast * {
       color: #fff !important;
       background: #000 !important;
-      border-color:#fff !important;
+      border-color: #fff !important;
     }
 
     .extra-spacing {
@@ -101,7 +102,8 @@
         scroll-behavior: auto !important;
       }
 
-      .atividade {
+      .atividade,
+      .evento-card {
         opacity: 1 !important;
         transform: none !important;
         animation: none !important;
@@ -113,13 +115,7 @@
       transition: none !important;
     }
 
-    .reduce-motion .atividade {
-      opacity: 1 !important;
-      transform: none !important;
-      animation: none !important;
-      cursor: default;
-    }
-
+    .reduce-motion .atividade,
     .reduce-motion .mural-foto-img {
       cursor: default;
     }
@@ -129,12 +125,13 @@
       top: 0;
       left: 0;
       right: 0;
+      min-height: var(--nav-h);
       background: rgba(255,255,255,0.96);
       backdrop-filter: blur(8px);
-      padding: 0.9375rem 1.5625rem;
+      padding: 0.9rem 1.25rem;
       z-index: 1000;
       display: flex;
-      gap: 1.1rem;
+      gap: 1rem;
       white-space: nowrap;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
@@ -142,11 +139,12 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     }
 
-    nav a, nav button {
+    nav a,
+    nav button {
       text-decoration: none;
       color: #333;
-      font-weight: bold;
-      font-size: 1.03125rem;
+      font-weight: 700;
+      font-size: 1rem;
       transition: color 0.3s, transform 0.3s;
       background: transparent;
       border: none;
@@ -161,19 +159,11 @@
     nav button:hover,
     nav button:focus {
       color: var(--cor-secundaria);
-      transform: scale(1.05);
+      transform: scale(1.04);
     }
 
     .admin-nav-btn.admin-on { color: #dc3545; }
     .nav-spacer { flex: 1 1 auto; }
-
-    @media (max-width: 480px) {
-      nav {
-        padding: 0.59375rem 0.84375rem;
-        gap: 0.84375rem;
-      }
-      nav a, nav button { font-size: 0.90625rem; }
-    }
 
     header {
       min-height: 100vh;
@@ -181,12 +171,12 @@
       justify-content: center;
       align-items: center;
       background: #ffffff;
-      padding: 110px 20px 40px;
+      padding: calc(var(--nav-h) + 24px) 20px 40px;
     }
 
     .hero-box {
       width: 100%;
-      max-width: 1280px;
+      max-width: var(--container);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -195,30 +185,30 @@
 
     header img.logo {
       width: min(80vw, 780px);
-      max-width: 100%;
       filter: drop-shadow(0 18px 40px rgba(0,0,0,0.10));
       background: transparent;
     }
 
     section {
-      padding: 5rem 1.25rem;
-      font-size: 1.08rem;
+      padding: 5rem 1rem;
+      font-size: 1.05rem;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
       min-height: 100vh;
+      scroll-margin-top: calc(var(--nav-h) + 16px);
     }
 
     #quem-somos { background-color: #e0f7fa; }
     #atividades { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
     #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
     #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
-    #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
+    #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
 
     h2 {
-      font-size: 2.625rem;
+      font-size: clamp(2rem, 4vw, 2.625rem);
       margin: 0 0 25px;
       color: var(--cor-secundaria);
       line-height: 1.15;
@@ -241,7 +231,7 @@
     }
 
     .quem-box p {
-      font-size: 1.12rem;
+      font-size: 1.08rem;
       line-height: 1.9;
       margin: 0 0 16px;
       color: #334;
@@ -258,10 +248,10 @@
       color: white;
       text-decoration: none;
       border-radius: 10px;
-      font-weight: bold;
+      font-weight: 700;
       transition: background-color 0.3s, transform 0.2s;
-      border:none;
-      cursor:pointer;
+      border: none;
+      cursor: pointer;
       font-size: 1rem;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
@@ -276,9 +266,15 @@
 
     .botao-secundario { background: #6c757d; }
 
-    .mural-topo {
+    .mural-topo,
+    .mural-area,
+    .atividades-stage,
+    .eventos-stage {
       width: 100%;
-      max-width: 1220px;
+      max-width: var(--container);
+    }
+
+    .mural-topo {
       display: flex;
       justify-content: flex-end;
       align-items: center;
@@ -289,17 +285,9 @@
     }
 
     .mural-area {
-      width: 100%;
-      max-width: 1220px;
       background:
         linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)),
-        repeating-linear-gradient(
-          90deg,
-          #c69c6d 0px,
-          #c69c6d 18px,
-          #b88e62 18px,
-          #b88e62 36px
-        );
+        repeating-linear-gradient(90deg,#c69c6d 0px,#c69c6d 18px,#b88e62 18px,#b88e62 36px);
       border-radius: 26px;
       padding: 60px 28px 28px;
       box-shadow: var(--sombra);
@@ -336,7 +324,7 @@
 
     .mural-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 22px 18px;
       position: relative;
       z-index: 1;
@@ -378,7 +366,7 @@
 
     .mural-foto-img {
       width: 100%;
-      height: 145px;
+      aspect-ratio: 4 / 3;
       object-fit: cover;
       display: block;
       cursor: pointer;
@@ -403,14 +391,11 @@
       border-radius: 8px;
       padding: 7px 10px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: 700;
       font-size: 0.85rem;
     }
 
-    .api-box {
-      margin-top: 24px;
-      text-align: left;
-    }
+    .api-box { margin-top: 24px; }
 
     .api-actions {
       display: flex;
@@ -423,10 +408,10 @@
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,0.85);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:2000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
       opacity: 0;
       animation: fadeIn 0.25s forwards;
       flex-direction: column;
@@ -434,27 +419,27 @@
     }
 
     .modal-card {
-      background:#fff;
-      padding:24px;
-      border-radius:12px;
-      max-width:1000px;
-      width:95%;
-      text-align:left;
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      max-width: 1000px;
+      width: min(95%, 1000px);
+      text-align: left;
       max-height: 92vh;
       overflow: auto;
     }
 
     .modal-img {
-      max-width:90%;
-      max-height:80%;
-      border-radius:12px;
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
       background: #fff;
     }
 
     .modal-controls {
       margin-top: 20px;
-      display:flex;
-      gap:10px;
+      display: flex;
+      gap: 10px;
       flex-wrap: wrap;
     }
 
@@ -466,7 +451,6 @@
       cursor: pointer;
       background-color: var(--cor-primaria);
       color: #fff;
-      transition: background-color 0.3s;
     }
 
     .modal-controls button:hover,
@@ -511,39 +495,62 @@
       justify-content: center;
     }
 
-    .atividades-carousel-wrap {
-      width: 100%;
-      max-width: 1280px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+    .atividades-stage,
+    .eventos-stage {
       margin-top: 8px;
     }
 
-    .atividade-nav-btn {
-      width: 52px;
-      height: 52px;
+    .section-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-inline button,
+    .atividade-nav-btn,
+    .eventos-nav button {
+      width: 48px;
+      height: 48px;
       flex: 0 0 auto;
       border-radius: 50%;
       border: none;
       background: var(--cor-primaria);
       color: #fff;
-      font-size: 1.1rem;
+      font-size: 1rem;
       cursor: pointer;
       box-shadow: 0 6px 16px rgba(0,0,0,0.16);
     }
 
-    .atividade-nav-btn:disabled {
+    .nav-inline button:disabled,
+    .atividade-nav-btn:disabled,
+    .eventos-nav button:disabled {
       opacity: .45;
       cursor: default;
     }
 
-    .atividades-grid {
+    .atividades-grid,
+    .eventos-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 22px;
       width: 100%;
+      gap: 22px;
       align-items: start;
+    }
+
+    .atividades-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .eventos-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 
     .atividade {
@@ -559,9 +566,7 @@
       animation: slideUp 0.5s forwards;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 390px;
-      height: auto;
-      align-self: start;
+      min-height: 100%;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.75);
@@ -572,14 +577,18 @@
       box-shadow: 0 20px 34px rgba(20, 33, 61, 0.16);
     }
 
-    .atividade::before {
+    .atividade::before,
+    .evento-card::before {
       content: "";
       position: absolute;
       inset: 0;
+      pointer-events: none;
+    }
+
+    .atividade::before {
       background:
         radial-gradient(circle at top right, rgba(0,179,81,0.10), transparent 28%),
         radial-gradient(circle at bottom left, rgba(27,40,69,0.09), transparent 28%);
-      pointer-events: none;
     }
 
     .atividade-faixa {
@@ -630,24 +639,23 @@
     .atividade h3 {
       color: var(--cor-primaria);
       margin: 0;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       line-height: 1.3;
     }
 
     .atividade-resumo {
       margin: 6px 0 12px;
       color: #555;
-      min-height: 95px;
-      font-size: 1rem;
+      font-size: 0.98rem;
       position: relative;
       z-index: 1;
       white-space: pre-line;
     }
 
     .atividade-preview {
-      font-size: 0.94rem;
+      font-size: 0.92rem;
       color: #666;
-      font-weight: 600;
+      font-weight: 700;
       margin-top: auto;
       position: relative;
       z-index: 1;
@@ -752,13 +760,6 @@
       text-decoration: underline;
     }
 
-    @keyframes fadeIn { to { opacity:1; } }
-
-    @keyframes slideUp {
-      from { transform: translateY(20px); opacity:0; }
-      to { transform: translateY(0); opacity:1; }
-    }
-
     .form-db {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -782,7 +783,7 @@
     .form-db textarea {
       grid-column: 1 / -1;
       resize: none;
-      height: 110px;
+      min-height: 110px;
     }
 
     input[required],
@@ -792,13 +793,14 @@
     }
 
     .table-wrap {
-      width:100%;
-      overflow-x:auto;
+      width: 100%;
+      overflow-x: auto;
       margin-top: 30px;
     }
 
     .table-db {
-      width:100%;
+      width: 100%;
+      min-width: 760px;
       border-collapse: collapse;
       background: #fff;
       border-radius: 12px;
@@ -817,14 +819,14 @@
 
     .table-db th { background: var(--cor-primaria); color: #fff; }
     .table-db tr:hover td { background: rgba(0,0,0,0.05); }
-    .table-actions button { margin-right:8px; margin-bottom:6px; }
+    .table-actions button { margin-right: 8px; margin-bottom: 6px; }
 
     .pagination {
       margin-top: 15px;
       display: flex;
       justify-content: center;
       gap: 15px;
-      align-items:center;
+      align-items: center;
       flex-wrap: wrap;
     }
 
@@ -835,22 +837,12 @@
       border-radius: 6px;
       padding: 8px 14px;
       cursor: pointer;
-      transition: background 0.3s;
       font-size: 1rem;
     }
 
     .pagination button:disabled { opacity: .5; cursor: default; }
-
     .pagination button:hover:not(:disabled),
-    .pagination button:focus:not(:disabled) {
-      background: var(--cor-secundaria);
-    }
-
-    .eventos-vitrine-wrap {
-      width: 100%;
-      max-width: 1200px;
-      margin-top: 10px;
-    }
+    .pagination button:focus:not(:disabled) { background: var(--cor-secundaria); }
 
     .eventos-vitrine-head {
       display: flex;
@@ -874,30 +866,6 @@
       flex-wrap: wrap;
     }
 
-    .eventos-nav button {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      border: none;
-      background: var(--cor-primaria);
-      color: #fff;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.16);
-    }
-
-    .eventos-nav button:disabled {
-      opacity: .45;
-      cursor: default;
-    }
-
-    .eventos-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 22px;
-      width: 100%;
-    }
-
     .evento-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,245,255,0.98));
       border-radius: 22px;
@@ -909,16 +877,13 @@
       text-align: left;
       min-height: 100%;
       position: relative;
+      padding: 0;
     }
 
     .evento-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
       background:
         radial-gradient(circle at top right, rgba(0,179,81,0.08), transparent 30%),
         radial-gradient(circle at bottom left, rgba(27,40,69,0.08), transparent 28%);
-      pointer-events: none;
     }
 
     .evento-card-topo {
@@ -967,7 +932,7 @@
     .evento-titulo {
       margin: 0;
       color: var(--cor-primaria);
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       line-height: 1.3;
       word-break: break-word;
     }
@@ -1050,7 +1015,7 @@
 
     footer h2 {
       color: var(--cor-secundaria);
-      font-size: 2.625rem;
+      font-size: clamp(2rem, 4vw, 2.625rem);
       margin-bottom: 25px;
     }
 
@@ -1081,20 +1046,20 @@
       flex-direction: column;
     }
 
-    .footer-card p { margin: 12px 0; font-size: 1.2rem; }
+    .footer-card p { margin: 12px 0; font-size: 1.1rem; }
     .footer-card h3 { margin-top: 0; color: var(--cor-primaria); }
 
     footer .social {
-      display:flex;
-      gap:22px;
-      align-items:center;
-      justify-content:flex-start;
-      flex-wrap:wrap;
-      margin-top:14px;
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin-top: 14px;
     }
 
     footer .social a {
-      font-size: 3.2rem;
+      font-size: 3rem;
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
@@ -1118,16 +1083,16 @@
     }
 
     .badge {
-      margin-top:10px;
-      font-size:0.875rem;
-      color:#555;
+      margin-top: 10px;
+      font-size: 0.875rem;
+      color: #555;
     }
 
     .status-wrap {
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      align-items:center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
     }
 
     .contact-link {
@@ -1141,12 +1106,12 @@
     }
 
     .visually-hidden {
-      position:absolute !important;
-      left:-10000px !important;
-      top:auto !important;
-      width:1px !important;
-      height:1px !important;
-      overflow:hidden !important;
+      position: absolute !important;
+      left: -10000px !important;
+      top: auto !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
     }
 
     .table-db thead th:first-child,
@@ -1154,28 +1119,183 @@
       display: none;
     }
 
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     @media (max-width: 1200px) {
-      .mural-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-      .atividades-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .eventos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .footer-grid { grid-template-columns: 1fr; }
     }
 
+    @media (max-width: 900px) {
+      :root { --nav-h: 70px; }
+
+      .agenda-dia-linha {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .agenda-dia-linha .remover-dia {
+        grid-column: 1 / -1;
+      }
+    }
+
     @media (max-width: 768px) {
-      section { font-size: 1rem; }
-      .mural-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .mural-foto-img { height: 125px; }
-      .eventos-grid { grid-template-columns: 1fr; }
-      .atividades-grid { grid-template-columns: 1fr; }
-      .evento-card-topo { align-items: flex-start; }
-      .atividades-carousel-wrap { gap: 8px; }
-      .atividade-nav-btn { width: 42px; height: 42px; }
-      h2 { font-size: 2rem; }
-      .agenda-dia-linha { grid-template-columns: 1fr; }
+      nav {
+        padding: 0.7rem 0.9rem;
+        gap: 0.8rem;
+      }
+
+      nav a,
+      nav button {
+        font-size: 0.92rem;
+      }
+
+      section {
+        padding: 4rem 0.9rem;
+        font-size: 1rem;
+        min-height: auto;
+      }
+
+      header {
+        min-height: auto;
+        padding: calc(var(--nav-h) + 16px) 16px 24px;
+      }
+
+      .hero-box {
+        min-height: auto;
+      }
+
+      .quem-box,
+      .bloco-admin,
+      .api-box,
+      .atividades-admin,
+      .eventos-admin,
+      .footer-card,
+      .modal-card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .mural-area {
+        padding: 56px 16px 18px;
+      }
+
+      .mural-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+      }
+
+      .section-toolbar {
+        justify-content: center;
+      }
+
+      .nav-inline button,
+      .atividade-nav-btn,
+      .eventos-nav button {
+        width: 42px;
+        height: 42px;
+      }
+
+      .atividade,
+      .evento-card {
+        border-radius: 18px;
+      }
+
+      .evento-card-topo {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root { --nav-h: 66px; }
+
+      .atividades-grid,
+      .eventos-grid,
+      .mural-grid,
+      .footer-grid,
+      .form-db,
+      .agenda-dia-linha {
+        grid-template-columns: 1fr;
+      }
+
+      .atividade-topo {
+        padding-right: 76px;
+      }
+
+      .atividade-admin-icons {
+        top: 12px;
+        right: 12px;
+      }
+
+      .atividade-resumo {
+        margin-bottom: 10px;
+      }
+
+      .evento-card-topo {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .evento-data-box {
+        min-width: 76px;
+      }
+
+      .footer-mapa {
+        min-height: 280px;
+      }
+
+      .modal-img {
+        max-width: 96%;
+      }
     }
 
     @media (max-width: 480px) {
-      .mural-grid { grid-template-columns: 1fr; }
+      nav {
+        padding: 0.6rem 0.75rem;
+      }
+
+      h2 { margin-bottom: 18px; }
+
+      .mural-titulo-interno {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+      }
+
+      .atividade,
+      .evento-card {
+        padding: 0;
+      }
+
+      .atividade {
+        padding: 1.05rem;
+      }
+
+      .evento-card-topo,
+      .evento-card-conteudo {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .evento-card-topo {
+        gap: 10px;
+      }
+
+      .evento-dia-num {
+        font-size: 1.45rem;
+      }
+
+      .evento-titulo {
+        font-size: 1.05rem;
+      }
+
+      .quem-box p,
+      .footer-card p,
+      .atividade-resumo,
+      .evento-descricao {
+        font-size: 0.96rem;
+      }
     }
   </style>
 </head>
@@ -1227,7 +1347,6 @@
 
         <div class="mural-area">
           <div class="mural-titulo-interno">MURAL</div>
-
           <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
             <div class="mural-foto" v-for="(img,i) in imagens" :key="(img.id || img.url || 'img') + '-' + i">
               <img
@@ -1243,12 +1362,7 @@
               />
               <div class="mural-foto-rodape">
                 <span>Foto {{ i + 1 }}</span>
-                <button
-                  v-if="isAdmin"
-                  class="btn-remover-foto"
-                  type="button"
-                  @click="removerFoto(img, i)"
-                >
+                <button v-if="isAdmin" class="btn-remover-foto" type="button" @click="removerFoto(img, i)">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -1271,15 +1385,9 @@
           </div>
 
           <div class="agenda-multiplos-dias">
-            <div style="font-weight:800; color:var(--cor-primaria); font-size:1rem;">
-              Dias e horários da atividade
-            </div>
+            <div style="font-weight:800; color:var(--cor-primaria); font-size:1rem;">Dias e horários da atividade</div>
 
-            <div
-              class="agenda-dia-linha"
-              v-for="(agenda, idxAgenda) in atividadeForm.agendamentos"
-              :key="'agenda-'+idxAgenda"
-            >
+            <div class="agenda-dia-linha" v-for="(agenda, idxAgenda) in atividadeForm.agendamentos" :key="'agenda-'+idxAgenda">
               <input v-model="agenda.data" type="date" aria-label="Dia da atividade">
 
               <select v-model="agenda.horaInicio" aria-label="Hora inicial">
@@ -1292,13 +1400,7 @@
                 <option v-for="hora in horasPredefinidas" :key="'fim-'+idxAgenda+'-'+hora" :value="hora">{{ hora }}</option>
               </select>
 
-              <button
-                type="button"
-                class="remover-dia"
-                @click="removerAgendamentoAtividade(idxAgenda)"
-                :disabled="atividadeForm.agendamentos.length === 1"
-                title="Remover dia"
-              >
+              <button type="button" class="remover-dia" @click="removerAgendamentoAtividade(idxAgenda)" :disabled="atividadeForm.agendamentos.length === 1" title="Remover dia">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1311,12 +1413,8 @@
           </div>
 
           <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
-            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">
-              Salvar atividade
-            </button>
-            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">
-              Limpar
-            </button>
+            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">Salvar atividade</button>
+            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
           </div>
 
           <div class="api-box">
@@ -1324,7 +1422,6 @@
               <button type="button" class="botao-formulario" @click="abrirTodasAtividadesJsonModal">
                 <i class="fas fa-code"></i> Todas atividades JSON
               </button>
-
               <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlAtividadesJson">
                 <i class="fas fa-link"></i> Copiar URL atividades
               </button>
@@ -1332,22 +1429,24 @@
           </div>
         </div>
 
-        <div class="atividades-carousel-wrap">
-          <button
-            type="button"
-            class="atividade-nav-btn"
-            @click="prevAtividadesPage"
-            :disabled="atividadesPage<=1 || atividadesTotalPages <= 1"
-            aria-label="Atividades anteriores"
-          >
-            <i class="fas fa-chevron-left"></i>
-          </button>
+        <div class="atividades-stage">
+          <div class="section-toolbar" v-if="mostrarNavegacaoAtividades">
+            <div class="nav-inline">
+              <button type="button" class="atividade-nav-btn" @click="prevAtividadesPage" :disabled="atividadesPage<=1 || atividadesTotalPages <= 1" aria-label="Atividades anteriores">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <span class="badge" style="margin:0;">Página {{ atividadesPage }} / {{ atividadesTotalPages }}</span>
+              <button type="button" class="atividade-nav-btn" @click="nextAtividadesPage" :disabled="atividadesPage>=atividadesTotalPages || atividadesTotalPages <= 1" aria-label="Próximas atividades">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
 
           <div class="atividades-grid">
             <article
               class="atividade"
               v-for="(item, idxLocal) in atividadesPaginadas"
-              :key="(item.id || item.titulo) + '-' + idxLocal + '-' + atividadesPage"
+              :key="(item.id || item.titulo) + '-' + idxLocal + '-' + atividadesPage + '-' + atividadesPerPage"
               @click="!reduceMotionActive && toggle(item._originalIndex)"
               @keydown.enter.prevent="!reduceMotionActive && toggle(item._originalIndex)"
               @keydown.space.prevent="!reduceMotionActive && toggle(item._originalIndex)"
@@ -1396,33 +1495,12 @@
                   </div>
                 </div>
 
-                <a
-                  v-if="item.link"
-                  class="link-info"
-                  :href="normalizarLink(item.link)"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  @click.stop
-                >
+                <a v-if="item.link" class="link-info" :href="normalizarLink(item.link)" target="_blank" rel="noopener noreferrer" @click.stop>
                   Mais informações
                 </a>
               </div>
             </article>
           </div>
-
-          <button
-            type="button"
-            class="atividade-nav-btn"
-            @click="nextAtividadesPage"
-            :disabled="atividadesPage>=atividadesTotalPages || atividadesTotalPages <= 1"
-            aria-label="Próximas atividades"
-          >
-            <i class="fas fa-chevron-right"></i>
-          </button>
-        </div>
-
-        <div class="badge" style="margin-top:14px;">
-          Página {{ atividadesPage }} / {{ atividadesTotalPages }}
         </div>
       </section>
 
@@ -1435,9 +1513,7 @@
 
         <div class="bloco-admin">
           <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
-            <p id="dica-form" class="visually-hidden">
-              Todos os campos marcados como obrigatórios precisam ser preenchidos.
-            </p>
+            <p id="dica-form" class="visually-hidden">Todos os campos marcados como obrigatórios precisam ser preenchidos.</p>
 
             <input v-model="novo.nome" id="nome" placeholder="Nome" required aria-label="Nome">
             <input v-model="novo.email" id="email" type="email" placeholder="E-mail" required aria-label="E-mail">
@@ -1469,7 +1545,6 @@
               <button type="button" class="botao-formulario" @click="abrirTodosParticipantesJsonModal">
                 <i class="fas fa-code"></i> Todos participantes JSON
               </button>
-
               <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlParticipantesJson">
                 <i class="fas fa-link"></i> Copiar URL participantes
               </button>
@@ -1478,12 +1553,7 @@
 
           <template v-if="isAdmin">
             <div style="margin-top:20px; width:100%; max-width:900px;">
-              <input
-                v-model="filtro"
-                placeholder="Buscar em todos os cadastros..."
-                style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
-                aria-label="Buscar cadastro"
-              >
+              <input v-model="filtro" placeholder="Buscar em todos os cadastros..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;" aria-label="Buscar cadastro">
               <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
             </div>
 
@@ -1540,9 +1610,7 @@
 
         <div class="eventos-admin" v-if="isAdmin">
           <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
-            <p id="dica-form-eventos" class="visually-hidden">
-              Preencha os campos obrigatórios para cadastrar um evento.
-            </p>
+            <p id="dica-form-eventos" class="visually-hidden">Preencha os campos obrigatórios para cadastrar um evento.</p>
 
             <input v-model="novoEvento.dataEvento" type="date" required aria-label="Data do evento">
             <input v-model="novoEvento.nomeEvento" type="text" placeholder="Nome do evento" required aria-label="Nome do evento">
@@ -1553,12 +1621,7 @@
           </form>
 
           <div style="margin-top:20px; width:100%; max-width:900px;">
-            <input
-              v-model="filtroEventos"
-              placeholder="Buscar por nome ou descrição do evento..."
-              style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;"
-              aria-label="Buscar evento"
-            >
+            <input v-model="filtroEventos" placeholder="Buscar por nome ou descrição do evento..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;" aria-label="Buscar evento">
             <p style="margin:10px 0 0 0;"><strong>{{ eventosFiltrados.length }} eventos encontrados</strong></p>
           </div>
 
@@ -1567,7 +1630,6 @@
               <button type="button" class="botao-formulario" @click="abrirTodosEventosJsonModal">
                 <i class="fas fa-code"></i> Todos eventos JSON
               </button>
-
               <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlEventosJson">
                 <i class="fas fa-link"></i> Copiar URL eventos
               </button>
@@ -1575,28 +1637,23 @@
           </div>
         </div>
 
-        <div class="eventos-vitrine-wrap">
+        <div class="eventos-stage">
           <div class="eventos-vitrine-head">
             <h3>Eventos</h3>
 
-            <div class="eventos-nav">
-              <button v-if="eventosTotalPages > 1" @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Voltar eventos">
+            <div class="eventos-nav" v-if="mostrarNavegacaoEventos">
+              <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Voltar eventos">
                 <i class="fas fa-chevron-left"></i>
               </button>
-
-              <span v-if="eventosTotalPages > 1" aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
-
-              <button v-if="eventosTotalPages > 1" @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Avançar eventos">
+              <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
+              <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Avançar eventos">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>
           </div>
 
           <div v-if="eventosLoading" class="evento-vazio">Carregando eventos…</div>
-
-          <div v-else-if="eventosPaginados.length === 0" class="evento-vazio">
-            Nenhum evento encontrado no momento.
-          </div>
+          <div v-else-if="eventosPaginados.length === 0" class="evento-vazio">Nenhum evento encontrado no momento.</div>
 
           <div v-else class="eventos-grid">
             <article class="evento-card" v-for="ev in eventosPaginados" :key="'ev-'+ev.id">
@@ -1631,28 +1688,24 @@
         <div class="footer-grid">
           <div class="footer-card">
             <h3>Fale com a ASO</h3>
-
             <p>
               <a href="tel:+5514997795812" class="contact-link" title="Ligar para ASO">
                 <i class="fas fa-phone" aria-hidden="true"></i>
                 <span aria-label="Telefone"> +55 (14) 99779-5812</span>
               </a>
             </p>
-
             <p>
               <a href="mailto:aso.ourinhos01@email.com" class="contact-link" title="Enviar e-mail para ASO">
                 <i class="fas fa-envelope" aria-hidden="true"></i>
                 <span aria-label="E-mail"> aso.ourinhos01@email.com</span>
               </a>
             </p>
-
             <p><i class="fas fa-location-dot" aria-hidden="true"></i> {{ sede.endereco }}</p>
 
             <div class="social">
               <a class="instagram" href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
                 <i class="fab fa-instagram" aria-hidden="true"></i>
               </a>
-
               <a class="facebook" href="https://www.facebook.com/AssociacaoAmigosDosSurdosOurinhoseRegiao/" target="_blank" rel="noopener noreferrer" title="Facebook da ASO" aria-label="Abrir Facebook da ASO">
                 <i class="fab fa-facebook-square" aria-hidden="true"></i>
               </a>
@@ -1695,7 +1748,6 @@
       <div v-if="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar" @click="closeEdit">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-editar" style="margin-top:0; color:var(--cor-secundaria);">Editar cadastro</h3>
-
           <div class="form-db">
             <input v-model="editBuffer.nome" placeholder="Nome" required aria-label="Nome">
             <input v-model="editBuffer.email" type="email" placeholder="E-mail" required aria-label="E-mail">
@@ -1742,7 +1794,6 @@
       <div v-if="editEventoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-evento" @click="closeEditEvento">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-editar-evento" style="margin-top:0; color:var(--cor-secundaria);">Editar evento</h3>
-
           <div class="form-db">
             <input v-model="editEventoBuffer.dataEvento" type="date" required aria-label="Data do evento">
             <input v-model="editEventoBuffer.nomeEvento" placeholder="Nome do evento" required aria-label="Nome do evento">
@@ -1759,13 +1810,9 @@
       <div v-if="eventosApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-eventos-modal" @click="eventosApiModal=false">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-api-eventos-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Eventos em JSON</h3>
-
           <div class="fake-api-preview">{{ eventosApiPreview }}</div>
-
           <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
-            <button class="botao-formulario" style="background:#6c757d;" @click="eventosApiModal=false">
-              Fechar
-            </button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="eventosApiModal=false">Fechar</button>
           </div>
         </div>
       </div>
@@ -1773,13 +1820,9 @@
       <div v-if="atividadesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-atividades-modal" @click="atividadesApiModal=false">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-api-atividades-modal" style="margin-top:0; color:var(--cor-secundaria);">Todas as Atividades em JSON</h3>
-
           <div class="fake-api-preview">{{ atividadesApiPreview }}</div>
-
           <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
-            <button class="botao-formulario" style="background:#6c757d;" @click="atividadesApiModal=false">
-              Fechar
-            </button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="atividadesApiModal=false">Fechar</button>
           </div>
         </div>
       </div>
@@ -1787,13 +1830,9 @@
       <div v-if="participantesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-participantes-modal" @click="participantesApiModal=false">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-api-participantes-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Participantes em JSON</h3>
-
           <div class="fake-api-preview">{{ participantesApiPreview }}</div>
-
           <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
-            <button class="botao-formulario" style="background:#6c757d;" @click="participantesApiModal=false">
-              Fechar
-            </button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="participantesApiModal=false">Fechar</button>
           </div>
         </div>
       </div>
@@ -1829,36 +1868,28 @@
         endereco: 'Sede da ASO',
         resumo: 'Aprendizado de Libras para comunidade, familiares e interessados em comunicação acessível.',
         link: '',
-        agendamentos: [
-          { data: '', horaInicio: '19:00', horaFim: '20:00' }
-        ]
+        agendamentos: [{ data: '', horaInicio: '19:00', horaFim: '20:00' }]
       },
       {
         titulo: 'Atendimento Social',
         endereco: 'Sede da ASO',
         resumo: 'Apoio, orientação e acolhimento à comunidade surda e às famílias.',
         link: '',
-        agendamentos: [
-          { data: '', horaInicio: '14:00', horaFim: '17:00' }
-        ]
+        agendamentos: [{ data: '', horaInicio: '14:00', horaFim: '17:00' }]
       },
       {
         titulo: 'Eventos e Encontros',
         endereco: 'Ourinhos/SP',
         resumo: 'Ações de integração, cultura surda, convivência e conscientização.',
         link: '',
-        agendamentos: [
-          { data: '', horaInicio: '', horaFim: '' }
-        ]
+        agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
       },
       {
         titulo: 'Voluntariado',
         endereco: 'Sede da ASO',
         resumo: 'Espaço para quem deseja colaborar com as ações e atividades da associação.',
         link: '',
-        agendamentos: [
-          { data: '', horaInicio: '', horaFim: '' }
-        ]
+        agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
       }
     ];
 
@@ -1866,6 +1897,7 @@
       el: '#app',
       data: {
         isAdmin: false,
+        viewportWidth: window.innerWidth,
         eventosApiModal: false,
         eventosApiPreview: '',
         atividadesApiModal: false,
@@ -1880,7 +1912,6 @@
         ],
 
         sede: JSON.parse(JSON.stringify(SEDE_PADRAO)),
-
         atividades: JSON.parse(JSON.stringify(ATIVIDADES_PADRAO)),
         atividadeForm: {
           id: null,
@@ -1888,9 +1919,7 @@
           endereco: '',
           resumo: '',
           link: '',
-          agendamentos: [
-            { data: '', horaInicio: '', horaFim: '' }
-          ]
+          agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
         },
 
         horasPredefinidas: [
@@ -1901,25 +1930,13 @@
         ],
 
         atividadesPage: 1,
-        atividadesPerPage: 4,
-
         imagens: [...GALERIA_PADRAO],
         active: null,
         reduceMotionActive: false,
 
         bancoTodos: [],
         novo: {
-          nome: '',
-          email: '',
-          celular: '',
-          logradouro: '',
-          numero: '',
-          bairro: '',
-          complemento: '',
-          cidade: '',
-          idade: '',
-          modalidade: '',
-          observacoes: ''
+          nome: '', email: '', celular: '', logradouro: '', numero: '', bairro: '', complemento: '', cidade: '', idade: '', modalidade: '', observacoes: ''
         },
         filtro: '',
         page: 1,
@@ -1930,14 +1947,9 @@
         editBuffer: null,
 
         eventosBanco: [],
-        novoEvento: {
-          dataEvento: '',
-          nomeEvento: '',
-          descricao: ''
-        },
+        novoEvento: { dataEvento: '', nomeEvento: '', descricao: '' },
         filtroEventos: '',
         eventosPage: 1,
-        eventosPerPage: 3,
         eventosLoading: false,
         detalhesEvento: null,
         editEventoModal: false,
@@ -1949,6 +1961,29 @@
       },
 
       computed: {
+        atividadesPerPage() {
+          const w = this.viewportWidth;
+          if (w < 640) return 1;
+          if (w < 900) return 2;
+          if (w < 1200) return 3;
+          return 4;
+        },
+
+        eventosPerPage() {
+          const w = this.viewportWidth;
+          if (w < 640) return 1;
+          if (w < 980) return 2;
+          return 3;
+        },
+
+        mostrarNavegacaoAtividades() {
+          return this.atividades.length > this.atividadesPerPage;
+        },
+
+        mostrarNavegacaoEventos() {
+          return this.eventosFiltrados.length > this.eventosPerPage;
+        },
+
         meusIds() {
           try {
             const raw = localStorage.getItem(MEUS_REGISTROS_STORAGE_KEY);
@@ -1985,7 +2020,6 @@
         registrosFiltrados() {
           if (!this.filtro) return this.registrosBase;
           const f = this.normalizarTexto(this.filtro);
-
           return this.registrosBase.filter(r =>
             this.normalizarTexto(r.nome).includes(f) ||
             this.normalizarTexto(r.email).includes(f) ||
@@ -2006,7 +2040,6 @@
         eventosFiltrados() {
           if (!this.filtroEventos) return this.eventosBanco;
           const f = this.normalizarTexto(this.filtroEventos);
-
           return this.eventosBanco.filter(ev =>
             this.normalizarTexto(ev.nomeEvento).includes(f) ||
             this.normalizarTexto(ev.descricao).includes(f)
@@ -2034,16 +2067,23 @@
         eventosTotalPages(novoTotal) {
           if (this.eventosPage > novoTotal) this.eventosPage = novoTotal;
           if (this.eventosPage < 1) this.eventosPage = 1;
+        },
+        atividadesPerPage() {
+          this.atividadesPage = 1;
+          this.active = null;
+        },
+        eventosPerPage() {
+          this.eventosPage = 1;
         }
       },
 
       methods: {
+        updateViewport() {
+          this.viewportWidth = window.innerWidth;
+        },
+
         normalizarTexto(valor) {
-          return String(valor || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .toLowerCase()
-            .trim();
+          return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
         },
 
         normalizarLink(link) {
@@ -2085,11 +2125,8 @@
         parseAgendamentos(raw) {
           let arr = [];
           try {
-            if (Array.isArray(raw)) {
-              arr = raw;
-            } else if (typeof raw === 'string' && raw.trim()) {
-              arr = JSON.parse(raw);
-            }
+            if (Array.isArray(raw)) arr = raw;
+            else if (typeof raw === 'string' && raw.trim()) arr = JSON.parse(raw);
           } catch (e) {
             arr = [];
           }
@@ -2117,37 +2154,23 @@
         getDriveFileIdFromUrl(url) {
           const s = String(url || '').trim();
           if (!s) return '';
-
-          const patterns = [
-            /[?&]id=([^&]+)/i,
-            /\/d\/([^/]+)/i,
-            /\/uc\?.*id=([^&]+)/i,
-            /\/thumbnail\?id=([^&]+)/i,
-            /\/file\/d\/([^/]+)/i
-          ];
-
+          const patterns = [/[(?&)]id=([^&]+)/i, /\/d\/([^/]+)/i, /\/uc\?.*id=([^&]+)/i, /\/thumbnail\?id=([^&]+)/i, /\/file\/d\/([^/]+)/i];
           for (const rx of patterns) {
             const m = s.match(rx);
             if (m && m[1]) return m[1];
           }
-
           return '';
         },
 
         montarFallbacksImagem(url) {
           const fileId = this.getDriveFileIdFromUrl(url);
           const lista = [];
-
-          if (url) {
-            lista.push(url);
-          }
-
+          if (url) lista.push(url);
           if (fileId) {
             lista.push(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`);
             lista.push(`https://drive.google.com/uc?export=view&id=${fileId}`);
             lista.push(`https://lh3.googleusercontent.com/d/${fileId}=w1600`);
           }
-
           return [...new Set(lista.filter(Boolean))];
         },
 
@@ -2162,7 +2185,6 @@
           const atual = el.getAttribute('src') || '';
           const baseUrl = typeof img === 'string' ? img : (img.url || '');
           const fallbacks = this.montarFallbacksImagem(baseUrl);
-
           const idxAtual = fallbacks.indexOf(atual);
           const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
 
@@ -2188,18 +2210,11 @@
           const fallbacks = this.montarFallbacksImagem(baseUrl);
           const idxAtual = fallbacks.indexOf(atual);
           const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
-
-          if (proximo && proximo !== atual) {
-            this.modalImage = proximo;
-          }
+          if (proximo && proximo !== atual) this.modalImage = proximo;
         },
 
         adicionarAgendamentoAtividade() {
-          this.atividadeForm.agendamentos.push({
-            data: '',
-            horaInicio: '',
-            horaFim: ''
-          });
+          this.atividadeForm.agendamentos.push({ data: '', horaInicio: '', horaFim: '' });
         },
 
         removerAgendamentoAtividade(idx) {
@@ -2214,18 +2229,14 @@
             endereco: '',
             resumo: '',
             link: '',
-            agendamentos: [
-              { data: '', horaInicio: '', horaFim: '' }
-            ]
+            agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
           };
         },
 
         editarAtividade(idx) {
           const item = this.atividades[idx];
           let ags = this.parseAgendamentos(item.agendamentosJson || item.agendamentos || []);
-          if (!ags.length) {
-            ags = [{ data: '', horaInicio: '', horaFim: '' }];
-          }
+          if (!ags.length) ags = [{ data: '', horaInicio: '', horaFim: '' }];
 
           this.atividadeForm = {
             id: item.id || null,
@@ -2233,11 +2244,7 @@
             endereco: item.endereco || '',
             resumo: item.resumo || '',
             link: item.link || '',
-            agendamentos: ags.map(a => ({
-              data: a.data || '',
-              horaInicio: a.horaInicio || '',
-              horaFim: a.horaFim || ''
-            }))
+            agendamentos: ags.map(a => ({ data: a.data || '', horaInicio: a.horaInicio || '', horaFim: a.horaFim || '' }))
           };
 
           window.location.hash = '#atividades';
@@ -2245,29 +2252,19 @@
 
         async excluirAtividade(idx) {
           if (!this.isAdmin) return;
-
           const senha = prompt('Informe a senha para excluir a atividade:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente excluir esta atividade?')) return;
 
           const item = this.atividades[idx];
-
           try {
             await this.apiPost('delete_activity', { id: item.id });
             this.atividades.splice(idx, 1);
-
             if (this.active === idx) this.active = null;
             if (typeof this.active === 'number' && this.active > idx) this.active--;
-
             this.limparAtividadeForm();
-
-            if (this.atividadesPage > this.atividadesTotalPages) {
-              this.atividadesPage = this.atividadesTotalPages;
-            }
+            if (this.atividadesPage > this.atividadesTotalPages) this.atividadesPage = this.atividadesTotalPages;
           } catch (e) {
             alert('Erro ao excluir atividade: ' + e.message);
           }
@@ -2275,24 +2272,13 @@
 
         async salvarTudoAtividades() {
           if (!this.isAdmin) return;
-
-          if (!this.atividadeForm.titulo.trim()) {
-            alert('Informe o nome da atividade.');
-            return;
-          }
+          if (!this.atividadeForm.titulo.trim()) return alert('Informe o nome da atividade.');
 
           const agendamentosValidos = this.atividadeForm.agendamentos
-            .map(a => ({
-              data: (a.data || '').trim(),
-              horaInicio: (a.horaInicio || '').trim(),
-              horaFim: (a.horaFim || '').trim()
-            }))
+            .map(a => ({ data: (a.data || '').trim(), horaInicio: (a.horaInicio || '').trim(), horaFim: (a.horaFim || '').trim() }))
             .filter(a => a.data || a.horaInicio || a.horaFim);
 
-          if (!agendamentosValidos.length) {
-            alert('Adicione pelo menos um dia ou horário para a atividade.');
-            return;
-          }
+          if (!agendamentosValidos.length) return alert('Adicione pelo menos um dia ou horário para a atividade.');
 
           const payload = {
             id: this.atividadeForm.id,
@@ -2345,29 +2331,22 @@
         async compressImage(file, maxWidth = 1600, quality = 0.88) {
           return new Promise((resolve, reject) => {
             const reader = new FileReader();
-
             reader.onload = (e) => {
               const img = new Image();
-
               img.onload = () => {
                 const scale = Math.min(1, maxWidth / img.width);
                 const canvas = document.createElement('canvas');
                 canvas.width = Math.round(img.width * scale);
                 canvas.height = Math.round(img.height * scale);
                 const ctx = canvas.getContext('2d');
-
                 ctx.fillStyle = '#ffffff';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                const dataUrl = canvas.toDataURL('image/jpeg', quality);
-                resolve(dataUrl);
+                resolve(canvas.toDataURL('image/jpeg', quality));
               };
-
               img.onerror = reject;
               img.src = e.target.result;
             };
-
             reader.onerror = reject;
             reader.readAsDataURL(file);
           });
@@ -2382,13 +2361,11 @@
 
           const file = event.target.files && event.target.files[0];
           if (!file) return;
-
           if (this.imagens.length >= 25) {
             alert('O limite do mural é de 25 fotos. Exclua uma antes de inserir outra.');
             event.target.value = '';
             return;
           }
-
           if (!file.type.startsWith('image/') && !/\.jfif$/i.test(file.name || '')) {
             alert('Selecione um arquivo de imagem.');
             event.target.value = '';
@@ -2398,13 +2375,11 @@
           try {
             const dataUrl = await this.compressImage(file);
             const base64 = dataUrl.split(',')[1];
-
             const created = await this.apiPost('upload_photo', {
               fileName: (file.name || 'foto.jpg').replace(/\.jfif$/i, '.jpg'),
               mimeType: 'image/jpeg',
               base64: base64
             });
-
             this.imagens.push(created);
           } catch (e) {
             console.error(e);
@@ -2415,23 +2390,14 @@
         },
 
         async removerFoto(foto, index) {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode excluir fotos.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode excluir fotos.');
           const senha = prompt('Informe a senha para excluir a foto:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente excluir esta foto do mural?')) return;
 
           try {
-            if (foto && foto.id) {
-              await this.apiPost('delete_photo', { id: foto.id });
-            }
+            if (foto && foto.id) await this.apiPost('delete_photo', { id: foto.id });
             this.imagens.splice(index, 1);
             if (this.modalOpen && this.modalIndex === index) this.closeModal();
           } catch (e) {
@@ -2474,11 +2440,7 @@
 
           const senha = prompt('Informe a senha de administrador:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
-
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           this.isAdmin = true;
           localStorage.setItem(ADMIN_STORAGE_KEY, '1');
         },
@@ -2510,16 +2472,14 @@
         },
 
         async apiGetList() {
-          const url = API + '?action=list';
-          const r = await fetch(url, { method: 'GET' });
+          const r = await fetch(API + '?action=list', { method: 'GET' });
           if (!r.ok) throw new Error('Falha ao listar');
           const data = await r.json();
           this.bancoTodos = Array.isArray(data) ? data : (data.data || []);
         },
 
         async apiGetAtividadesList() {
-          const url = API + '?action=list_activities';
-          const r = await fetch(url, { method: 'GET' });
+          const r = await fetch(API + '?action=list_activities', { method: 'GET' });
           if (!r.ok) throw new Error('Falha ao listar atividades');
           const data = await r.json();
           const arr = Array.isArray(data) ? data : (data.data || []);
@@ -2528,8 +2488,7 @@
         },
 
         async apiGetFotosList() {
-          const url = API + '?action=list_photos';
-          const r = await fetch(url, { method: 'GET' });
+          const r = await fetch(API + '?action=list_photos', { method: 'GET' });
           if (!r.ok) throw new Error('Falha ao listar fotos');
           const data = await r.json();
           const arr = Array.isArray(data) ? data : (data.data || []);
@@ -2537,56 +2496,32 @@
         },
 
         async apiGetEventosList() {
-          const url = API + '?action=list_events';
-          const r = await fetch(url, { method: 'GET' });
+          const r = await fetch(API + '?action=list_events', { method: 'GET' });
           if (!r.ok) throw new Error('Falha ao listar eventos');
           const data = await r.json();
           const arr = Array.isArray(data) ? data : (data.data || []);
-          this.eventosBanco = Array.isArray(arr) ? arr : [];
-          this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
+          this.eventosBanco = this.ordenarEventosLista(Array.isArray(arr) ? arr : []);
         },
 
         async apiPost(action, payload) {
-          const r = await fetch(API + '?action=' + action, {
-            method: 'POST',
-            body: JSON.stringify(payload || {})
-          });
+          const r = await fetch(API + '?action=' + action, { method: 'POST', body: JSON.stringify(payload || {}) });
           const json = await r.json();
           if (!r.ok || json.ok === false) throw new Error(json.error || 'Erro');
           return json.data;
         },
 
         ordenarEventosLista(arr) {
-          return [...arr].sort((a, b) => {
-            const da = this.normalizarDataEvento(a.dataEvento);
-            const db = this.normalizarDataEvento(b.dataEvento);
-            return db.localeCompare(da);
-          });
+          return [...arr].sort((a, b) => this.normalizarDataEvento(b.dataEvento).localeCompare(this.normalizarDataEvento(a.dataEvento)));
         },
 
-        async apiEventosInsert(payload) {
-          return await this.apiPost('insert_event', payload);
-        },
-
-        async apiEventosUpdate(payload) {
-          return await this.apiPost('update_event', payload);
-        },
-
-        async apiEventosDelete(id) {
-          return await this.apiPost('delete_event', { id });
-        },
-
-        async apiEventosTruncate() {
-          return await this.apiPost('delete_all_events', {});
-        },
+        async apiEventosInsert(payload) { return await this.apiPost('insert_event', payload); },
+        async apiEventosUpdate(payload) { return await this.apiPost('update_event', payload); },
+        async apiEventosDelete(id) { return await this.apiPost('delete_event', { id }); },
+        async apiEventosTruncate() { return await this.apiPost('delete_all_events', {}); },
 
         async gerarTodosEventosJson() {
           await this.apiGetEventosList();
-          const resposta = {
-            ok: true,
-            data: this.eventosBanco,
-            total: this.eventosBanco.length
-          };
+          const resposta = { ok: true, data: this.eventosBanco, total: this.eventosBanco.length };
           this.eventosApiPreview = JSON.stringify(resposta, null, 2);
           return resposta;
         },
@@ -2594,20 +2529,13 @@
         async abrirTodosEventosJsonModal() {
           if (!this.isAdmin) return;
           this.eventosApiModal = true;
-          try {
-            await this.gerarTodosEventosJson();
-          } catch (e) {
-            this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
-          }
+          try { await this.gerarTodosEventosJson(); }
+          catch (e) { this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
         },
 
         async gerarTodasAtividadesJson() {
           await this.apiGetAtividadesList();
-          const resposta = {
-            ok: true,
-            data: this.atividades,
-            total: this.atividades.length
-          };
+          const resposta = { ok: true, data: this.atividades, total: this.atividades.length };
           this.atividadesApiPreview = JSON.stringify(resposta, null, 2);
           return resposta;
         },
@@ -2615,20 +2543,13 @@
         async abrirTodasAtividadesJsonModal() {
           if (!this.isAdmin) return;
           this.atividadesApiModal = true;
-          try {
-            await this.gerarTodasAtividadesJson();
-          } catch (e) {
-            this.atividadesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
-          }
+          try { await this.gerarTodasAtividadesJson(); }
+          catch (e) { this.atividadesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
         },
 
         async gerarTodosParticipantesJson() {
           await this.apiGetList();
-          const resposta = {
-            ok: true,
-            data: this.bancoTodos,
-            total: this.bancoTodos.length
-          };
+          const resposta = { ok: true, data: this.bancoTodos, total: this.bancoTodos.length };
           this.participantesApiPreview = JSON.stringify(resposta, null, 2);
           return resposta;
         },
@@ -2636,33 +2557,19 @@
         async abrirTodosParticipantesJsonModal() {
           if (!this.isAdmin) return;
           this.participantesApiModal = true;
-          try {
-            await this.gerarTodosParticipantesJson();
-          } catch (e) {
-            this.participantesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
-          }
+          try { await this.gerarTodosParticipantesJson(); }
+          catch (e) { this.participantesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
         },
 
-        copiarUrlEventosJson() {
-          this.copiarTexto(API + '?action=list_events', 'URL dos eventos copiada com sucesso.');
-        },
-
-        copiarUrlAtividadesJson() {
-          this.copiarTexto(API + '?action=list_activities', 'URL das atividades copiada com sucesso.');
-        },
-
-        copiarUrlParticipantesJson() {
-          this.copiarTexto(API + '?action=list', 'URL dos participantes copiada com sucesso.');
-        },
+        copiarUrlEventosJson() { this.copiarTexto(API + '?action=list_events', 'URL dos eventos copiada com sucesso.'); },
+        copiarUrlAtividadesJson() { this.copiarTexto(API + '?action=list_activities', 'URL das atividades copiada com sucesso.'); },
+        copiarUrlParticipantesJson() { this.copiarTexto(API + '?action=list', 'URL dos participantes copiada com sucesso.'); },
 
         copiarTexto(texto, mensagemSucesso) {
           if (navigator.clipboard && window.isSecureContext) {
-            navigator.clipboard.writeText(texto)
-              .then(() => alert(mensagemSucesso))
-              .catch(() => this.copiarTextoFallback(texto, mensagemSucesso));
+            navigator.clipboard.writeText(texto).then(() => alert(mensagemSucesso)).catch(() => this.copiarTextoFallback(texto, mensagemSucesso));
             return;
           }
-
           this.copiarTextoFallback(texto, mensagemSucesso);
         },
 
@@ -2674,14 +2581,12 @@
           input.style.left = '-9999px';
           document.body.appendChild(input);
           input.select();
-
           try {
             document.execCommand('copy');
             alert(mensagemSucesso);
           } catch (e) {
             alert('Não foi possível copiar automaticamente. URL: ' + texto);
           }
-
           document.body.removeChild(input);
         },
 
@@ -2699,18 +2604,9 @@
         },
 
         handleModalKeys(ev) {
-          if (ev.key === 'Escape') {
-            this.closeModal();
-            ev.preventDefault();
-          }
-          if (ev.key === 'ArrowRight') {
-            this.nextImage();
-            ev.preventDefault();
-          }
-          if (ev.key === 'ArrowLeft') {
-            this.prevImage();
-            ev.preventDefault();
-          }
+          if (ev.key === 'Escape') { this.closeModal(); ev.preventDefault(); }
+          if (ev.key === 'ArrowRight') { this.nextImage(); ev.preventDefault(); }
+          if (ev.key === 'ArrowLeft') { this.prevImage(); ev.preventDefault(); }
         },
 
         prevImage() {
@@ -2731,44 +2627,26 @@
 
         async load() {
           this.loading = true;
-          try {
-            await this.apiGetList();
-          } catch (e) {
-            console.error(e);
-            alert('Não consegui conectar à API de pessoas. Verifique a URL do Google Apps Script.');
-          } finally {
-            this.loading = false;
-          }
+          try { await this.apiGetList(); }
+          catch (e) { console.error(e); alert('Não consegui conectar à API de pessoas. Verifique a URL do Google Apps Script.'); }
+          finally { this.loading = false; }
         },
 
         async loadAtividades() {
-          try {
-            await this.apiGetAtividadesList();
-          } catch (e) {
-            console.error(e);
-            alert('A API de atividades não respondeu. Verifique a publicação do Google Apps Script.');
-          }
+          try { await this.apiGetAtividadesList(); }
+          catch (e) { console.error(e); alert('A API de atividades não respondeu. Verifique a publicação do Google Apps Script.'); }
         },
 
         async loadFotos() {
-          try {
-            await this.apiGetFotosList();
-          } catch (e) {
-            console.error(e);
-            alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.');
-          }
+          try { await this.apiGetFotosList(); }
+          catch (e) { console.error(e); alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.'); }
         },
 
         async loadEventos() {
           this.eventosLoading = true;
-          try {
-            await this.apiGetEventosList();
-          } catch (e) {
-            console.error(e);
-            alert('A API de eventos não respondeu. Verifique a publicação do Google Apps Script.');
-          } finally {
-            this.eventosLoading = false;
-          }
+          try { await this.apiGetEventosList(); }
+          catch (e) { console.error(e); alert('A API de eventos não respondeu. Verifique a publicação do Google Apps Script.'); }
+          finally { this.eventosLoading = false; }
         },
 
         async insertRegistro() {
@@ -2777,21 +2655,7 @@
             const created = await this.apiPost('insert', this.novo);
             this.bancoTodos.push(created);
             this.salvarMeuRegistroId(created.id);
-
-            this.novo = {
-              nome: '',
-              email: '',
-              celular: '',
-              logradouro: '',
-              numero: '',
-              bairro: '',
-              complemento: '',
-              cidade: '',
-              idade: '',
-              modalidade: '',
-              observacoes: ''
-            };
-
+            this.novo = { nome: '', email: '', celular: '', logradouro: '', numero: '', bairro: '', complemento: '', cidade: '', idade: '', modalidade: '', observacoes: '' };
             if (this.isAdmin) this.page = this.totalPages;
           } catch (e) {
             alert('Erro ao inserir: ' + e.message);
@@ -2801,18 +2665,12 @@
         },
 
         viewDetalhes(r) {
-          if (!this.podeManipularRegistro(r)) {
-            alert('Você só pode visualizar os cadastros que inseriu.');
-            return;
-          }
+          if (!this.podeManipularRegistro(r)) return alert('Você só pode visualizar os cadastros que inseriu.');
           this.detalhes = r;
         },
 
         openEdit(r) {
-          if (!this.podeManipularRegistro(r)) {
-            alert('Você só pode editar os cadastros que inseriu.');
-            return;
-          }
+          if (!this.podeManipularRegistro(r)) return alert('Você só pode editar os cadastros que inseriu.');
           this.editBuffer = JSON.parse(JSON.stringify(r));
           this.editModal = true;
         },
@@ -2823,11 +2681,7 @@
         },
 
         async saveEdit() {
-          if (!this.editBuffer || !this.podeManipularRegistro(this.editBuffer)) {
-            alert('Você não tem permissão para editar este cadastro.');
-            return;
-          }
-
+          if (!this.editBuffer || !this.podeManipularRegistro(this.editBuffer)) return alert('Você não tem permissão para editar este cadastro.');
           this.loading = true;
           try {
             const upd = await this.apiPost('update', this.editBuffer);
@@ -2842,17 +2696,10 @@
         },
 
         async deleteRegistro(registro) {
-          if (!this.podeManipularRegistro(registro)) {
-            alert('Você só pode excluir os cadastros que inseriu.');
-            return;
-          }
-
+          if (!this.podeManipularRegistro(registro)) return alert('Você só pode excluir os cadastros que inseriu.');
           const senha = prompt('Informe a senha para excluir o registro:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente excluir este registro?')) return;
 
           this.loading = true;
@@ -2869,17 +2716,10 @@
         },
 
         async resetBanco() {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode apagar todos os registros.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode apagar todos os registros.');
           const senha = prompt('Informe a senha para APAGAR TODOS os registros:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente apagar todos os registros?')) return;
 
           this.loading = true;
@@ -2896,23 +2736,13 @@
         },
 
         async insertEvento() {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode inserir eventos.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode inserir eventos.');
           this.eventosLoading = true;
           try {
             const created = await this.apiEventosInsert(this.novoEvento);
             this.eventosBanco.push(created);
             this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
-
-            this.novoEvento = {
-              dataEvento: '',
-              nomeEvento: '',
-              descricao: ''
-            };
-
+            this.novoEvento = { dataEvento: '', nomeEvento: '', descricao: '' };
             this.eventosPage = 1;
             await this.gerarTodosEventosJson();
           } catch (e) {
@@ -2928,10 +2758,7 @@
         },
 
         openEditEvento(ev) {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode editar eventos.');
-            return;
-          }
+          if (!this.isAdmin) return alert('Somente o administrador pode editar eventos.');
           this.editEventoBuffer = JSON.parse(JSON.stringify(ev));
           this.editEventoModal = true;
         },
@@ -2942,20 +2769,14 @@
         },
 
         async saveEditEvento() {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode editar eventos.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode editar eventos.');
           this.eventosLoading = true;
           try {
             const upd = await this.apiEventosUpdate(this.editEventoBuffer);
             const idx = this.eventosBanco.findIndex(x => Number(x.id) === Number(upd.id));
             if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
-
             this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
             await this.gerarTodosEventosJson();
-
             this.closeEditEvento();
           } catch (e) {
             alert('Erro ao salvar evento: ' + e.message);
@@ -2965,17 +2786,10 @@
         },
 
         async deleteEvento(evento) {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode excluir eventos.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode excluir eventos.');
           const senha = prompt('Informe a senha para excluir o evento:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente excluir este evento?')) return;
 
           this.eventosLoading = true;
@@ -2992,17 +2806,10 @@
         },
 
         async resetEventos() {
-          if (!this.isAdmin) {
-            alert('Somente o administrador pode apagar todos os eventos.');
-            return;
-          }
-
+          if (!this.isAdmin) return alert('Somente o administrador pode apagar todos os eventos.');
           const senha = prompt('Informe a senha para APAGAR TODOS os eventos:');
           if (senha === null) return;
-          if (senha !== SENHA_EXCLUSAO) {
-            alert('Senha incorreta.');
-            return;
-          }
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
           if (!confirm('Deseja realmente apagar todos os eventos?')) return;
 
           this.eventosLoading = true;
@@ -3018,21 +2825,10 @@
           }
         },
 
-        prevPage() {
-          if (this.page > 1) this.page--;
-        },
-
-        nextPage() {
-          if (this.page < this.totalPages) this.page++;
-        },
-
-        prevEventosPage() {
-          if (this.eventosPage > 1) this.eventosPage--;
-        },
-
-        nextEventosPage() {
-          if (this.eventosPage < this.eventosTotalPages) this.eventosPage++;
-        }
+        prevPage() { if (this.page > 1) this.page--; },
+        nextPage() { if (this.page < this.totalPages) this.page++; },
+        prevEventosPage() { if (this.eventosPage > 1) this.eventosPage--; },
+        nextEventosPage() { if (this.eventosPage < this.eventosTotalPages) this.eventosPage++; }
       },
 
       mounted() {
@@ -3041,6 +2837,7 @@
         this.loadEventos();
         this.loadAtividades();
         this.loadFotos();
+        window.addEventListener('resize', this.updateViewport, { passive: true });
 
         const body = document.body;
         const btnContrast = document.getElementById('btn-contrast');
@@ -3055,11 +2852,7 @@
         btnMotion.addEventListener('click', () => {
           body.classList.toggle('reduce-motion');
           this.reduceMotionActive = body.classList.contains('reduce-motion');
-          if (this.reduceMotionActive) {
-            this.active = '__ALL__';
-          } else {
-            this.active = null;
-          }
+          this.active = this.reduceMotionActive ? '__ALL__' : null;
         });
 
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -3082,6 +2875,11 @@
           fontScale = Math.max(80, fontScale - 10);
           applyFontScale();
         });
+      },
+
+      beforeDestroy() {
+        window.removeEventListener('resize', this.updateViewport);
+        document.removeEventListener('keydown', this.handleModalKeys);
       }
     });
   </script>

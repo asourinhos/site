@@ -1318,6 +1318,18 @@
               Limpar
             </button>
           </div>
+
+          <div class="api-box">
+            <div class="api-actions">
+              <button type="button" class="botao-formulario" @click="abrirTodasAtividadesJsonModal">
+                <i class="fas fa-code"></i> Todas atividades JSON
+              </button>
+
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlAtividadesJson">
+                <i class="fas fa-link"></i> Copiar URL atividades
+              </button>
+            </div>
+          </div>
         </div>
 
         <div class="atividades-carousel-wrap">
@@ -1452,6 +1464,18 @@
             <button v-if="isAdmin" type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
           </form>
 
+          <div class="api-box" v-if="isAdmin">
+            <div class="api-actions">
+              <button type="button" class="botao-formulario" @click="abrirTodosParticipantesJsonModal">
+                <i class="fas fa-code"></i> Todos participantes JSON
+              </button>
+
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlParticipantesJson">
+                <i class="fas fa-link"></i> Copiar URL participantes
+              </button>
+            </div>
+          </div>
+
           <template v-if="isAdmin">
             <div style="margin-top:20px; width:100%; max-width:900px;">
               <input
@@ -1542,6 +1566,10 @@
             <div class="api-actions">
               <button type="button" class="botao-formulario" @click="abrirTodosEventosJsonModal">
                 <i class="fas fa-code"></i> Todos eventos JSON
+              </button>
+
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlEventosJson">
+                <i class="fas fa-link"></i> Copiar URL eventos
               </button>
             </div>
           </div>
@@ -1741,6 +1769,34 @@
           </div>
         </div>
       </div>
+
+      <div v-if="atividadesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-atividades-modal" @click="atividadesApiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-atividades-modal" style="margin-top:0; color:var(--cor-secundaria);">Todas as Atividades em JSON</h3>
+
+          <div class="fake-api-preview">{{ atividadesApiPreview }}</div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#6c757d;" @click="atividadesApiModal=false">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="participantesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-participantes-modal" @click="participantesApiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-participantes-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Participantes em JSON</h3>
+
+          <div class="fake-api-preview">{{ participantesApiPreview }}</div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#6c757d;" @click="participantesApiModal=false">
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
     </main>
   </div>
 
@@ -1812,6 +1868,10 @@
         isAdmin: false,
         eventosApiModal: false,
         eventosApiPreview: '',
+        atividadesApiModal: false,
+        atividadesApiPreview: '',
+        participantesApiModal: false,
+        participantesApiPreview: '',
 
         textoQuemSomos: [
           'A Associação Amigos dos Surdos de Ourinhos e Região é uma organização voltada à promoção da inclusão, da acessibilidade e do fortalecimento da comunidade surda em Ourinhos e municípios próximos. Seu trabalho busca ampliar a participação social das pessoas surdas, valorizar a Libras e construir relações mais respeitosas entre a comunidade surda, as famílias, os serviços públicos e a sociedade em geral.',
@@ -2539,6 +2599,90 @@
           } catch (e) {
             this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
           }
+        },
+
+        async gerarTodasAtividadesJson() {
+          await this.apiGetAtividadesList();
+          const resposta = {
+            ok: true,
+            data: this.atividades,
+            total: this.atividades.length
+          };
+          this.atividadesApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodasAtividadesJsonModal() {
+          if (!this.isAdmin) return;
+          this.atividadesApiModal = true;
+          try {
+            await this.gerarTodasAtividadesJson();
+          } catch (e) {
+            this.atividadesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
+          }
+        },
+
+        async gerarTodosParticipantesJson() {
+          await this.apiGetList();
+          const resposta = {
+            ok: true,
+            data: this.bancoTodos,
+            total: this.bancoTodos.length
+          };
+          this.participantesApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodosParticipantesJsonModal() {
+          if (!this.isAdmin) return;
+          this.participantesApiModal = true;
+          try {
+            await this.gerarTodosParticipantesJson();
+          } catch (e) {
+            this.participantesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
+          }
+        },
+
+        copiarUrlEventosJson() {
+          this.copiarTexto(API + '?action=list_events', 'URL dos eventos copiada com sucesso.');
+        },
+
+        copiarUrlAtividadesJson() {
+          this.copiarTexto(API + '?action=list_activities', 'URL das atividades copiada com sucesso.');
+        },
+
+        copiarUrlParticipantesJson() {
+          this.copiarTexto(API + '?action=list', 'URL dos participantes copiada com sucesso.');
+        },
+
+        copiarTexto(texto, mensagemSucesso) {
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(texto)
+              .then(() => alert(mensagemSucesso))
+              .catch(() => this.copiarTextoFallback(texto, mensagemSucesso));
+            return;
+          }
+
+          this.copiarTextoFallback(texto, mensagemSucesso);
+        },
+
+        copiarTextoFallback(texto, mensagemSucesso) {
+          const input = document.createElement('textarea');
+          input.value = texto;
+          input.setAttribute('readonly', '');
+          input.style.position = 'absolute';
+          input.style.left = '-9999px';
+          document.body.appendChild(input);
+          input.select();
+
+          try {
+            document.execCommand('copy');
+            alert(mensagemSucesso);
+          } catch (e) {
+            alert('Não foi possível copiar automaticamente. URL: ' + texto);
+          }
+
+          document.body.removeChild(input);
         },
 
         openModal(i) {

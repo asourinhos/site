@@ -14,7 +14,6 @@
       --cor-clara: #f7fafc;
       --cor-card-atividade: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.98));
       --sombra: 0 10px 30px rgba(0,0,0,0.12);
-      --radius: 18px;
     }
 
     html { font-size: 100%; }
@@ -101,19 +100,17 @@
         transition: none !important;
         scroll-behavior: auto !important;
       }
-    }
 
-    .reduce-motion * {
-      animation: none !important;
-      transition: none !important;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
       .atividade {
         opacity: 1 !important;
         transform: none !important;
         animation: none !important;
       }
+    }
+
+    .reduce-motion * {
+      animation: none !important;
+      transition: none !important;
     }
 
     .reduce-motion .atividade {
@@ -251,8 +248,7 @@
     }
 
     .botao-formulario,
-    .botao-secundario,
-    .btn-mini-acao {
+    .botao-secundario {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -273,9 +269,7 @@
     .botao-formulario:hover,
     .botao-formulario:focus,
     .botao-secundario:hover,
-    .botao-secundario:focus,
-    .btn-mini-acao:hover,
-    .btn-mini-acao:focus {
+    .botao-secundario:focus {
       background-color: var(--cor-secundaria);
       transform: translateY(-1px);
     }
@@ -418,34 +412,11 @@
       text-align: left;
     }
 
-    .api-box h3 {
-      margin-top: 0;
-      color: var(--cor-primaria);
-    }
-
     .api-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-top: 14px;
-    }
-
-    .api-endpoints {
-      margin-top: 16px;
-      background: #f8fbff;
-      border: 1px solid #dbe8f5;
-      border-radius: 14px;
-      padding: 14px;
-      font-size: 0.95rem;
-      color: #334;
-      overflow-wrap: anywhere;
-    }
-
-    .api-endpoints code {
-      background: #eef4fb;
-      padding: 2px 6px;
-      border-radius: 6px;
-      font-size: 0.92rem;
     }
 
     .modal {
@@ -1041,7 +1012,6 @@
     .evento-acoes .mini-btn.editar { background: #007bff; }
     .evento-acoes .mini-btn.excluir { background: #dc3545; }
     .evento-acoes .mini-btn.ver { background: #6c757d; }
-    .evento-acoes .mini-btn.api { background: #5b21b6; }
 
     .evento-vazio {
       width: 100%;
@@ -1064,18 +1034,6 @@
       border: 1px solid rgba(255,255,255,0.08);
       white-space: pre-wrap;
       word-break: break-word;
-    }
-
-    .api-mini-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(91,33,182,0.10);
-      color: #4c1d95;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 0.88rem;
-      font-weight: 700;
     }
 
     footer {
@@ -1812,7 +1770,6 @@
     const SENHA_EXCLUSAO = '1234';
     const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
     const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
-
     const EVENTOS_API_BASE = '/api/eventos';
     const EVENTOS_STORAGE_KEY = 'aso_eventos_fake_mysql_v1';
     const EVENTOS_SEQ_KEY = 'aso_eventos_fake_mysql_seq_v1';
@@ -1863,8 +1820,6 @@
     new Vue({
       el: '#app',
       data: {
-        API,
-        EVENTOS_API_BASE,
         isAdmin: false,
         eventosApiModal: false,
         eventosApiPreview: '',
@@ -1898,10 +1853,8 @@
 
         atividadesPage: 1,
         atividadesPerPage: 4,
-        atividadesApiStatus: 'desconectado',
 
         imagens: [...GALERIA_PADRAO],
-        fotosApiStatus: 'desconectado',
         active: null,
         reduceMotionActive: false,
 
@@ -1923,7 +1876,6 @@
         page: 1,
         perPage: 5,
         loading: false,
-        apiStatus: 'desconectado',
         detalhes: null,
         editModal: false,
         editBuffer: null,
@@ -1938,7 +1890,6 @@
         eventosPage: 1,
         eventosPerPage: 3,
         eventosLoading: false,
-        eventosApiStatus: 'offline',
         detalhesEvento: null,
         editEventoModal: false,
         editEventoBuffer: null,
@@ -2020,33 +1971,6 @@
         eventosPaginados() {
           const start = (this.eventosPage - 1) * this.eventosPerPage;
           return this.eventosFiltrados.slice(start, start + this.eventosPerPage);
-        },
-
-        eventosApiExemplo() {
-          return JSON.stringify({
-            ok: true,
-            message: 'Consulta realizada com sucesso.',
-            data: [
-              {
-                id: 1,
-                dataEvento: '2026-03-15',
-                nomeEvento: 'Encontro da Comunidade Surda',
-                descricao: 'Evento de integração e fortalecimento da comunidade.'
-              }
-            ],
-            meta: {
-              api: 'ASO Eventos REST',
-              version: '1.0.0',
-              method: 'GET',
-              endpoint: '/api/eventos/list',
-              database: 'mysql',
-              table: 'eventos',
-              total: 1,
-              page: 1,
-              limit: 10,
-              timestamp: new Date().toISOString()
-            }
-          }, null, 2);
         }
       },
 
@@ -2433,10 +2357,8 @@
             });
 
             this.imagens.push(created);
-            this.fotosApiStatus = 'conectado';
           } catch (e) {
             console.error(e);
-            this.fotosApiStatus = 'desconectado';
             alert('Erro ao enviar foto: ' + e.message);
           } finally {
             event.target.value = '';
@@ -2575,22 +2497,6 @@
           return json.data;
         },
 
-        setStatus(ok) {
-          this.apiStatus = ok ? 'conectado' : 'desconectado';
-        },
-
-        setEventosStatus(ok) {
-          this.eventosApiStatus = ok ? 'online' : 'offline';
-        },
-
-        setAtividadesStatus(ok) {
-          this.atividadesApiStatus = ok ? 'conectado' : 'desconectado';
-        },
-
-        setFotosStatus(ok) {
-          this.fotosApiStatus = ok ? 'conectado' : 'desconectado';
-        },
-
         openModal(i) {
           this.modalIndex = i;
           this.modalImage = this.resolverImagem(this.imagens[i]);
@@ -2639,10 +2545,8 @@
           this.loading = true;
           try {
             await this.apiGetList();
-            this.setStatus(true);
           } catch (e) {
             console.error(e);
-            this.setStatus(false);
             alert('Não consegui conectar à API de pessoas. Verifique a URL do Google Apps Script.');
           } finally {
             this.loading = false;
@@ -2652,10 +2556,8 @@
         async loadAtividades() {
           try {
             await this.apiGetAtividadesList();
-            this.setAtividadesStatus(true);
           } catch (e) {
             console.error(e);
-            this.setAtividadesStatus(false);
             alert('A API de atividades não respondeu. Verifique a publicação do Google Apps Script.');
           }
         },
@@ -2663,10 +2565,8 @@
         async loadFotos() {
           try {
             await this.apiGetFotosList();
-            this.setFotosStatus(true);
           } catch (e) {
             console.error(e);
-            this.setFotosStatus(false);
             alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.');
           }
         },
@@ -2865,25 +2765,6 @@
           let eventos = this.lerEventosStorage();
           eventos = this.ordenarEventosLista(eventos);
 
-          if (action === 'ping') {
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'API de eventos online.',
-              data: {
-                status: 'online',
-                driver: 'rest-json-simulado',
-                database: 'mysql',
-                table: 'eventos'
-              },
-              meta: this.montarEventosMeta({
-                method: 'GET',
-                endpoint: `${EVENTOS_API_BASE}/ping`,
-                total: eventos.length,
-                limit: 1
-              })
-            });
-          }
-
           if (action === 'list') {
             const page = Number(extras.page || 1);
             const limit = Number(extras.limit || 50);
@@ -2900,37 +2781,6 @@
                 total: eventos.length,
                 page,
                 limit
-              })
-            });
-          }
-
-          if (action === 'show') {
-            const id = Number(extras.id || payload.id);
-            const found = eventos.find(ev => Number(ev.id) === id);
-
-            if (!found) {
-              return this.montarEventosResposta({
-                ok: false,
-                message: 'Evento não encontrado.',
-                data: null,
-                meta: this.montarEventosMeta({
-                  method: 'GET',
-                  endpoint: `${EVENTOS_API_BASE}/show/${id}`,
-                  total: eventos.length,
-                  limit: 1
-                })
-              });
-            }
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Evento localizado com sucesso.',
-              data: found,
-              meta: this.montarEventosMeta({
-                method: 'GET',
-                endpoint: `${EVENTOS_API_BASE}/show/${id}`,
-                total: eventos.length,
-                limit: 1
               })
             });
           }
@@ -3116,10 +2966,8 @@
           this.eventosApiModal = true;
           try {
             await this.gerarTodosEventosJson();
-            this.setEventosStatus(true);
           } catch (e) {
             this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
-            this.setEventosStatus(false);
           }
         },
 
@@ -3127,10 +2975,8 @@
           this.eventosLoading = true;
           try {
             await this.apiGetEventosList();
-            this.setEventosStatus(true);
           } catch (e) {
             console.error(e);
-            this.setEventosStatus(false);
             alert('A API simulada de eventos não respondeu corretamente.');
           } finally {
             this.eventosLoading = false;

@@ -1556,14 +1556,6 @@
       <section id="eventos-dados" aria-labelledby="titulo-cadastro-eventos">
         <h2 id="titulo-cadastro-eventos">Eventos</h2>
 
-        <div class="status-wrap">
-          <div class="badge" role="status" aria-live="polite">
-            📅 Status da API Eventos: <strong>{{ eventosApiStatus }}</strong>
-          </div>
-          <div class="badge" v-if="isAdmin"><strong>Gerenciamento de eventos visível apenas para administrador</strong></div>
-          <div class="badge" v-if="isAdmin"><span class="api-mini-badge"><i class="fas fa-database"></i> API REST JSON simulada localmente</span></div>
-        </div>
-
         <div class="eventos-admin" v-if="isAdmin">
           <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
             <p id="dica-form-eventos" class="visually-hidden">
@@ -1589,28 +1581,10 @@
           </div>
 
           <div class="api-box">
-            <h3>API simulada de eventos</h3>
-            <div class="badge">Essa área fica visível só para administrador e imita uma API REST JSON com retorno estilo banco MySQL.</div>
-
             <div class="api-actions">
-              <button type="button" class="botao-formulario" @click="copiarEventosApiUrl">
-                <i class="fas fa-copy"></i> Copiar rota fake
+              <button type="button" class="botao-formulario" @click="abrirTodosEventosJsonModal">
+                <i class="fas fa-code"></i> Todos eventos JSON
               </button>
-              <button type="button" class="botao-formulario" @click="testarEventosApiPing">
-                <i class="fas fa-plug"></i> Testar API Eventos
-              </button>
-              <button type="button" class="botao-formulario" @click="abrirEventosApiModal">
-                <i class="fas fa-code"></i> Ver endpoints
-              </button>
-            </div>
-
-            <div class="api-endpoints">
-              <div><strong>Base fake:</strong> <code>{{ EVENTOS_API_BASE }}</code></div>
-              <div style="margin-top:8px;"><strong>Exemplo:</strong> <code>{{ EVENTOS_API_BASE }}/list?page=1&limit=10</code></div>
-            </div>
-
-            <div class="fake-api-preview" v-if="eventosApiPreview">
-{{ eventosApiPreview }}
             </div>
           </div>
         </div>
@@ -1635,9 +1609,9 @@
                 type="button"
                 class="botao-formulario"
                 style="background:#5b21b6;"
-                @click="abrirEventosApiModal"
+                @click="abrirTodosEventosJsonModal"
               >
-                <i class="fas fa-server"></i> API Eventos
+                <i class="fas fa-server"></i> Todos eventos JSON
               </button>
             </div>
           </div>
@@ -1668,7 +1642,6 @@
                   <button class="mini-btn ver" type="button" @click="viewDetalhesEvento(ev)">Ver detalhes</button>
                   <button class="mini-btn editar" type="button" @click="openEditEvento(ev)">Editar</button>
                   <button class="mini-btn excluir" type="button" @click="deleteEvento(ev)">Excluir</button>
-                  <button class="mini-btn api" type="button" @click="simularEndpointEventoPorId(ev.id)">API</button>
                 </div>
               </div>
             </article>
@@ -1807,32 +1780,11 @@
 
       <div v-if="eventosApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-eventos-modal" @click="eventosApiModal=false">
         <div class="modal-card" @click.stop>
-          <h3 id="titulo-api-eventos-modal" style="margin-top:0; color:var(--cor-secundaria);">API simulada de Eventos</h3>
+          <h3 id="titulo-api-eventos-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Eventos em JSON</h3>
 
-          <p><b>Base fake:</b><br><code>{{ EVENTOS_API_BASE }}</code></p>
-
-          <p><b>GET:</b></p>
-          <p><code>{{ EVENTOS_API_BASE }}/ping</code></p>
-          <p><code>{{ EVENTOS_API_BASE }}/list?page=1&limit=10</code></p>
-          <p><code>{{ EVENTOS_API_BASE }}/show/1</code></p>
-
-          <p><b>POST:</b></p>
-          <p><code>{{ EVENTOS_API_BASE }}/insert</code></p>
-
-          <p><b>PUT:</b></p>
-          <p><code>{{ EVENTOS_API_BASE }}/update/1</code></p>
-
-          <p><b>DELETE:</b></p>
-          <p><code>{{ EVENTOS_API_BASE }}/delete/1</code></p>
-          <p><code>{{ EVENTOS_API_BASE }}/truncate</code></p>
-
-          <p><b>Exemplo de resposta:</b></p>
-          <div class="fake-api-preview">{{ eventosApiPreview || eventosApiExemplo }}</div>
+          <div class="fake-api-preview">{{ eventosApiPreview }}</div>
 
           <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
-            <button class="botao-formulario" @click="testarEventosApiPing">
-              Testar ping
-            </button>
             <button class="botao-formulario" style="background:#6c757d;" @click="eventosApiModal=false">
               Fechar
             </button>
@@ -3153,39 +3105,22 @@
           return resposta.data;
         },
 
-        async abrirEventosApiModal() {
+        async gerarTodosEventosJson() {
+          const resposta = await this.fakeEventosApi('list', {}, { page: 1, limit: 9999 });
+          this.eventosApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodosEventosJsonModal() {
           if (!this.isAdmin) return;
           this.eventosApiModal = true;
-          await this.testarEventosApiPing();
-        },
-
-        async copiarEventosApiUrl() {
-          if (!this.isAdmin) return;
           try {
-            await navigator.clipboard.writeText(this.EVENTOS_API_BASE);
-            alert('Rota fake da API de eventos copiada.');
-          } catch (e) {
-            prompt('Copie manualmente a rota fake da API de eventos:', this.EVENTOS_API_BASE);
-          }
-        },
-
-        async testarEventosApiPing() {
-          if (!this.isAdmin) return;
-          try {
-            const resposta = await this.fakeEventosApi('ping');
-            this.eventosApiPreview = JSON.stringify(resposta, null, 2);
+            await this.gerarTodosEventosJson();
             this.setEventosStatus(true);
           } catch (e) {
             this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
             this.setEventosStatus(false);
           }
-        },
-
-        async simularEndpointEventoPorId(id) {
-          if (!this.isAdmin) return;
-          const resposta = await this.fakeEventosApi('show', {}, { id });
-          this.eventosApiPreview = JSON.stringify(resposta, null, 2);
-          this.eventosApiModal = true;
         },
 
         async loadEventos() {
@@ -3221,7 +3156,7 @@
             };
 
             this.eventosPage = 1;
-            this.eventosApiPreview = JSON.stringify(await this.fakeEventosApi('show', {}, { id: created.id }), null, 2);
+            await this.gerarTodosEventosJson();
           } catch (e) {
             alert('Erro ao inserir evento: ' + e.message);
           } finally {
@@ -3261,7 +3196,7 @@
             if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
 
             this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
-            this.eventosApiPreview = JSON.stringify(await this.fakeEventosApi('show', {}, { id: upd.id }), null, 2);
+            await this.gerarTodosEventosJson();
 
             this.closeEditEvento();
           } catch (e) {
@@ -3290,11 +3225,7 @@
             await this.apiEventosDelete(evento.id);
             this.eventosBanco = this.eventosBanco.filter(ev => Number(ev.id) !== Number(evento.id));
             if (this.eventosPage > this.eventosTotalPages) this.eventosPage = this.eventosTotalPages;
-            this.eventosApiPreview = JSON.stringify({
-              ok: true,
-              message: `Evento ${evento.id} removido com sucesso.`,
-              data: { id: evento.id }
-            }, null, 2);
+            await this.gerarTodosEventosJson();
           } catch (e) {
             alert('Erro ao excluir evento: ' + e.message);
           } finally {
@@ -3321,7 +3252,7 @@
             await this.apiEventosTruncate();
             this.eventosBanco = [];
             this.eventosPage = 1;
-            this.eventosApiPreview = JSON.stringify(await this.fakeEventosApi('list', {}, { page: 1, limit: 10 }), null, 2);
+            await this.gerarTodosEventosJson();
           } catch (e) {
             alert('Erro ao apagar todos os eventos: ' + e.message);
           } finally {

@@ -1460,38 +1460,7 @@
         <h2 id="titulo-cadastro">Participe</h2>
 
         <div class="status-wrap">
-          <div class="badge" role="status" aria-live="polite">
-            🔗 Status da API Pessoas: <strong>{{ apiStatus }}</strong>
-          </div>
-          <div class="badge" role="status" aria-live="polite">
-            🖼️ Status das Fotos: <strong>{{ fotosApiStatus }}</strong>
-          </div>
-          <div class="badge" role="status" aria-live="polite">
-            📚 Status das Atividades: <strong>{{ atividadesApiStatus }}</strong>
-          </div>
           <div class="badge" v-if="isAdmin"><strong>Modo administrador ativo</strong></div>
-        </div>
-
-        <div class="api-box">
-          <h3>API do site</h3>
-          <div class="badge">Aqui você consegue copiar e testar a API publicada do Google Apps Script.</div>
-
-          <div class="api-actions">
-            <button type="button" class="botao-formulario" @click="copiarApiUrl">
-              <i class="fas fa-copy"></i> Copiar URL da API
-            </button>
-            <button type="button" class="botao-formulario" @click="abrirApiPing">
-              <i class="fas fa-plug"></i> Testar API
-            </button>
-            <button type="button" class="botao-formulario" @click="apiModal = true">
-              <i class="fas fa-code"></i> Ver endpoints
-            </button>
-          </div>
-
-          <div class="api-endpoints">
-            <div><strong>Base:</strong> <code>{{ API }}</code></div>
-            <div style="margin-top:8px;"><strong>Teste rápido:</strong> <code>{{ API }}?action=ping</code></div>
-          </div>
         </div>
 
         <div class="bloco-admin">
@@ -1836,39 +1805,6 @@
         </div>
       </div>
 
-      <div v-if="apiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-modal" @click="apiModal=false">
-        <div class="modal-card" @click.stop>
-          <h3 id="titulo-api-modal" style="margin-top:0; color:var(--cor-secundaria);">Endpoints da API</h3>
-
-          <p><b>Base:</b><br><code>{{ API }}</code></p>
-          <p><b>GET:</b></p>
-          <p><code>?action=ping</code></p>
-          <p><code>?action=list</code></p>
-          <p><code>?action=list_events</code></p>
-          <p><code>?action=list_activities</code></p>
-          <p><code>?action=list_photos</code></p>
-
-          <p><b>POST:</b></p>
-          <p><code>?action=insert</code></p>
-          <p><code>?action=update</code></p>
-          <p><code>?action=delete</code></p>
-          <p><code>?action=delete_all</code></p>
-          <p><code>?action=insert_event</code></p>
-          <p><code>?action=update_event</code></p>
-          <p><code>?action=delete_event</code></p>
-          <p><code>?action=delete_all_events</code></p>
-          <p><code>?action=insert_activity</code></p>
-          <p><code>?action=update_activity</code></p>
-          <p><code>?action=delete_activity</code></p>
-          <p><code>?action=upload_photo</code></p>
-          <p><code>?action=delete_photo</code></p>
-
-          <div style="text-align:right; margin-top:18px;">
-            <button class="botao-formulario" @click="apiModal=false">Fechar</button>
-          </div>
-        </div>
-      </div>
-
       <div v-if="eventosApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-eventos-modal" @click="eventosApiModal=false">
         <div class="modal-card" @click.stop>
           <h3 id="titulo-api-eventos-modal" style="margin-top:0; color:var(--cor-secundaria);">API simulada de Eventos</h3>
@@ -1978,7 +1914,6 @@
         API,
         EVENTOS_API_BASE,
         isAdmin: false,
-        apiModal: false,
         eventosApiModal: false,
         eventosApiPreview: '',
 
@@ -2746,19 +2681,6 @@
 
         toggle(idx) {
           this.active = this.active === idx ? null : idx;
-        },
-
-        async copiarApiUrl() {
-          try {
-            await navigator.clipboard.writeText(this.API);
-            alert('URL da API copiada.');
-          } catch (e) {
-            prompt('Copie manualmente a URL da API:', this.API);
-          }
-        },
-
-        abrirApiPing() {
-          window.open(this.API + '?action=ping', '_blank', 'noopener');
         },
 
         async load() {

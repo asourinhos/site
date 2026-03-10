@@ -86,10 +86,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      background:
-        radial-gradient(circle at top, rgba(0,179,81,0.07), transparent 25%),
-        radial-gradient(circle at bottom, rgba(27,40,69,0.10), transparent 32%),
-        linear-gradient(180deg, #f8fbff 0%, #eef5fb 100%);
+      background: #ffffff;
       padding: 110px 20px 40px;
     }
     .hero-box {
@@ -103,7 +100,6 @@
     header img.logo {
       width: min(80vw, 780px);
       max-width: 100%;
-      mix-blend-mode: multiply;
       filter: drop-shadow(0 18px 40px rgba(0,0,0,0.10));
       background: transparent;
     }
@@ -125,27 +121,12 @@
     #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
     #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); scroll-margin-top: 80px; }
 
-    .section-kicker {
-      font-size: 0.95rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-weight: 800;
-      color: var(--cor-secundaria);
-      margin-bottom: 10px;
-    }
-
     h2 {
-      font-size: 2.5rem;
-      margin: 0 0 18px;
-      color: var(--cor-primaria);
+      font-size: 2.625rem;
+      margin: 0 0 25px;
+      color: var(--cor-secundaria);
       line-height: 1.15;
-    }
-
-    .section-subtitle {
-      max-width: 860px;
-      margin: 0 auto 26px;
-      color: #4d5b66;
-      font-size: 1.08rem;
+      text-align: center;
     }
 
     .quem-box {
@@ -394,41 +375,6 @@
       margin: 18px 0 8px;
       text-align: left;
       width: 100%;
-    }
-
-    .atividades-header-box {
-      width: 100%;
-      max-width: 1250px;
-      background: rgba(255,255,255,0.72);
-      border-radius: 18px;
-      box-shadow: var(--sombra);
-      padding: 22px;
-      margin-bottom: 28px;
-      text-align: left;
-    }
-
-    .sede-grid {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 20px;
-      align-items: start;
-    }
-
-    .sede-card {
-      background: #fff;
-      border-radius: 16px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-      padding: 18px;
-      height: 100%;
-    }
-
-    .mapa-embed {
-      width: 100%;
-      min-height: 230px;
-      border: none;
-      border-radius: 16px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
-      background: #fff;
     }
 
     .atividades-carousel-wrap {
@@ -978,7 +924,7 @@
       .mural-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
       .atividades-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .eventos-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .sede-grid, .footer-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
@@ -1031,9 +977,7 @@
       </header>
 
       <section id="quem-somos" aria-labelledby="titulo-quem-somos">
-        <div class="section-kicker">Conheça a associação</div>
-        <h2 id="titulo-quem-somos">Uma ponte entre inclusão, comunidade e cidadania</h2>
-        <p class="section-subtitle">A ASO atua para fortalecer a comunidade surda, ampliar a acessibilidade e aproximar pessoas, famílias e instituições em Ourinhos e região.</p>
+        <h2 id="titulo-quem-somos">Quem Somos</h2>
 
         <div class="quem-box">
           <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
@@ -1073,9 +1017,7 @@
       </section>
 
       <section id="atividades" aria-labelledby="titulo-atividades">
-        <div class="section-kicker">Onde a associação acontece</div>
-        <h2 id="titulo-atividades">Atividades, encontros e serviços da ASO</h2>
-        <p class="section-subtitle">Veja as ações disponíveis, os horários e onde cada atividade acontece. Tudo organizado para facilitar o acesso da comunidade.</p>
+        <h2 id="titulo-atividades">Atividades</h2>
 
         <div class="atividades-admin" v-if="isAdmin">
           <h3 style="margin-top:0; color:var(--cor-primaria);">Gerenciar atividades e endereço da sede</h3>
@@ -1112,22 +1054,6 @@
             <button class="botao-formulario" type="button" @click="adicionarLinhaAgenda">Adicionar horário</button>
             <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">Salvar tudo</button>
             <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
-          </div>
-        </div>
-
-        <div class="atividades-header-box">
-          <div class="sede-grid">
-            <div class="sede-card">
-              <h3 style="margin-top:0; color:var(--cor-primaria); font-size:1.5rem;">{{ sede.nome }}</h3>
-              <p style="font-size:1.08rem; color:#555; margin-bottom:16px;">
-                Espaço de convivência, atendimento e realização das principais ações da associação.
-              </p>
-              <p style="font-size:1.02rem; margin:0;"><strong>Endereço:</strong><br>{{ sede.endereco }}</p>
-            </div>
-
-            <div>
-              <iframe class="mapa-embed" :src="googleMapsEmbed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
           </div>
         </div>
 
@@ -1206,9 +1132,7 @@
       </section>
 
       <section id="banco-dados" aria-labelledby="titulo-cadastro">
-        <div class="section-kicker">Faça parte</div>
-        <h2 id="titulo-cadastro">Participe da associação e mantenha seu cadastro ativo</h2>
-        <p class="section-subtitle">Preencha seus dados para se aproximar das atividades, eventos e ações promovidas pela ASO.</p>
+        <h2 id="titulo-cadastro">Participe</h2>
 
         <div class="status-wrap">
           <div class="badge" role="status" aria-live="polite">
@@ -1308,9 +1232,7 @@
       </section>
 
       <section id="eventos-dados" aria-labelledby="titulo-cadastro-eventos">
-        <div class="section-kicker">Agenda da associação</div>
-        <h2 id="titulo-cadastro-eventos">Acompanhe os próximos eventos e encontros</h2>
-        <p class="section-subtitle">Confira a programação mais recente da ASO com uma visualização mais direta, bonita e fácil de acompanhar.</p>
+        <h2 id="titulo-cadastro-eventos">Eventos</h2>
 
         <div class="status-wrap">
           <div class="badge" role="status" aria-live="polite">

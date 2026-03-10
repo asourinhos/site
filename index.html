@@ -1561,16 +1561,6 @@
               <button v-if="eventosTotalPages > 1" @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Avançar eventos">
                 <i class="fas fa-chevron-right"></i>
               </button>
-
-              <button
-                v-if="isAdmin"
-                type="button"
-                class="botao-formulario"
-                style="background:#5b21b6;"
-                @click="abrirTodosEventosJsonModal"
-              >
-                <i class="fas fa-server"></i> Todos eventos JSON
-              </button>
             </div>
           </div>
 
@@ -1713,6 +1703,8 @@
           <p><b>Data do evento:</b> {{ formatarData(detalhesEvento.dataEvento) }}</p>
           <p><b>Nome do evento:</b> {{ detalhesEvento.nomeEvento }}</p>
           <p><b>Descrição:</b> {{ detalhesEvento.descricao || '—' }}</p>
+          <p v-if="detalhesEvento.createdAt"><b>Criado em:</b> {{ detalhesEvento.createdAt }}</p>
+          <p v-if="detalhesEvento.updatedAt"><b>Atualizado em:</b> {{ detalhesEvento.updatedAt }}</p>
           <div style="text-align:right; margin-top:10px;">
             <button class="botao-formulario" @click="detalhesEvento=null">Fechar</button>
           </div>
@@ -1770,9 +1762,6 @@
     const SENHA_EXCLUSAO = '1234';
     const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
     const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
-    const EVENTOS_API_BASE = '/api/eventos';
-    const EVENTOS_STORAGE_KEY = 'aso_eventos_fake_mysql_v1';
-    const EVENTOS_SEQ_KEY = 'aso_eventos_fake_mysql_seq_v1';
 
     const SEDE_PADRAO = {
       endereco: 'Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP'
@@ -2487,6 +2476,16 @@
           this.imagens = Array.isArray(arr) ? arr : [];
         },
 
+        async apiGetEventosList() {
+          const url = API + '?action=list_events';
+          const r = await fetch(url, { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar eventos');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.eventosBanco = Array.isArray(arr) ? arr : [];
+          this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
+        },
+
         async apiPost(action, payload) {
           const r = await fetch(API + '?action=' + action, {
             method: 'POST',
@@ -2495,6 +2494,51 @@
           const json = await r.json();
           if (!r.ok || json.ok === false) throw new Error(json.error || 'Erro');
           return json.data;
+        },
+
+        ordenarEventosLista(arr) {
+          return [...arr].sort((a, b) => {
+            const da = this.normalizarDataEvento(a.dataEvento);
+            const db = this.normalizarDataEvento(b.dataEvento);
+            return db.localeCompare(da);
+          });
+        },
+
+        async apiEventosInsert(payload) {
+          return await this.apiPost('insert_event', payload);
+        },
+
+        async apiEventosUpdate(payload) {
+          return await this.apiPost('update_event', payload);
+        },
+
+        async apiEventosDelete(id) {
+          return await this.apiPost('delete_event', { id });
+        },
+
+        async apiEventosTruncate() {
+          return await this.apiPost('delete_all_events', {});
+        },
+
+        async gerarTodosEventosJson() {
+          await this.apiGetEventosList();
+          const resposta = {
+            ok: true,
+            data: this.eventosBanco,
+            total: this.eventosBanco.length
+          };
+          this.eventosApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodosEventosJsonModal() {
+          if (!this.isAdmin) return;
+          this.eventosApiModal = true;
+          try {
+            await this.gerarTodosEventosJson();
+          } catch (e) {
+            this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
+          }
         },
 
         openModal(i) {
@@ -2568,6 +2612,18 @@
           } catch (e) {
             console.error(e);
             alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.');
+          }
+        },
+
+        async loadEventos() {
+          this.eventosLoading = true;
+          try {
+            await this.apiGetEventosList();
+          } catch (e) {
+            console.error(e);
+            alert('A API de eventos não respondeu. Verifique a publicação do Google Apps Script.');
+          } finally {
+            this.eventosLoading = false;
           }
         },
 
@@ -2692,294 +2748,6 @@
             alert('Erro ao apagar tudo: ' + e.message);
           } finally {
             this.loading = false;
-          }
-        },
-
-        eventosNowIso() {
-          return new Date().toISOString();
-        },
-
-        eventosDelay(ms = 180) {
-          return new Promise(resolve => setTimeout(resolve, ms));
-        },
-
-        lerEventosStorage() {
-          try {
-            const raw = localStorage.getItem(EVENTOS_STORAGE_KEY);
-            const parsed = raw ? JSON.parse(raw) : [];
-            return Array.isArray(parsed) ? parsed : [];
-          } catch (e) {
-            return [];
-          }
-        },
-
-        salvarEventosStorage(arr) {
-          localStorage.setItem(EVENTOS_STORAGE_KEY, JSON.stringify(arr));
-        },
-
-        obterProximoEventoId() {
-          const atual = Number(localStorage.getItem(EVENTOS_SEQ_KEY) || '0') + 1;
-          localStorage.setItem(EVENTOS_SEQ_KEY, String(atual));
-          return atual;
-        },
-
-        ordenarEventosLista(arr) {
-          return arr.sort((a, b) => {
-            const da = this.normalizarDataEvento(a.dataEvento);
-            const db = this.normalizarDataEvento(b.dataEvento);
-            return db.localeCompare(da);
-          });
-        },
-
-        montarEventosMeta({ method, endpoint, total = 0, page = 1, limit = 10, affectedRows = 0, insertId = null }) {
-          return {
-            api: 'ASO Eventos REST',
-            version: '1.0.0',
-            method,
-            endpoint,
-            database: 'mysql',
-            host: 'localhost',
-            schema: 'aso_site',
-            table: 'eventos',
-            total,
-            page,
-            limit,
-            affectedRows,
-            insertId,
-            timestamp: this.eventosNowIso()
-          };
-        },
-
-        montarEventosResposta({ ok = true, message = '', data = null, meta = {} }) {
-          return {
-            ok,
-            message,
-            data,
-            meta
-          };
-        },
-
-        async fakeEventosApi(action, payload = {}, extras = {}) {
-          await this.eventosDelay();
-
-          let eventos = this.lerEventosStorage();
-          eventos = this.ordenarEventosLista(eventos);
-
-          if (action === 'list') {
-            const page = Number(extras.page || 1);
-            const limit = Number(extras.limit || 50);
-            const start = (page - 1) * limit;
-            const data = eventos.slice(start, start + limit);
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Eventos listados com sucesso.',
-              data,
-              meta: this.montarEventosMeta({
-                method: 'GET',
-                endpoint: `${EVENTOS_API_BASE}/list`,
-                total: eventos.length,
-                page,
-                limit
-              })
-            });
-          }
-
-          if (action === 'insert') {
-            const novo = {
-              id: this.obterProximoEventoId(),
-              dataEvento: this.normalizarDataEvento(payload.dataEvento),
-              nomeEvento: String(payload.nomeEvento || '').trim(),
-              descricao: String(payload.descricao || '').trim(),
-              created_at: this.eventosNowIso(),
-              updated_at: this.eventosNowIso()
-            };
-
-            eventos.push(novo);
-            eventos = this.ordenarEventosLista(eventos);
-            this.salvarEventosStorage(eventos);
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Evento inserido com sucesso.',
-              data: novo,
-              meta: this.montarEventosMeta({
-                method: 'POST',
-                endpoint: `${EVENTOS_API_BASE}/insert`,
-                total: eventos.length,
-                affectedRows: 1,
-                insertId: novo.id,
-                limit: 1
-              })
-            });
-          }
-
-          if (action === 'update') {
-            const id = Number(payload.id || extras.id);
-            const idx = eventos.findIndex(ev => Number(ev.id) === id);
-
-            if (idx === -1) {
-              return this.montarEventosResposta({
-                ok: false,
-                message: 'Evento não encontrado para atualização.',
-                data: null,
-                meta: this.montarEventosMeta({
-                  method: 'PUT',
-                  endpoint: `${EVENTOS_API_BASE}/update/${id}`,
-                  total: eventos.length,
-                  affectedRows: 0,
-                  limit: 1
-                })
-              });
-            }
-
-            const atualizado = {
-              ...eventos[idx],
-              dataEvento: this.normalizarDataEvento(payload.dataEvento),
-              nomeEvento: String(payload.nomeEvento || '').trim(),
-              descricao: String(payload.descricao || '').trim(),
-              updated_at: this.eventosNowIso()
-            };
-
-            eventos[idx] = atualizado;
-            eventos = this.ordenarEventosLista(eventos);
-            this.salvarEventosStorage(eventos);
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Evento atualizado com sucesso.',
-              data: atualizado,
-              meta: this.montarEventosMeta({
-                method: 'PUT',
-                endpoint: `${EVENTOS_API_BASE}/update/${id}`,
-                total: eventos.length,
-                affectedRows: 1,
-                limit: 1
-              })
-            });
-          }
-
-          if (action === 'delete') {
-            const id = Number(payload.id || extras.id);
-            const existe = eventos.some(ev => Number(ev.id) === id);
-
-            if (!existe) {
-              return this.montarEventosResposta({
-                ok: false,
-                message: 'Evento não encontrado para exclusão.',
-                data: null,
-                meta: this.montarEventosMeta({
-                  method: 'DELETE',
-                  endpoint: `${EVENTOS_API_BASE}/delete/${id}`,
-                  total: eventos.length,
-                  affectedRows: 0,
-                  limit: 1
-                })
-              });
-            }
-
-            eventos = eventos.filter(ev => Number(ev.id) !== id);
-            this.salvarEventosStorage(eventos);
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Evento removido com sucesso.',
-              data: { id },
-              meta: this.montarEventosMeta({
-                method: 'DELETE',
-                endpoint: `${EVENTOS_API_BASE}/delete/${id}`,
-                total: eventos.length,
-                affectedRows: 1,
-                limit: 1
-              })
-            });
-          }
-
-          if (action === 'truncate') {
-            localStorage.setItem(EVENTOS_STORAGE_KEY, JSON.stringify([]));
-
-            return this.montarEventosResposta({
-              ok: true,
-              message: 'Tabela de eventos esvaziada com sucesso.',
-              data: [],
-              meta: this.montarEventosMeta({
-                method: 'DELETE',
-                endpoint: `${EVENTOS_API_BASE}/truncate`,
-                total: 0,
-                affectedRows: eventos.length,
-                limit: 0
-              })
-            });
-          }
-
-          return this.montarEventosResposta({
-            ok: false,
-            message: 'Endpoint inválido.',
-            data: null,
-            meta: this.montarEventosMeta({
-              method: 'GET',
-              endpoint: `${EVENTOS_API_BASE}/unknown`,
-              total: eventos.length
-            })
-          });
-        },
-
-        async apiGetEventosList() {
-          const resposta = await this.fakeEventosApi('list', {}, { page: 1, limit: 500 });
-          if (!resposta.ok) throw new Error(resposta.message || 'Falha ao listar eventos');
-          this.eventosBanco = Array.isArray(resposta.data) ? resposta.data : [];
-          this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
-        },
-
-        async apiEventosInsert(payload) {
-          const resposta = await this.fakeEventosApi('insert', payload);
-          if (!resposta.ok) throw new Error(resposta.message || 'Erro ao inserir evento');
-          return resposta.data;
-        },
-
-        async apiEventosUpdate(payload) {
-          const resposta = await this.fakeEventosApi('update', payload, { id: payload.id });
-          if (!resposta.ok) throw new Error(resposta.message || 'Erro ao atualizar evento');
-          return resposta.data;
-        },
-
-        async apiEventosDelete(id) {
-          const resposta = await this.fakeEventosApi('delete', { id }, { id });
-          if (!resposta.ok) throw new Error(resposta.message || 'Erro ao excluir evento');
-          return resposta.data;
-        },
-
-        async apiEventosTruncate() {
-          const resposta = await this.fakeEventosApi('truncate');
-          if (!resposta.ok) throw new Error(resposta.message || 'Erro ao limpar eventos');
-          return resposta.data;
-        },
-
-        async gerarTodosEventosJson() {
-          const resposta = await this.fakeEventosApi('list', {}, { page: 1, limit: 9999 });
-          this.eventosApiPreview = JSON.stringify(resposta, null, 2);
-          return resposta;
-        },
-
-        async abrirTodosEventosJsonModal() {
-          if (!this.isAdmin) return;
-          this.eventosApiModal = true;
-          try {
-            await this.gerarTodosEventosJson();
-          } catch (e) {
-            this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2);
-          }
-        },
-
-        async loadEventos() {
-          this.eventosLoading = true;
-          try {
-            await this.apiGetEventosList();
-          } catch (e) {
-            console.error(e);
-            alert('A API simulada de eventos não respondeu corretamente.');
-          } finally {
-            this.eventosLoading = false;
           }
         },
 

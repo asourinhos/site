@@ -12,6 +12,7 @@
       --cor-primaria: #1b2845;
       --cor-secundaria: #00b351;
       --cor-clara: #f7fafc;
+      --cor-card-atividade: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.98));
       --sombra: 0 10px 30px rgba(0,0,0,0.12);
       --radius: 18px;
     }
@@ -147,7 +148,7 @@
       color: #334;
     }
 
-    .botao-formulario, .botao-secundario {
+    .botao-formulario, .botao-secundario, .btn-mini-acao {
       display: inline-flex;
       align-items: center;
       justify-content: center;
@@ -165,7 +166,8 @@
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
     .botao-formulario:hover, .botao-formulario:focus,
-    .botao-secundario:hover, .botao-secundario:focus {
+    .botao-secundario:hover, .botao-secundario:focus,
+    .btn-mini-acao:hover, .btn-mini-acao:focus {
       background-color: var(--cor-secundaria);
       transform: translateY(-1px);
     }
@@ -333,6 +335,8 @@
       max-width:1000px;
       width:95%;
       text-align:left;
+      max-height: 92vh;
+      overflow: auto;
     }
 
     .modal-img { max-width:90%; max-height:80%; border-radius:12px; }
@@ -358,6 +362,43 @@
       box-shadow: var(--sombra);
       padding: 22px;
       margin-bottom: 28px;
+    }
+
+    .agenda-multiplos-dias {
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .agenda-dia-linha {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: #f7fbff;
+      border: 1px solid #d9e8f6;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .agenda-dia-linha .remover-dia {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .agenda-dia-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
     }
 
     .atividades-carousel-wrap {
@@ -395,10 +436,10 @@
     }
 
     .atividade {
-      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,242,0.98));
+      background: var(--cor-card-atividade);
       padding: 1.35rem;
-      border-radius: 18px;
-      box-shadow: 0 8px 22px rgba(0,0,0,0.12);
+      border-radius: 22px;
+      box-shadow: 0 14px 30px rgba(20, 33, 61, 0.12);
       display: flex;
       flex-direction: column;
       align-items: stretch;
@@ -407,16 +448,17 @@
       animation: slideUp 0.5s forwards;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 340px;
+      min-height: 390px;
       height: auto;
       align-self: start;
       position: relative;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.75);
     }
 
     .atividade:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 26px rgba(0,0,0,0.14);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 34px rgba(20, 33, 61, 0.16);
     }
 
     .atividade::before {
@@ -424,15 +466,25 @@
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(circle at top right, rgba(0,179,81,0.06), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(27,40,69,0.06), transparent 28%);
+        radial-gradient(circle at top right, rgba(0,179,81,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(27,40,69,0.09), transparent 28%);
       pointer-events: none;
+    }
+
+    .atividade-faixa {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--cor-secundaria), #61d89c, #93c5fd);
+      z-index: 1;
     }
 
     .atividade-admin-icons {
       position: absolute;
-      top: 12px;
-      right: 12px;
+      top: 14px;
+      right: 14px;
       display: flex;
       gap: 8px;
       z-index: 3;
@@ -460,6 +512,20 @@
       padding-right: 84px;
       position: relative;
       z-index: 1;
+      padding-top: 10px;
+    }
+
+    .atividade-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,179,81,0.10);
+      color: var(--cor-secundaria);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.84rem;
+      font-weight: 800;
+      letter-spacing: .2px;
     }
 
     .atividade h3 {
@@ -518,6 +584,66 @@
       line-height: 1.55;
     }
 
+    .atividade-agenda-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .atividade-agenda-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #ffffff;
+      border: 1px solid #e5eef7;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .atividade-agenda-icone {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(27,40,69,0.08);
+      color: var(--cor-primaria);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .atividade-agenda-texto strong {
+      display: block;
+      color: var(--cor-primaria);
+      font-size: 0.96rem;
+      line-height: 1.3;
+    }
+
+    .atividade-agenda-texto span {
+      display: block;
+      color: #666;
+      font-size: 0.92rem;
+      margin-top: 2px;
+    }
+
+    .atividade-chip-endereco {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(27,40,69,0.08);
+      color: var(--cor-primaria);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 6px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
     .link-info {
       margin-top: 14px;
       display: inline-block;
@@ -569,6 +695,7 @@
       border-bottom: 1px solid rgba(0,0,0,0.08);
       text-align: left;
       font-size: 0.9375rem;
+      vertical-align: top;
     }
     .table-db th { background: var(--cor-primaria); color: #fff; }
     .table-db tr:hover td { background: rgba(0,0,0,0.05); }
@@ -895,6 +1022,7 @@
       .atividades-carousel-wrap { gap: 8px; }
       .atividade-nav-btn { width: 42px; height: 42px; }
       h2 { font-size: 2rem; }
+      .agenda-dia-linha { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 480px) {
@@ -952,9 +1080,9 @@
           <div class="mural-titulo-interno">MURAL</div>
 
           <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
-            <div class="mural-foto" v-for="(img,i) in imagens" :key="img + '-' + i">
+            <div class="mural-foto" v-for="(img,i) in imagens" :key="(img.id || img.url || 'img') + '-' + i">
               <img
-                :src="img"
+                :src="img.url || img"
                 class="mural-foto-img"
                 :alt="'Foto da ASO número ' + (i+1)"
                 :role="reduceMotionActive ? null : 'button'"
@@ -965,7 +1093,12 @@
               />
               <div class="mural-foto-rodape">
                 <span>Foto {{ i + 1 }}</span>
-                <button v-if="isAdmin" class="btn-remover-foto" type="button" @click="removerFoto(i)">
+                <button
+                  v-if="isAdmin"
+                  class="btn-remover-foto"
+                  type="button"
+                  @click="removerFoto(img, i)"
+                >
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -983,24 +1116,61 @@
           <div class="form-db" style="margin-top:0;">
             <input v-model="atividadeForm.titulo" placeholder="Título da atividade" aria-label="Título da atividade">
             <input v-model="atividadeForm.endereco" placeholder="Endereço" aria-label="Endereço">
-
-            <select v-model="atividadeForm.horaInicio" aria-label="Hora de início">
-              <option value="">Hora inicial</option>
-              <option v-for="hora in horasPredefinidas" :key="'ini-'+hora" :value="hora">{{ hora }}</option>
-            </select>
-
-            <select v-model="atividadeForm.horaFim" aria-label="Hora de término">
-              <option value="">Hora final</option>
-              <option v-for="hora in horasPredefinidas" :key="'fim-'+hora" :value="hora">{{ hora }}</option>
-            </select>
-
             <input v-model="atividadeForm.link" placeholder="Link" aria-label="Link">
             <textarea v-model="atividadeForm.resumo" placeholder="Descrição" aria-label="Descrição da atividade"></textarea>
           </div>
 
+          <div class="agenda-multiplos-dias">
+            <div style="font-weight:800; color:var(--cor-primaria); font-size:1rem;">
+              Dias e horários da atividade
+            </div>
+
+            <div
+              class="agenda-dia-linha"
+              v-for="(agenda, idxAgenda) in atividadeForm.agendamentos"
+              :key="'agenda-'+idxAgenda"
+            >
+              <input
+                v-model="agenda.data"
+                type="date"
+                aria-label="Dia da atividade"
+              >
+
+              <select v-model="agenda.horaInicio" aria-label="Hora inicial">
+                <option value="">Hora inicial</option>
+                <option v-for="hora in horasPredefinidas" :key="'ini-'+idxAgenda+'-'+hora" :value="hora">{{ hora }}</option>
+              </select>
+
+              <select v-model="agenda.horaFim" aria-label="Hora final">
+                <option value="">Hora final</option>
+                <option v-for="hora in horasPredefinidas" :key="'fim-'+idxAgenda+'-'+hora" :value="hora">{{ hora }}</option>
+              </select>
+
+              <button
+                type="button"
+                class="remover-dia"
+                @click="removerAgendamentoAtividade(idxAgenda)"
+                :disabled="atividadeForm.agendamentos.length === 1"
+                title="Remover dia"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+
+            <div class="agenda-dia-actions">
+              <button class="botao-secundario" type="button" @click="adicionarAgendamentoAtividade">
+                <i class="fas fa-calendar-plus"></i> Adicionar dia e horário
+              </button>
+            </div>
+          </div>
+
           <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
-            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">Salvar atividade</button>
-            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
+            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">
+              Salvar atividade
+            </button>
+            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">
+              Limpar
+            </button>
           </div>
         </div>
 
@@ -1013,7 +1183,7 @@
             <article
               class="atividade"
               v-for="(item, idxLocal) in atividadesPaginadas"
-              :key="item.titulo + '-' + idxLocal + '-' + atividadesPage"
+              :key="(item.id || item.titulo) + '-' + idxLocal + '-' + atividadesPage"
               @click="!reduceMotionActive && toggle(item._originalIndex)"
               @keydown.enter.prevent="!reduceMotionActive && toggle(item._originalIndex)"
               @keydown.space.prevent="!reduceMotionActive && toggle(item._originalIndex)"
@@ -1021,6 +1191,8 @@
               :role="reduceMotionActive ? null : 'button'"
               :tabindex="reduceMotionActive ? -1 : 0"
             >
+              <div class="atividade-faixa"></div>
+
               <div class="atividade-admin-icons" v-if="isAdmin">
                 <button class="atividade-icon-btn edit" type="button" @click.stop="editarAtividade(item._originalIndex)" aria-label="Editar atividade">
                   <i class="fas fa-pen"></i>
@@ -1031,7 +1203,14 @@
               </div>
 
               <div class="atividade-topo">
+                <div class="atividade-badge">
+                  <i class="fas fa-hands"></i> Atividade ASO
+                </div>
                 <h3>{{ item.titulo }}</h3>
+              </div>
+
+              <div class="atividade-chip-endereco" v-if="item.endereco">
+                <i class="fas fa-location-dot"></i> {{ item.endereco }}
               </div>
 
               <p class="atividade-resumo">{{ item.resumo }}</p>
@@ -1039,10 +1218,27 @@
 
               <div class="atividade-detalhes" v-if="reduceMotionActive || active===item._originalIndex">
                 <div class="atividade-detalhe-bloco">
-                  <div class="atividade-detalhe-label">Horário e endereço</div>
+                  <div class="atividade-detalhe-label">Dias e horários</div>
                   <div class="atividade-detalhe-texto">
-                    <div><strong>Horário:</strong> {{ item.horario || '—' }}</div>
-                    <div><strong>Endereço:</strong> {{ item.endereco || '—' }}</div>
+                    <div v-if="item.agendamentosFormatados && item.agendamentosFormatados.length" class="atividade-agenda-lista">
+                      <div class="atividade-agenda-item" v-for="(agenda, idxAgenda) in item.agendamentosFormatados" :key="'agf-'+idxAgenda">
+                        <div class="atividade-agenda-icone">
+                          <i class="fas fa-calendar-days"></i>
+                        </div>
+                        <div class="atividade-agenda-texto">
+                          <strong>{{ agenda.dataExtenso || 'Data a combinar' }}</strong>
+                          <span>{{ agenda.horario || 'Horário a combinar' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>Agenda a combinar.</div>
+                  </div>
+                </div>
+
+                <div class="atividade-detalhe-bloco">
+                  <div class="atividade-detalhe-label">Local</div>
+                  <div class="atividade-detalhe-texto">
+                    {{ item.endereco || '—' }}
                   </div>
                 </div>
 
@@ -1076,6 +1272,12 @@
         <div class="status-wrap">
           <div class="badge" role="status" aria-live="polite">
             🔗 Status da API Pessoas: <strong>{{ apiStatus }}</strong>
+          </div>
+          <div class="badge" role="status" aria-live="polite">
+            🖼️ Status das Fotos: <strong>{{ fotosApiStatus }}</strong>
+          </div>
+          <div class="badge" role="status" aria-live="polite">
+            📚 Status das Atividades: <strong>{{ atividadesApiStatus }}</strong>
           </div>
           <div class="badge" v-if="isAdmin"><strong>Modo administrador ativo</strong></div>
         </div>
@@ -1384,14 +1586,24 @@
     </main>
   </div>
 
+  <!-- VLibras oficial -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
   <script>
-    const API = 'https://script.google.com/macros/s/AKfycbxIvASOTZRLP6rGYYAgnJ2ZUmHWVmjinAVtNp-O0IVhRb18t_qgtqy8gENz3B8mHdoC/exec';
-    const GALERIA_STORAGE_KEY = 'aso_mural_customizado_v9';
-    const GALERIA_PADRAO = ['1.jfif', '2.jfif', '3.jfif', '4.jfif', '5.jfif', '6.jfif'];
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <script>
+    const API = 'https://script.google.com/macros/s/AKfycbx15jJ1Ft-jUsfMS3fwO35FdKu9W2pvs0RoIqd2h2cTZnwtyFZBTg1FfGh5C2lE_yAr/exec';
+    const GALERIA_PADRAO = [];
     const SENHA_EXCLUSAO = '1234';
     const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
     const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
-    const ATIVIDADES_STORAGE_KEY = 'aso_atividades_custom_v5';
 
     const SEDE_PADRAO = {
       endereco: 'Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP'
@@ -1401,30 +1613,38 @@
       {
         titulo: 'Curso de Libras',
         endereco: 'Sede da ASO',
-        horario: '19:00 às 20:00',
         resumo: 'Aprendizado de Libras para comunidade, familiares e interessados em comunicação acessível.',
-        link: ''
+        link: '',
+        agendamentos: [
+          { data: '', horaInicio: '19:00', horaFim: '20:00' }
+        ]
       },
       {
         titulo: 'Atendimento Social',
         endereco: 'Sede da ASO',
-        horario: '14:00 às 17:00',
         resumo: 'Apoio, orientação e acolhimento à comunidade surda e às famílias.',
-        link: ''
+        link: '',
+        agendamentos: [
+          { data: '', horaInicio: '14:00', horaFim: '17:00' }
+        ]
       },
       {
         titulo: 'Eventos e Encontros',
         endereco: 'Ourinhos/SP',
-        horario: 'Datas variáveis',
         resumo: 'Ações de integração, cultura surda, convivência e conscientização.',
-        link: ''
+        link: '',
+        agendamentos: [
+          { data: '', horaInicio: '', horaFim: '' }
+        ]
       },
       {
         titulo: 'Voluntariado',
         endereco: 'Sede da ASO',
-        horario: 'Horário combinado',
         resumo: 'Espaço para quem deseja colaborar com as ações e atividades da associação.',
-        link: ''
+        link: '',
+        agendamentos: [
+          { data: '', horaInicio: '', horaFim: '' }
+        ]
       }
     ];
 
@@ -1443,13 +1663,14 @@
 
         atividades: JSON.parse(JSON.stringify(ATIVIDADES_PADRAO)),
         atividadeForm: {
-          indice: null,
+          id: null,
           titulo: '',
           endereco: '',
-          horaInicio: '',
-          horaFim: '',
           resumo: '',
-          link: ''
+          link: '',
+          agendamentos: [
+            { data: '', horaInicio: '', horaFim: '' }
+          ]
         },
         horasPredefinidas: [
           '06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30',
@@ -1459,8 +1680,10 @@
         ],
         atividadesPage: 1,
         atividadesPerPage: 4,
+        atividadesApiStatus: 'desconectado',
 
         imagens: [...GALERIA_PADRAO],
+        fotosApiStatus: 'desconectado',
         active: null,
         reduceMotionActive: false,
 
@@ -1530,6 +1753,7 @@
           const start = (this.atividadesPage - 1) * this.atividadesPerPage;
           return this.atividades.slice(start, start + this.atividadesPerPage).map((item, idx) => ({
             ...item,
+            agendamentosFormatados: this.parseAgendamentos(item.agendamentosJson || item.agendamentos || []),
             _originalIndex: start + idx
           }));
         },
@@ -1603,96 +1827,109 @@
           return str.length >= 10 ? str.slice(0, 10) : str;
         },
 
-        carregarGaleriaLocal() {
-          try {
-            const salvo = localStorage.getItem(GALERIA_STORAGE_KEY);
-            if (!salvo) return;
-            const parsed = JSON.parse(salvo);
-            if (Array.isArray(parsed) && parsed.length) this.imagens = parsed.slice(0, 25);
-          } catch (e) {
-            console.error('Erro ao carregar mural local:', e);
-          }
+        formatarDataCurta(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'Data a combinar';
+          const [ano, mes, dia] = normalizada.split('-');
+          return `${dia}/${mes}/${ano}`;
         },
 
-        salvarGaleriaLocal() {
-          try {
-            localStorage.setItem(GALERIA_STORAGE_KEY, JSON.stringify(this.imagens.slice(0, 25)));
-          } catch (e) {
-            console.error('Erro ao salvar mural local:', e);
-            alert('Não consegui salvar as fotos neste navegador.');
-          }
-        },
-
-        carregarAtividadesLocal() {
-          try {
-            const salvo = localStorage.getItem(ATIVIDADES_STORAGE_KEY);
-            if (!salvo) return;
-            const parsed = JSON.parse(salvo);
-            if (Array.isArray(parsed) && parsed.length) this.atividades = parsed;
-          } catch (e) {
-            console.error('Erro ao carregar atividades:', e);
-          }
-        },
-
-        salvarAtividadesLocal() {
-          try {
-            localStorage.setItem(ATIVIDADES_STORAGE_KEY, JSON.stringify(this.atividades));
-          } catch (e) {
-            console.error('Erro ao salvar atividades:', e);
-            alert('Não consegui salvar as atividades no navegador.');
-          }
+        formatarDataExtenso(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'Data a combinar';
+          const [ano, mes, dia] = normalizada.split('-');
+          const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+          return `${Number(dia)} de ${meses[Number(mes) - 1] || mes} de ${ano}`;
         },
 
         montarHorario(horaInicio, horaFim) {
           if (horaInicio && horaFim) return `${horaInicio} às ${horaFim}`;
           if (horaInicio) return horaInicio;
           if (horaFim) return horaFim;
-          return '';
+          return 'Horário a combinar';
         },
 
-        separarHorario(horario) {
-          const texto = String(horario || '').trim();
-          if (texto.includes(' às ')) {
-            const partes = texto.split(' às ');
-            return {
-              horaInicio: partes[0] || '',
-              horaFim: partes[1] || ''
-            };
+        parseAgendamentos(raw) {
+          let arr = [];
+          try {
+            if (Array.isArray(raw)) {
+              arr = raw;
+            } else if (typeof raw === 'string' && raw.trim()) {
+              arr = JSON.parse(raw);
+            }
+          } catch (e) {
+            arr = [];
           }
-          return {
-            horaInicio: texto || '',
+
+          if (!Array.isArray(arr)) arr = [];
+
+          return arr
+            .filter(item => item && (item.data || item.horaInicio || item.horaFim))
+            .map(item => ({
+              data: item.data || '',
+              horaInicio: item.horaInicio || '',
+              horaFim: item.horaFim || '',
+              dataCurta: item.data ? this.formatarDataCurta(item.data) : 'Data a combinar',
+              dataExtenso: item.data ? this.formatarDataExtenso(item.data) : 'Data a combinar',
+              horario: this.montarHorario(item.horaInicio, item.horaFim)
+            }))
+            .sort((a, b) => {
+              if (!a.data && !b.data) return 0;
+              if (!a.data) return 1;
+              if (!b.data) return -1;
+              return a.data.localeCompare(b.data);
+            });
+        },
+
+        adicionarAgendamentoAtividade() {
+          this.atividadeForm.agendamentos.push({
+            data: '',
+            horaInicio: '',
             horaFim: ''
-          };
+          });
+        },
+
+        removerAgendamentoAtividade(idx) {
+          if (this.atividadeForm.agendamentos.length <= 1) return;
+          this.atividadeForm.agendamentos.splice(idx, 1);
         },
 
         limparAtividadeForm() {
           this.atividadeForm = {
-            indice: null,
+            id: null,
             titulo: '',
             endereco: '',
-            horaInicio: '',
-            horaFim: '',
             resumo: '',
-            link: ''
+            link: '',
+            agendamentos: [
+              { data: '', horaInicio: '', horaFim: '' }
+            ]
           };
         },
 
         editarAtividade(idx) {
           const item = this.atividades[idx];
-          const horarioSeparado = this.separarHorario(item.horario);
+          let ags = this.parseAgendamentos(item.agendamentosJson || item.agendamentos || []);
+          if (!ags.length) {
+            ags = [{ data: '', horaInicio: '', horaFim: '' }];
+          }
+
           this.atividadeForm = {
-            indice: idx,
+            id: item.id || null,
             titulo: item.titulo || '',
             endereco: item.endereco || '',
-            horaInicio: horarioSeparado.horaInicio,
-            horaFim: horarioSeparado.horaFim,
             resumo: item.resumo || '',
-            link: item.link || ''
+            link: item.link || '',
+            agendamentos: ags.map(a => ({
+              data: a.data || '',
+              horaInicio: a.horaInicio || '',
+              horaFim: a.horaFim || ''
+            }))
           };
           window.location.hash = '#atividades';
         },
 
-        excluirAtividade(idx) {
+        async excluirAtividade(idx) {
           if (!this.isAdmin) return;
           const senha = prompt('Informe a senha para excluir a atividade:');
           if (senha === null) return;
@@ -1702,18 +1939,24 @@
           }
           if (!confirm('Deseja realmente excluir esta atividade?')) return;
 
-          this.atividades.splice(idx, 1);
-          this.salvarAtividadesLocal();
-          if (this.active === idx) this.active = null;
-          if (this.active > idx) this.active--;
-          this.limparAtividadeForm();
+          const item = this.atividades[idx];
 
-          if (this.atividadesPage > this.atividadesTotalPages) {
-            this.atividadesPage = this.atividadesTotalPages;
+          try {
+            await this.apiPost('delete_activity', { id: item.id });
+            this.atividades.splice(idx, 1);
+            if (this.active === idx) this.active = null;
+            if (this.active > idx) this.active--;
+            this.limparAtividadeForm();
+
+            if (this.atividadesPage > this.atividadesTotalPages) {
+              this.atividadesPage = this.atividadesTotalPages;
+            }
+          } catch (e) {
+            alert('Erro ao excluir atividade: ' + e.message);
           }
         },
 
-        salvarTudoAtividades() {
+        async salvarTudoAtividades() {
           if (!this.isAdmin) return;
 
           if (!this.atividadeForm.titulo.trim()) {
@@ -1721,23 +1964,54 @@
             return;
           }
 
-          const novaAtividade = {
-            titulo: this.atividadeForm.titulo.trim(),
-            endereco: this.atividadeForm.endereco.trim(),
-            horario: this.montarHorario(this.atividadeForm.horaInicio, this.atividadeForm.horaFim),
-            resumo: this.atividadeForm.resumo.trim(),
-            link: this.atividadeForm.link.trim()
-          };
+          const agendamentosValidos = this.atividadeForm.agendamentos
+            .map(a => ({
+              data: (a.data || '').trim(),
+              horaInicio: (a.horaInicio || '').trim(),
+              horaFim: (a.horaFim || '').trim()
+            }))
+            .filter(a => a.data || a.horaInicio || a.horaFim);
 
-          if (this.atividadeForm.indice === null || this.atividadeForm.indice === undefined) {
-            this.atividades.push(novaAtividade);
-          } else {
-            this.$set(this.atividades, this.atividadeForm.indice, novaAtividade);
+          if (!agendamentosValidos.length) {
+            alert('Adicione pelo menos um dia ou horário para a atividade.');
+            return;
           }
 
-          this.salvarAtividadesLocal();
-          this.limparAtividadeForm();
-          alert('Atividade salva com sucesso.');
+          const payload = {
+            id: this.atividadeForm.id,
+            titulo: this.atividadeForm.titulo.trim(),
+            endereco: this.atividadeForm.endereco.trim(),
+            resumo: this.atividadeForm.resumo.trim(),
+            link: this.atividadeForm.link.trim(),
+            agendamentos: agendamentosValidos
+          };
+
+          try {
+            if (payload.id) {
+              const upd = await this.apiPost('update_activity', payload);
+              const idx = this.atividades.findIndex(x => Number(x.id) === Number(upd.id));
+              if (idx !== -1) this.$set(this.atividades, idx, upd);
+            } else {
+              const created = await this.apiPost('insert_activity', payload);
+              this.atividades.push(created);
+            }
+
+            this.ordenarAtividades();
+            this.limparAtividadeForm();
+            alert('Atividade salva com sucesso.');
+          } catch (e) {
+            alert('Erro ao salvar atividade: ' + e.message);
+          }
+        },
+
+        ordenarAtividades() {
+          this.atividades.sort((a, b) => {
+            const agA = this.parseAgendamentos(a.agendamentosJson || a.agendamentos || []);
+            const agB = this.parseAgendamentos(b.agendamentosJson || b.agendamentos || []);
+            const dA = agA.length && agA[0].data ? agA[0].data : '9999-12-31';
+            const dB = agB.length && agB[0].data ? agB[0].data : '9999-12-31';
+            return dA.localeCompare(dB);
+          });
         },
 
         prevAtividadesPage() {
@@ -1754,7 +2028,31 @@
           }
         },
 
-        handleImageUpload(event) {
+        async compressImage(file, maxWidth = 1600, quality = 0.85) {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const img = new Image();
+              img.onload = () => {
+                const scale = Math.min(1, maxWidth / img.width);
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.width * scale);
+                canvas.height = Math.round(img.height * scale);
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                const mimeType = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+                const dataUrl = canvas.toDataURL(mimeType, quality);
+                resolve(dataUrl);
+              };
+              img.onerror = reject;
+              img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        },
+
+        async handleImageUpload(event) {
           if (!this.isAdmin) {
             alert('Somente o administrador pode inserir fotos.');
             event.target.value = '';
@@ -1776,16 +2074,28 @@
             return;
           }
 
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.imagens.push(e.target.result);
-            this.salvarGaleriaLocal();
-          };
-          reader.readAsDataURL(file);
-          event.target.value = '';
+          try {
+            const dataUrl = await this.compressImage(file);
+            const base64 = dataUrl.split(',')[1];
+
+            const created = await this.apiPost('upload_photo', {
+              fileName: file.name,
+              mimeType: dataUrl.substring(dataUrl.indexOf(':') + 1, dataUrl.indexOf(';')),
+              base64: base64
+            });
+
+            this.imagens.push(created);
+            this.fotosApiStatus = 'conectado';
+          } catch (e) {
+            console.error(e);
+            this.fotosApiStatus = 'desconectado';
+            alert('Erro ao enviar foto: ' + e.message);
+          } finally {
+            event.target.value = '';
+          }
         },
 
-        removerFoto(index) {
+        async removerFoto(foto, index) {
           if (!this.isAdmin) {
             alert('Somente o administrador pode excluir fotos.');
             return;
@@ -1799,8 +2109,14 @@
           }
           if (!confirm('Deseja realmente excluir esta foto do mural?')) return;
 
-          this.imagens.splice(index, 1);
-          this.salvarGaleriaLocal();
+          try {
+            if (foto && foto.id) {
+              await this.apiPost('delete_photo', { id: foto.id });
+            }
+            this.imagens.splice(index, 1);
+          } catch (e) {
+            alert('Erro ao excluir foto: ' + e.message);
+          }
         },
 
         getDiaEvento(data) {
@@ -1894,6 +2210,25 @@
           });
         },
 
+        async apiGetAtividadesList() {
+          const url = API + '?action=list_activities';
+          const r = await fetch(url, { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar atividades');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.atividades = arr.length ? arr : JSON.parse(JSON.stringify(ATIVIDADES_PADRAO));
+          this.ordenarAtividades();
+        },
+
+        async apiGetFotosList() {
+          const url = API + '?action=list_photos';
+          const r = await fetch(url, { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar fotos');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.imagens = arr || [];
+        },
+
         async apiPost(action, payload) {
           const r = await fetch(API + '?action=' + action, {
             method: 'POST',
@@ -1912,9 +2247,17 @@
           this.eventosApiStatus = ok ? 'conectado' : 'desconectado';
         },
 
+        setAtividadesStatus(ok) {
+          this.atividadesApiStatus = ok ? 'conectado' : 'desconectado';
+        },
+
+        setFotosStatus(ok) {
+          this.fotosApiStatus = ok ? 'conectado' : 'desconectado';
+        },
+
         openModal(i) {
           this.modalIndex = i;
-          this.modalImage = this.imagens[i];
+          this.modalImage = this.imagens[i].url || this.imagens[i];
           this.modalOpen = true;
           this.$nextTick(() => { this.$refs.firstModalBtn?.focus(); });
           document.addEventListener('keydown', this.handleModalKeys);
@@ -1942,12 +2285,12 @@
 
         prevImage() {
           this.modalIndex = (this.modalIndex - 1 + this.imagens.length) % this.imagens.length;
-          this.modalImage = this.imagens[this.modalIndex];
+          this.modalImage = this.imagens[this.modalIndex].url || this.imagens[this.modalIndex];
         },
 
         nextImage() {
           this.modalIndex = (this.modalIndex + 1) % this.imagens.length;
-          this.modalImage = this.imagens[this.modalIndex];
+          this.modalImage = this.imagens[this.modalIndex].url || this.imagens[this.modalIndex];
         },
 
         toggle(idx) {
@@ -1976,9 +2319,31 @@
           } catch (e) {
             console.error(e);
             this.setEventosStatus(false);
-            alert('A API de eventos ainda não está pronta no Google Apps Script. Depois de atualizar o GS, esta área vai funcionar.');
+            alert('A API de eventos não respondeu. Verifique a publicação do Google Apps Script.');
           } finally {
             this.eventosLoading = false;
+          }
+        },
+
+        async loadAtividades() {
+          try {
+            await this.apiGetAtividadesList();
+            this.setAtividadesStatus(true);
+          } catch (e) {
+            console.error(e);
+            this.setAtividadesStatus(false);
+            alert('A API de atividades não respondeu. Verifique a publicação do Google Apps Script.');
+          }
+        },
+
+        async loadFotos() {
+          try {
+            await this.apiGetFotosList();
+            this.setFotosStatus(true);
+          } catch (e) {
+            console.error(e);
+            this.setFotosStatus(false);
+            alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.');
           }
         },
 
@@ -2252,10 +2617,10 @@
 
       mounted() {
         this.carregarAdminLocal();
-        this.carregarGaleriaLocal();
-        this.carregarAtividadesLocal();
         this.load();
         this.loadEventos();
+        this.loadAtividades();
+        this.loadFotos();
 
         const body = document.body;
         const btnContrast = document.getElementById('btn-contrast');

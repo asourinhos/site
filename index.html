@@ -113,11 +113,33 @@
     .reduce-motion * {
       animation: none !important;
       transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* CORREÇÃO DO BUG:
+       os cards não podem continuar com opacity:0 quando a animação é desligada */
+    .reduce-motion .atividade,
+    .reduce-motion .evento-card {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+
+    .reduce-motion .mural-foto,
+    .reduce-motion .mural-foto:hover {
+      transform: none !important;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18) !important;
     }
 
     .reduce-motion .atividade,
     .reduce-motion .mural-foto-img {
       cursor: default;
+    }
+
+    .reduce-motion .atividade:hover,
+    .reduce-motion .evento-card:hover {
+      transform: none !important;
     }
 
     nav {
@@ -1474,7 +1496,9 @@
               </div>
 
               <p class="atividade-resumo">{{ item.resumo }}</p>
-              <p class="atividade-preview">clique para {{ active===item._originalIndex ? 'recolher' : 'expandir' }}</p>
+              <p class="atividade-preview">
+                {{ reduceMotionActive ? 'modo sem animação ativo: todas as atividades expandidas' : ('clique para ' + (active===item._originalIndex ? 'recolher' : 'expandir')) }}
+              </p>
 
               <div class="atividade-detalhes" v-if="reduceMotionActive || active===item._originalIndex">
                 <div class="atividade-detalhe-bloco">
@@ -2070,7 +2094,7 @@
         },
         atividadesPerPage() {
           this.atividadesPage = 1;
-          this.active = null;
+          if (!this.reduceMotionActive) this.active = null;
         },
         eventosPerPage() {
           this.eventosPage = 1;
@@ -2154,7 +2178,7 @@
         getDriveFileIdFromUrl(url) {
           const s = String(url || '').trim();
           if (!s) return '';
-          const patterns = [/[(?&)]id=([^&]+)/i, /\/d\/([^/]+)/i, /\/uc\?.*id=([^&]+)/i, /\/thumbnail\?id=([^&]+)/i, /\/file\/d\/([^/]+)/i];
+          const patterns = [/[\?&]id=([^&]+)/i, /\/d\/([^/]+)/i, /\/uc\?.*id=([^&]+)/i, /\/thumbnail\?id=([^&]+)/i, /\/file\/d\/([^/]+)/i];
           for (const rx of patterns) {
             const m = s.match(rx);
             if (m && m[1]) return m[1];
@@ -2320,12 +2344,12 @@
 
         prevAtividadesPage() {
           this.atividadesPage = Math.max(1, this.atividadesPage - 1);
-          this.active = null;
+          if (!this.reduceMotionActive) this.active = null;
         },
 
         nextAtividadesPage() {
           this.atividadesPage = Math.min(this.atividadesTotalPages, this.atividadesPage + 1);
-          this.active = null;
+          if (!this.reduceMotionActive) this.active = null;
         },
 
         async compressImage(file, maxWidth = 1600, quality = 0.88) {
@@ -2622,6 +2646,7 @@
         },
 
         toggle(idx) {
+          if (this.reduceMotionActive) return;
           this.active = this.active === idx ? null : idx;
         },
 
@@ -2852,13 +2877,24 @@
         btnMotion.addEventListener('click', () => {
           body.classList.toggle('reduce-motion');
           this.reduceMotionActive = body.classList.contains('reduce-motion');
-          this.active = this.reduceMotionActive ? '__ALL__' : null;
+
+          /* Quando ativa:
+             - todas as atividades ficam expandidas
+             Quando desativa:
+             - volta ao normal
+             - recolhe tudo
+          */
+          if (this.reduceMotionActive) {
+            this.active = null;
+          } else {
+            this.active = null;
+          }
         });
 
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           body.classList.add('reduce-motion');
           this.reduceMotionActive = true;
-          this.active = '__ALL__';
+          this.active = null;
         }
 
         let fontScale = 100;

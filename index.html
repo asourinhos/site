@@ -116,8 +116,6 @@
       scroll-behavior: auto !important;
     }
 
-    /* CORREÇÃO DO BUG:
-       os cards não podem continuar com opacity:0 quando a animação é desligada */
     .reduce-motion .atividade,
     .reduce-motion .evento-card {
       opacity: 1 !important;
@@ -588,10 +586,12 @@
       animation: slideUp 0.5s forwards;
       cursor: pointer;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      min-height: 100%;
       position: relative;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,0.75);
+      min-height: unset;
+      height: auto;
+      align-self: start;
     }
 
     .atividade:hover {
@@ -1496,8 +1496,9 @@
               </div>
 
               <p class="atividade-resumo">{{ item.resumo }}</p>
-              <p class="atividade-preview">
-                {{ reduceMotionActive ? 'modo sem animação ativo: todas as atividades expandidas' : ('clique para ' + (active===item._originalIndex ? 'recolher' : 'expandir')) }}
+
+              <p class="atividade-preview" v-if="!reduceMotionActive">
+                {{ 'clique para ' + (active===item._originalIndex ? 'recolher' : 'expandir') }}
               </p>
 
               <div class="atividade-detalhes" v-if="reduceMotionActive || active===item._originalIndex">
@@ -2877,18 +2878,7 @@
         btnMotion.addEventListener('click', () => {
           body.classList.toggle('reduce-motion');
           this.reduceMotionActive = body.classList.contains('reduce-motion');
-
-          /* Quando ativa:
-             - todas as atividades ficam expandidas
-             Quando desativa:
-             - volta ao normal
-             - recolhe tudo
-          */
-          if (this.reduceMotionActive) {
-            this.active = null;
-          } else {
-            this.active = null;
-          }
+          this.active = null;
         });
 
         if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

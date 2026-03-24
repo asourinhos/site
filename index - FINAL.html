@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASO - Associação Amigos dos Surdos de Ourinhos</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+  <style>
+    :root {
+      --cor-primaria: #1b2845;
+      --cor-secundaria: #00b351;
+      --cor-clara: #f7fafc;
+      --cor-card-atividade: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,251,255,0.98));
+      --sombra: 0 10px 30px rgba(0,0,0,0.12);
+      --nav-h: 76px;
+      --container: 1280px;
+    }
+
+    html { font-size: 100%; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      scroll-behavior: smooth;
+      color: #333;
+      background: #fff;
+      line-height: 1.6;
+    }
+
+    img { max-width: 100%; }
+
+    .skip-link {
+      position: absolute;
+      left: -9999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .skip-link:focus {
+      position: fixed;
+      left: 12px;
+      top: 12px;
+      width: auto;
+      height: auto;
+      padding: 10px 14px;
+      background: #000;
+      color: #fff;
+      z-index: 2001;
+      border-radius: 8px;
+    }
+
+    .a11y-toolbar {
+      position: fixed;
+      right: 10px;
+      bottom: 10px;
+      z-index: 1200;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .a11y-toolbar button {
+      padding: 0.5rem 0.625rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    .a11y-toolbar button:focus,
+    a:focus,
+    button:focus,
+    [role="button"]:focus,
+    .atividade:focus,
+    .evento-card:focus {
+      outline: 3px solid #005fcc;
+      outline-offset: 2px;
+    }
+
+    .high-contrast,
+    .high-contrast * {
+      color: #fff !important;
+      background: #000 !important;
+      border-color: #fff !important;
+    }
+
+    .extra-spacing {
+      letter-spacing: 0.3px;
+      line-height: 1.8;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+
+      .atividade,
+      .evento-card {
+        opacity: 1 !important;
+        transform: none !important;
+        animation: none !important;
+      }
+    }
+
+    .reduce-motion * {
+      animation: none !important;
+      transition: none !important;
+      scroll-behavior: auto !important;
+    }
+
+    .reduce-motion .atividade,
+    .reduce-motion .evento-card {
+      opacity: 1 !important;
+      transform: none !important;
+      animation: none !important;
+      transition: none !important;
+    }
+
+    .reduce-motion .mural-foto,
+    .reduce-motion .mural-foto:hover {
+      transform: none !important;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18) !important;
+    }
+
+    .reduce-motion .atividade,
+    .reduce-motion .mural-foto-img {
+      cursor: default;
+    }
+
+    .reduce-motion .atividade:hover,
+    .reduce-motion .evento-card:hover {
+      transform: none !important;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      min-height: var(--nav-h);
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(8px);
+      padding: 0.9rem 1.25rem;
+      z-index: 1000;
+      display: flex;
+      gap: 1rem;
+      white-space: nowrap;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    nav a,
+    nav button {
+      text-decoration: none;
+      color: #333;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: color 0.3s, transform 0.3s;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      font-family: inherit;
+      flex: 0 0 auto;
+    }
+
+    nav a:hover,
+    nav a:focus,
+    nav button:hover,
+    nav button:focus {
+      color: var(--cor-secundaria);
+      transform: scale(1.04);
+    }
+
+    .admin-nav-btn.admin-on { color: #dc3545; }
+    .nav-spacer { flex: 1 1 auto; }
+
+    header {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: calc(var(--nav-h) + 24px) 20px 40px;
+    }
+
+    .hero-box {
+      width: 100%;
+      max-width: var(--container);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 70vh;
+    }
+
+    header img.logo {
+      width: min(80vw, 780px);
+      filter: drop-shadow(0 18px 40px rgba(0,0,0,0.10));
+      background: transparent;
+    }
+
+    section {
+      padding: 5rem 1rem;
+      font-size: 1.05rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      min-height: 100vh;
+      scroll-margin-top: calc(var(--nav-h) + 16px);
+    }
+
+    #quem-somos { background-color: #e0f7fa; }
+    #atividades { background: linear-gradient(135deg, #fff3e0, #ffe0b2); }
+    #banco-dados { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+    #eventos-dados { background: linear-gradient(135deg, #ede7f6, #d1c4e9); }
+    #contato { background: linear-gradient(135deg, #fce4ec, #f8bbd0); }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 2.625rem);
+      margin: 0 0 25px;
+      color: var(--cor-secundaria);
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .quem-box,
+    .bloco-admin,
+    .api-box,
+    .atividades-admin,
+    .eventos-admin {
+      width: 100%;
+      max-width: 1100px;
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(6px);
+      border-radius: 24px;
+      box-shadow: var(--sombra);
+      padding: 28px;
+      text-align: left;
+    }
+
+    .quem-box p {
+      font-size: 1.08rem;
+      line-height: 1.9;
+      margin: 0 0 16px;
+      color: #334;
+    }
+
+    .botao-formulario,
+    .botao-secundario {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0.75rem 1.2rem;
+      background-color: var(--cor-primaria);
+      color: white;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 700;
+      transition: background-color 0.3s, transform 0.2s;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+
+    .botao-formulario:hover,
+    .botao-formulario:focus,
+    .botao-secundario:hover,
+    .botao-secundario:focus {
+      background-color: var(--cor-secundaria);
+      transform: translateY(-1px);
+    }
+
+    .botao-secundario { background: #6c757d; }
+
+    .mural-topo,
+    .mural-area,
+    .atividades-stage,
+    .eventos-stage {
+      width: 100%;
+      max-width: var(--container);
+    }
+
+    .mural-topo {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+      margin-bottom: 14px;
+    }
+
+    .mural-area {
+      background:
+        linear-gradient(rgba(255,255,255,0.10), rgba(255,255,255,0.10)),
+        repeating-linear-gradient(90deg,#c69c6d 0px,#c69c6d 18px,#b88e62 18px,#b88e62 36px);
+      border-radius: 26px;
+      padding: 60px 28px 28px;
+      box-shadow: var(--sombra);
+      position: relative;
+      overflow: hidden;
+      border: 8px solid rgba(255,255,255,0.55);
+      margin-top: 24px;
+    }
+
+    .mural-area::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 18%),
+        radial-gradient(circle at 80% 25%, rgba(255,255,255,0.10), transparent 16%),
+        radial-gradient(circle at 60% 80%, rgba(255,255,255,0.10), transparent 18%);
+      pointer-events: none;
+    }
+
+    .mural-titulo-interno {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.55rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.82);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.18);
+      z-index: 2;
+      user-select: none;
+    }
+
+    .mural-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 22px 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mural-foto {
+      position: relative;
+      background: #fff;
+      padding: 10px 10px 16px;
+      border-radius: 4px;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+      transform-origin: center;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .mural-foto:nth-child(odd) { transform: rotate(-4deg); }
+    .mural-foto:nth-child(even) { transform: rotate(3deg); }
+    .mural-foto:nth-child(3n) { transform: rotate(-2deg); }
+    .mural-foto:nth-child(5n) { transform: rotate(2deg); }
+
+    .mural-foto:hover {
+      transform: scale(1.03) rotate(0deg);
+      box-shadow: 0 16px 28px rgba(0,0,0,0.22);
+    }
+
+    .mural-foto::before {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 22px;
+      height: 22px;
+      transform: translateX(-50%);
+      background: radial-gradient(circle at 30% 30%, #fff6b0, #f0c419 70%);
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 3;
+    }
+
+    .mural-foto-img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+    }
+
+    .mural-foto-rodape {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: #555;
+    }
+
+    .btn-remover-foto {
+      border: none;
+      background: #dc3545;
+      color: #fff;
+      border-radius: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .api-box { margin-top: 24px; }
+
+    .api-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      opacity: 0;
+      animation: fadeIn 0.25s forwards;
+      flex-direction: column;
+      padding: 12px;
+    }
+
+    .modal-card {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      max-width: 1000px;
+      width: min(95%, 1000px);
+      text-align: left;
+      max-height: 92vh;
+      overflow: auto;
+    }
+
+    .modal-img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .modal-controls {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-controls button {
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: var(--cor-primaria);
+      color: #fff;
+    }
+
+    .modal-controls button:hover,
+    .modal-controls button:focus {
+      background-color: var(--cor-secundaria);
+    }
+
+    .agenda-multiplos-dias {
+      width: 100%;
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .agenda-dia-linha {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: #f7fbff;
+      border: 1px solid #d9e8f6;
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .agenda-dia-linha .remover-dia {
+      background: #dc3545;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .agenda-dia-actions {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .atividades-stage,
+    .eventos-stage {
+      margin-top: 8px;
+    }
+
+    .section-toolbar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 12px;
+      margin: 0 0 14px;
+      flex-wrap: wrap;
+    }
+
+    .nav-inline {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-inline button,
+    .atividade-nav-btn,
+    .eventos-nav button {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      border: none;
+      background: var(--cor-primaria);
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.16);
+    }
+
+    .nav-inline button:disabled,
+    .atividade-nav-btn:disabled,
+    .eventos-nav button:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .atividades-grid,
+    .eventos-grid {
+      display: grid;
+      width: 100%;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .atividades-grid {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .eventos-grid {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .atividade {
+      background: var(--cor-card-atividade);
+      padding: 1.35rem;
+      border-radius: 22px;
+      box-shadow: 0 14px 30px rgba(20, 33, 61, 0.12);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      text-align: left;
+      opacity: 0;
+      animation: slideUp 0.5s forwards;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.75);
+      min-height: unset;
+      height: auto;
+      align-self: start;
+    }
+
+    .atividade:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 34px rgba(20, 33, 61, 0.16);
+    }
+
+    .atividade::before,
+    .evento-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .atividade::before {
+      background:
+        radial-gradient(circle at top right, rgba(0,179,81,0.10), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(27,40,69,0.09), transparent 28%);
+    }
+
+    .atividade-faixa {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--cor-secundaria), #61d89c, #93c5fd);
+      z-index: 1;
+    }
+
+    .atividade-admin-icons {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      gap: 8px;
+      z-index: 3;
+    }
+
+    .atividade-icon-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+
+    .atividade-icon-btn.edit { background: #007bff; }
+    .atividade-icon-btn.delete { background: #dc3545; }
+
+    .atividade-topo {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+      padding-right: 84px;
+      position: relative;
+      z-index: 1;
+      padding-top: 10px;
+    }
+
+    .atividade h3 {
+      color: var(--cor-primaria);
+      margin: 0;
+      font-size: 1.3rem;
+      line-height: 1.3;
+    }
+
+    .atividade-resumo {
+      margin: 6px 0 12px;
+      color: #555;
+      font-size: 0.98rem;
+      position: relative;
+      z-index: 1;
+      white-space: pre-line;
+    }
+
+    .atividade-preview {
+      font-size: 0.92rem;
+      color: #666;
+      font-weight: 700;
+      margin-top: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .atividade-detalhes {
+      margin-top: 14px;
+      border-top: 1px solid #eee;
+      padding-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .atividade-detalhe-bloco {
+      background: #f8fafc;
+      border: 1px solid #e6edf5;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .atividade-detalhe-label {
+      font-size: 0.84rem;
+      font-weight: 800;
+      color: var(--cor-primaria);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+    }
+
+    .atividade-detalhe-texto {
+      color: #555;
+      font-size: 0.96rem;
+      line-height: 1.55;
+    }
+
+    .atividade-agenda-lista {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .atividade-agenda-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #ffffff;
+      border: 1px solid #e5eef7;
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .atividade-agenda-icone {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: rgba(27,40,69,0.08);
+      color: var(--cor-primaria);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      margin-top: 2px;
+    }
+
+    .atividade-agenda-texto strong {
+      display: block;
+      color: var(--cor-primaria);
+      font-size: 0.96rem;
+      line-height: 1.3;
+    }
+
+    .atividade-agenda-texto span {
+      display: block;
+      color: #666;
+      font-size: 0.92rem;
+      margin-top: 2px;
+    }
+
+    .atividade-chip-endereco {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(27,40,69,0.08);
+      color: var(--cor-primaria);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      margin-top: 6px;
+      position: relative;
+      z-index: 1;
+      flex-wrap: wrap;
+    }
+
+    .link-info {
+      margin-top: 14px;
+      display: inline-block;
+      font-weight: 700;
+      color: var(--cor-primaria);
+      text-decoration: underline;
+    }
+
+    .form-db {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 20px;
+    }
+
+    .form-db input,
+    .form-db select,
+    .form-db textarea {
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 100%;
+      font-size: 1rem;
+      background: #fff;
+    }
+
+    .form-db textarea {
+      grid-column: 1 / -1;
+      resize: none;
+      min-height: 110px;
+    }
+
+    input[required],
+    select[required],
+    textarea[required] {
+      border-left: 4px solid #007bff;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      margin-top: 30px;
+    }
+
+    .table-db {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+    }
+
+    .table-db th,
+    .table-db td {
+      padding: 10px;
+      border-bottom: 1px solid rgba(0,0,0,0.08);
+      text-align: left;
+      font-size: 0.9375rem;
+      vertical-align: top;
+    }
+
+    .table-db th { background: var(--cor-primaria); color: #fff; }
+    .table-db tr:hover td { background: rgba(0,0,0,0.05); }
+    .table-actions button { margin-right: 8px; margin-bottom: 6px; }
+
+    .pagination {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      background: var(--cor-primaria);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .pagination button:disabled { opacity: .5; cursor: default; }
+    .pagination button:hover:not(:disabled),
+    .pagination button:focus:not(:disabled) { background: var(--cor-secundaria); }
+
+    .eventos-vitrine-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .eventos-vitrine-head h3 {
+      margin: 0;
+      color: var(--cor-primaria);
+      font-size: 1.6rem;
+    }
+
+    .eventos-nav {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .evento-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,245,255,0.98));
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 14px 34px rgba(55, 35, 90, 0.15);
+      border: 1px solid rgba(255,255,255,0.7);
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      min-height: 100%;
+      position: relative;
+      padding: 0;
+    }
+
+    .evento-card::before {
+      background:
+        radial-gradient(circle at top right, rgba(0,179,81,0.08), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(27,40,69,0.08), transparent 28%);
+    }
+
+    .evento-card-topo {
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .evento-data-box {
+      background: var(--cor-primaria);
+      color: #fff;
+      min-width: 84px;
+      border-radius: 18px;
+      padding: 12px 10px;
+      text-align: center;
+      box-shadow: 0 8px 18px rgba(27,40,69,0.24);
+      flex-shrink: 0;
+    }
+
+    .evento-dia-num {
+      display: block;
+      font-size: 1.7rem;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .evento-mes-ano {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .evento-titulo-box {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .evento-titulo {
+      margin: 0;
+      color: var(--cor-primaria);
+      font-size: 1.2rem;
+      line-height: 1.3;
+      word-break: break-word;
+    }
+
+    .evento-card-conteudo {
+      padding: 0 18px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .evento-descricao {
+      margin: 0;
+      color: #555;
+      font-size: 0.98rem;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    .evento-acoes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+
+    .evento-acoes .mini-btn {
+      border: none;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      background: var(--cor-primaria);
+    }
+
+    .evento-acoes .mini-btn.editar { background: #007bff; }
+    .evento-acoes .mini-btn.excluir { background: #dc3545; }
+    .evento-acoes .mini-btn.ver { background: #6c757d; }
+
+    .evento-vazio {
+      width: 100%;
+      background: rgba(255,255,255,0.8);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--sombra);
+      color: #666;
+    }
+
+    .fake-api-preview {
+      margin-top: 16px;
+      background: #0f172a;
+      color: #dbeafe;
+      border-radius: 14px;
+      padding: 16px;
+      overflow: auto;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      border: 1px solid rgba(255,255,255,0.08);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    footer {
+      text-align: center;
+      padding: 50px 20px;
+      color: #333;
+      border-top: 3px solid var(--cor-secundaria);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    footer h2 {
+      color: var(--cor-secundaria);
+      font-size: clamp(2rem, 4vw, 2.625rem);
+      margin-bottom: 25px;
+    }
+
+    .footer-grid {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: stretch;
+      margin-top: 10px;
+    }
+
+    .footer-card {
+      background: rgba(255,255,255,0.72);
+      backdrop-filter: blur(6px);
+      border-radius: 22px;
+      box-shadow: var(--sombra);
+      padding: 24px;
+      text-align: left;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .footer-card.mapa-card {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer-card p { margin: 12px 0; font-size: 1.1rem; }
+    .footer-card h3 { margin-top: 0; color: var(--cor-primaria); }
+
+    footer .social {
+      display: flex;
+      gap: 22px;
+      align-items: center;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      margin-top: 14px;
+    }
+
+    footer .social a {
+      font-size: 3rem;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    footer .social a.instagram { color: #E4405F; }
+    footer .social a.facebook { color: #1877F2; }
+
+    footer .social a:hover,
+    footer .social a:focus {
+      transform: scale(1.2);
+      opacity: 0.8;
+    }
+
+    .footer-mapa {
+      width: 100%;
+      height: 100%;
+      min-height: 340px;
+      border: none;
+      border-radius: 16px;
+      display: block;
+      overflow: hidden;
+    }
+
+    .badge {
+      margin-top: 10px;
+      font-size: 0.875rem;
+      color: #555;
+    }
+
+    .status-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .contact-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .contact-link:hover,
+    .contact-link:focus {
+      text-decoration: underline;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      left: -10000px !important;
+      top: auto !important;
+      width: 1px !important;
+      height: 1px !important;
+      overflow: hidden !important;
+    }
+
+    .table-db thead th:first-child,
+    .table-db tbody td:first-child {
+      display: none;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 1200px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      :root { --nav-h: 70px; }
+
+      .agenda-dia-linha {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .agenda-dia-linha .remover-dia {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        padding: 0.7rem 0.9rem;
+        gap: 0.8rem;
+      }
+
+      nav a,
+      nav button {
+        font-size: 0.92rem;
+      }
+
+      section {
+        padding: 4rem 0.9rem;
+        font-size: 1rem;
+        min-height: auto;
+      }
+
+      header {
+        min-height: auto;
+        padding: calc(var(--nav-h) + 16px) 16px 24px;
+      }
+
+      .hero-box {
+        min-height: auto;
+      }
+
+      .quem-box,
+      .bloco-admin,
+      .api-box,
+      .atividades-admin,
+      .eventos-admin,
+      .footer-card,
+      .modal-card {
+        padding: 20px;
+        border-radius: 20px;
+      }
+
+      .mural-area {
+        padding: 56px 16px 18px;
+      }
+
+      .mural-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+      }
+
+      .section-toolbar {
+        justify-content: center;
+      }
+
+      .nav-inline button,
+      .atividade-nav-btn,
+      .eventos-nav button {
+        width: 42px;
+        height: 42px;
+      }
+
+      .atividade,
+      .evento-card {
+        border-radius: 18px;
+      }
+
+      .evento-card-topo {
+        align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 640px) {
+      :root { --nav-h: 66px; }
+
+      .atividades-grid,
+      .eventos-grid,
+      .mural-grid,
+      .footer-grid,
+      .form-db,
+      .agenda-dia-linha {
+        grid-template-columns: 1fr;
+      }
+
+      .atividade-topo {
+        padding-right: 76px;
+      }
+
+      .atividade-admin-icons {
+        top: 12px;
+        right: 12px;
+      }
+
+      .atividade-resumo {
+        margin-bottom: 10px;
+      }
+
+      .evento-card-topo {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .evento-data-box {
+        min-width: 76px;
+      }
+
+      .footer-mapa {
+        min-height: 280px;
+      }
+
+      .modal-img {
+        max-width: 96%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      nav {
+        padding: 0.6rem 0.75rem;
+      }
+
+      h2 { margin-bottom: 18px; }
+
+      .mural-titulo-interno {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+      }
+
+      .atividade,
+      .evento-card {
+        padding: 0;
+      }
+
+      .atividade {
+        padding: 1.05rem;
+      }
+
+      .evento-card-topo,
+      .evento-card-conteudo {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .evento-card-topo {
+        gap: 10px;
+      }
+
+      .evento-dia-num {
+        font-size: 1.45rem;
+      }
+
+      .evento-titulo {
+        font-size: 1.05rem;
+      }
+
+      .quem-box p,
+      .footer-card p,
+      .atividade-resumo,
+      .evento-descricao {
+        font-size: 0.96rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo</a>
+
+  <div class="a11y-toolbar" aria-label="Ferramentas de acessibilidade">
+    <button type="button" id="btn-contrast" title="Ativar/Desativar alto contraste">Contraste</button>
+    <button type="button" id="btn-font+" title="Aumentar tamanho do texto">A+</button>
+    <button type="button" id="btn-font-" title="Diminuir tamanho do texto">A−</button>
+    <button type="button" id="btn-spacing" title="Aumentar espaçamento de linhas e letras">Espaçamento</button>
+    <button type="button" id="btn-motion" title="Reduzir animações e expandir tudo">Menos animação</button>
+  </div>
+
+  <div id="app">
+    <nav role="navigation" aria-label="Principal">
+      <a href="#topo">Início</a>
+      <a href="#quem-somos">Quem Somos</a>
+      <a href="#atividades">Atividades</a>
+      <a href="#banco-dados">Participe</a>
+      <a href="#eventos-dados">Eventos</a>
+      <a href="#contato">Contato</a>
+      <div class="nav-spacer"></div>
+      <button type="button" class="admin-nav-btn" :class="{ 'admin-on': isAdmin }" @click="toggleAdmin">
+        {{ isAdmin ? 'Sair Admin' : 'Admin' }}
+      </button>
+    </nav>
+
+    <main id="conteudo-principal">
+      <header id="topo" aria-label="Início">
+        <div class="hero-box">
+          <img alt="Logo da ASO, Associação Amigos dos Surdos de Ourinhos" class="logo" src="logo.png"/>
+        </div>
+      </header>
+
+      <section id="quem-somos" aria-labelledby="titulo-quem-somos">
+        <h2 id="titulo-quem-somos">Quem Somos</h2>
+
+        <div class="quem-box">
+          <p v-for="(p, i) in textoQuemSomos" :key="'texto-'+i">{{ p }}</p>
+        </div>
+
+        <div class="mural-topo" v-if="isAdmin">
+          <label class="botao-formulario" style="cursor:pointer;">
+            <i class="fas fa-image"></i> Inserir foto
+            <input type="file" accept="image/*,.jfif,.jpeg,.jpg,.png,.webp" @change="handleImageUpload" style="display:none;">
+          </label>
+        </div>
+
+        <div class="mural-area">
+          <div class="mural-titulo-interno">MURAL</div>
+          <div class="mural-grid" role="list" aria-label="Mural de fotos da ASO">
+            <div class="mural-foto" v-for="(img,i) in imagens" :key="(img.id || img.url || 'img') + '-' + i">
+              <img
+                :src="resolverImagem(img)"
+                class="mural-foto-img"
+                :alt="'Foto da ASO número ' + (i+1)"
+                :role="reduceMotionActive ? null : 'button'"
+                :tabindex="reduceMotionActive ? -1 : 0"
+                @click="!reduceMotionActive && openModal(i)"
+                @keydown.enter.prevent="!reduceMotionActive && openModal(i)"
+                @keydown.space.prevent="!reduceMotionActive && openModal(i)"
+                @error="handleImageError($event, img)"
+              />
+              <div class="mural-foto-rodape">
+                <span>Foto {{ i + 1 }}</span>
+                <button v-if="isAdmin" class="btn-remover-foto" type="button" @click="removerFoto(img, i)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="atividades" aria-labelledby="titulo-atividades">
+        <h2 id="titulo-atividades">Atividades</h2>
+
+        <div class="atividades-admin" v-if="isAdmin">
+          <h3 style="margin-top:0; color:var(--cor-primaria);">Gerenciar atividades</h3>
+
+          <div class="form-db" style="margin-top:0;">
+            <input v-model="atividadeForm.titulo" placeholder="Título da atividade" aria-label="Título da atividade">
+            <input v-model="atividadeForm.endereco" placeholder="Endereço" aria-label="Endereço">
+            <input v-model="atividadeForm.link" placeholder="Link" aria-label="Link">
+            <textarea v-model="atividadeForm.resumo" placeholder="Descrição" aria-label="Descrição da atividade"></textarea>
+          </div>
+
+          <div class="agenda-multiplos-dias">
+            <div style="font-weight:800; color:var(--cor-primaria); font-size:1rem;">Dias e horários da atividade</div>
+
+            <div class="agenda-dia-linha" v-for="(agenda, idxAgenda) in atividadeForm.agendamentos" :key="'agenda-'+idxAgenda">
+              <input v-model="agenda.data" type="date" aria-label="Dia da atividade">
+
+              <select v-model="agenda.horaInicio" aria-label="Hora inicial">
+                <option value="">Hora inicial</option>
+                <option v-for="hora in horasPredefinidas" :key="'ini-'+idxAgenda+'-'+hora" :value="hora">{{ hora }}</option>
+              </select>
+
+              <select v-model="agenda.horaFim" aria-label="Hora final">
+                <option value="">Hora final</option>
+                <option v-for="hora in horasPredefinidas" :key="'fim-'+idxAgenda+'-'+hora" :value="hora">{{ hora }}</option>
+              </select>
+
+              <button type="button" class="remover-dia" @click="removerAgendamentoAtividade(idxAgenda)" :disabled="atividadeForm.agendamentos.length === 1" title="Remover dia">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+
+            <div class="agenda-dia-actions">
+              <button class="botao-secundario" type="button" @click="adicionarAgendamentoAtividade">
+                <i class="fas fa-calendar-plus"></i> Adicionar dia e horário
+              </button>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin-top:16px;">
+            <button class="botao-formulario" type="button" style="background:#28a745;" @click="salvarTudoAtividades">Salvar atividade</button>
+            <button class="botao-formulario" type="button" style="background:#6c757d;" @click="limparAtividadeForm">Limpar</button>
+          </div>
+
+          <div class="api-box">
+            <div class="api-actions">
+              <button type="button" class="botao-formulario" @click="abrirTodasAtividadesJsonModal">
+                <i class="fas fa-code"></i> Todas atividades JSON
+              </button>
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlAtividadesJson">
+                <i class="fas fa-link"></i> Copiar URL atividades
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="atividades-stage">
+          <div class="section-toolbar" v-if="mostrarNavegacaoAtividades">
+            <div class="nav-inline">
+              <button type="button" class="atividade-nav-btn" @click="prevAtividadesPage" :disabled="atividadesPage<=1 || atividadesTotalPages <= 1" aria-label="Atividades anteriores">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <span class="badge" style="margin:0;">Página {{ atividadesPage }} / {{ atividadesTotalPages }}</span>
+              <button type="button" class="atividade-nav-btn" @click="nextAtividadesPage" :disabled="atividadesPage>=atividadesTotalPages || atividadesTotalPages <= 1" aria-label="Próximas atividades">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="atividades-grid">
+            <article
+              class="atividade"
+              v-for="(item, idxLocal) in atividadesPaginadas"
+              :key="(item.id || item.titulo) + '-' + idxLocal + '-' + atividadesPage + '-' + atividadesPerPage"
+              @click="!reduceMotionActive && toggle(item._originalIndex)"
+              @keydown.enter.prevent="!reduceMotionActive && toggle(item._originalIndex)"
+              @keydown.space.prevent="!reduceMotionActive && toggle(item._originalIndex)"
+              :aria-expanded="(reduceMotionActive || active===item._originalIndex) ? 'true' : 'false'"
+              :role="reduceMotionActive ? null : 'button'"
+              :tabindex="reduceMotionActive ? -1 : 0"
+            >
+              <div class="atividade-faixa"></div>
+
+              <div class="atividade-admin-icons" v-if="isAdmin">
+                <button class="atividade-icon-btn edit" type="button" @click.stop="editarAtividade(item._originalIndex)" aria-label="Editar atividade">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="atividade-icon-btn delete" type="button" @click.stop="excluirAtividade(item._originalIndex)" aria-label="Excluir atividade">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+
+              <div class="atividade-topo">
+                <h3>{{ item.titulo }}</h3>
+              </div>
+
+              <div class="atividade-chip-endereco" v-if="item.endereco">
+                <i class="fas fa-location-dot"></i> {{ item.endereco }}
+              </div>
+
+              <p class="atividade-resumo">{{ item.resumo }}</p>
+
+              <p class="atividade-preview" v-if="!reduceMotionActive">
+                {{ 'clique para ' + (active===item._originalIndex ? 'recolher' : 'expandir') }}
+              </p>
+
+              <div class="atividade-detalhes" v-if="reduceMotionActive || active===item._originalIndex">
+                <div class="atividade-detalhe-bloco">
+                  <div class="atividade-detalhe-label">Dias e horários</div>
+                  <div class="atividade-detalhe-texto">
+                    <div v-if="item.agendamentosFormatados && item.agendamentosFormatados.length" class="atividade-agenda-lista">
+                      <div class="atividade-agenda-item" v-for="(agenda, idxAgenda) in item.agendamentosFormatados" :key="'agf-'+idxAgenda">
+                        <div class="atividade-agenda-icone">
+                          <i class="fas fa-calendar-days"></i>
+                        </div>
+                        <div class="atividade-agenda-texto">
+                          <strong>{{ agenda.dataExtenso || 'Data a combinar' }}</strong>
+                          <span>{{ agenda.horario || 'Horário a combinar' }}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div v-else>Agenda a combinar.</div>
+                  </div>
+                </div>
+
+                <a v-if="item.link" class="link-info" :href="normalizarLink(item.link)" target="_blank" rel="noopener noreferrer" @click.stop>
+                  Mais informações
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="banco-dados" aria-labelledby="titulo-cadastro">
+        <h2 id="titulo-cadastro">Participe</h2>
+
+        <div class="status-wrap">
+          <div class="badge" v-if="isAdmin"><strong>Modo administrador ativo</strong></div>
+        </div>
+
+        <div class="bloco-admin">
+          <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">
+            <p id="dica-form" class="visually-hidden">Todos os campos marcados como obrigatórios precisam ser preenchidos.</p>
+
+            <input v-model="novo.nome" id="nome" placeholder="Nome" required aria-label="Nome">
+            <input v-model="novo.email" id="email" type="email" placeholder="E-mail" required aria-label="E-mail">
+            <input v-model="novo.celular" id="celular" placeholder="Celular" required aria-label="Celular">
+            <input v-model="novo.logradouro" id="logradouro" placeholder="Logradouro" required aria-label="Logradouro">
+            <input v-model="novo.numero" id="numero" placeholder="Número" required aria-label="Número">
+            <input v-model="novo.bairro" id="bairro" placeholder="Bairro" required aria-label="Bairro">
+            <input v-model="novo.complemento" id="complemento" placeholder="Complemento" aria-label="Complemento">
+            <input v-model="novo.cidade" id="cidade" placeholder="Cidade" required aria-label="Cidade">
+            <input v-model.number="novo.idade" id="idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
+
+            <select v-model="novo.modalidade" required aria-label="Modalidade">
+              <option disabled value="">Modalidade</option>
+              <option>Curso de Libras</option>
+              <option>Atendimento Social</option>
+              <option>Evento</option>
+              <option>Voluntário</option>
+              <option>Outro</option>
+            </select>
+
+            <textarea v-model="novo.observacoes" id="observacoes" placeholder="Observações" aria-label="Observações"></textarea>
+
+            <button type="submit" class="botao-formulario" :disabled="loading">INSERT</button>
+            <button v-if="isAdmin" type="button" class="botao-formulario" style="background:#dc3545;" @click="resetBanco" :disabled="loading">DELETE ALL</button>
+          </form>
+
+          <div class="api-box" v-if="isAdmin">
+            <div class="api-actions">
+              <button type="button" class="botao-formulario" @click="abrirTodosParticipantesJsonModal">
+                <i class="fas fa-code"></i> Todos participantes JSON
+              </button>
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlParticipantesJson">
+                <i class="fas fa-link"></i> Copiar URL participantes
+              </button>
+            </div>
+          </div>
+
+          <template v-if="isAdmin">
+            <div style="margin-top:20px; width:100%; max-width:900px;">
+              <input v-model="filtro" placeholder="Buscar em todos os cadastros..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;" aria-label="Buscar cadastro">
+              <p style="margin:10px 0 0 0;"><strong>{{ registrosFiltrados.length }} registros encontrados</strong></p>
+            </div>
+
+            <div class="table-wrap">
+              <table class="table-db" aria-label="Tabela de cadastros de pessoas">
+                <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Nº</th>
+                    <th scope="col">Nome</th>
+                    <th scope="col">Idade</th>
+                    <th scope="col">Cidade</th>
+                    <th scope="col">Modalidade</th>
+                    <th scope="col">Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(r, i) in paginated" :key="r.id">
+                    <td>{{ r.id }}</td>
+                    <td>{{ (page - 1) * perPage + i + 1 }}</td>
+                    <td>{{ r.nome }}</td>
+                    <td>{{ r.idade }}</td>
+                    <td>{{ r.cidade }}</td>
+                    <td>{{ r.modalidade }}</td>
+                    <td class="table-actions">
+                      <button @click="viewDetalhes(r)" class="botao-formulario" style="background:#6c757d;">🔍 Ver detalhes</button>
+                      <button @click="openEdit(r)" class="botao-formulario" style="background:#007bff;">🖋️ Editar</button>
+                      <button @click="deleteRegistro(r)" class="botao-formulario" style="background:#dc3545;">🗑️ Excluir</button>
+                    </td>
+                  </tr>
+
+                  <tr v-if="!loading && paginated.length === 0">
+                    <td colspan="7" style="padding:12px; text-align:center; color:#666;">Nenhum cadastro encontrado.</td>
+                  </tr>
+
+                  <tr v-if="loading">
+                    <td colspan="7" style="padding:12px; text-align:center; color:#666;">Carregando…</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="pagination" v-if="totalPages > 1" role="navigation" aria-label="Paginação de cadastros de pessoas">
+              <button @click="prevPage" :disabled="page===1 || loading" aria-label="Página anterior">⟨ Anterior</button>
+              <span aria-live="polite">Página {{ page }} / {{ totalPages }}</span>
+              <button @click="nextPage" :disabled="page===totalPages || loading" aria-label="Próxima página">Próximo ⟩</button>
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section id="eventos-dados" aria-labelledby="titulo-cadastro-eventos">
+        <h2 id="titulo-cadastro-eventos">Eventos</h2>
+
+        <div class="eventos-admin" v-if="isAdmin">
+          <form @submit.prevent="insertEvento" class="form-db" aria-describedby="dica-form-eventos">
+            <p id="dica-form-eventos" class="visually-hidden">Preencha os campos obrigatórios para cadastrar um evento.</p>
+
+            <input v-model="novoEvento.dataEvento" type="date" required aria-label="Data do evento">
+            <input v-model="novoEvento.nomeEvento" type="text" placeholder="Nome do evento" required aria-label="Nome do evento">
+            <textarea v-model="novoEvento.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
+
+            <button type="submit" class="botao-formulario" :disabled="eventosLoading">INSERT EVENTO</button>
+            <button type="button" class="botao-formulario" style="background:#dc3545;" @click="resetEventos" :disabled="eventosLoading">DELETE ALL EVENTOS</button>
+          </form>
+
+          <div style="margin-top:20px; width:100%; max-width:900px;">
+            <input v-model="filtroEventos" placeholder="Buscar por nome ou descrição do evento..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #ccc;" aria-label="Buscar evento">
+            <p style="margin:10px 0 0 0;"><strong>{{ eventosFiltrados.length }} eventos encontrados</strong></p>
+          </div>
+
+          <div class="api-box">
+            <div class="api-actions">
+              <button type="button" class="botao-formulario" @click="abrirTodosEventosJsonModal">
+                <i class="fas fa-code"></i> Todos eventos JSON
+              </button>
+              <button type="button" class="botao-formulario" style="background:#5b21b6;" @click="copiarUrlEventosJson">
+                <i class="fas fa-link"></i> Copiar URL eventos
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="eventos-stage">
+          <div class="eventos-vitrine-head">
+            <h3>Eventos</h3>
+
+            <div class="eventos-nav" v-if="mostrarNavegacaoEventos">
+              <button @click="prevEventosPage" :disabled="eventosPage===1 || eventosLoading" aria-label="Voltar eventos">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <span aria-live="polite">Página {{ eventosPage }} / {{ eventosTotalPages }}</span>
+              <button @click="nextEventosPage" :disabled="eventosPage===eventosTotalPages || eventosLoading" aria-label="Avançar eventos">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="eventosLoading" class="evento-vazio">Carregando eventos…</div>
+          <div v-else-if="eventosPaginados.length === 0" class="evento-vazio">Nenhum evento encontrado no momento.</div>
+
+          <div v-else class="eventos-grid">
+            <article class="evento-card" v-for="ev in eventosPaginados" :key="'ev-'+ev.id">
+              <div class="evento-card-topo">
+                <div class="evento-data-box">
+                  <span class="evento-dia-num">{{ getDiaEvento(ev.dataEvento) }}</span>
+                  <span class="evento-mes-ano">{{ getMesAnoEvento(ev.dataEvento) }}</span>
+                </div>
+
+                <div class="evento-titulo-box">
+                  <h4 class="evento-titulo">{{ ev.nomeEvento }}</h4>
+                </div>
+              </div>
+
+              <div class="evento-card-conteudo">
+                <p class="evento-descricao">{{ ev.descricao || 'Sem descrição.' }}</p>
+
+                <div class="evento-acoes" v-if="isAdmin">
+                  <button class="mini-btn ver" type="button" @click="viewDetalhesEvento(ev)">Ver detalhes</button>
+                  <button class="mini-btn editar" type="button" @click="openEditEvento(ev)">Editar</button>
+                  <button class="mini-btn excluir" type="button" @click="deleteEvento(ev)">Excluir</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contato" aria-labelledby="titulo-contato">
+        <h2 id="titulo-contato">Contato</h2>
+
+        <div class="footer-grid">
+          <div class="footer-card">
+            <h3>Fale com a ASO</h3>
+            <p>
+              <a href="tel:+5514997795812" class="contact-link" title="Ligar para ASO">
+                <i class="fas fa-phone" aria-hidden="true"></i>
+                <span aria-label="Telefone"> +55 (14) 99779-5812</span>
+              </a>
+            </p>
+            <p>
+              <a href="mailto:aso.ourinhos01@email.com" class="contact-link" title="Enviar e-mail para ASO">
+                <i class="fas fa-envelope" aria-hidden="true"></i>
+                <span aria-label="E-mail"> aso.ourinhos01@email.com</span>
+              </a>
+            </p>
+            <p><i class="fas fa-location-dot" aria-hidden="true"></i> {{ sede.endereco }}</p>
+
+            <div class="social">
+              <a class="instagram" href="https://www.instagram.com/asoourinhos/" target="_blank" rel="noopener noreferrer" title="Instagram da ASO" aria-label="Abrir Instagram da ASO">
+                <i class="fab fa-instagram" aria-hidden="true"></i>
+              </a>
+              <a class="facebook" href="https://www.facebook.com/AssociacaoAmigosDosSurdosOurinhoseRegiao/" target="_blank" rel="noopener noreferrer" title="Facebook da ASO" aria-label="Abrir Facebook da ASO">
+                <i class="fab fa-facebook-square" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="footer-card mapa-card">
+            <h3>Onde estamos</h3>
+            <iframe class="footer-mapa" :src="googleMapsEmbed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </div>
+        </div>
+      </footer>
+
+      <div v-if="modalOpen" class="modal" role="dialog" aria-modal="true" aria-label="Visualização de imagem da galeria" @click="closeModal">
+        <img :src="modalImage" class="modal-img" alt="Imagem ampliada" @click.stop @error="handleModalImageError"/>
+        <div class="modal-controls" @click.stop>
+          <button ref="firstModalBtn" @click.stop="prevImage">⟨ Anterior</button>
+          <button @click.stop="nextImage">Próximo ⟩</button>
+          <button @click.stop="closeModal">Fechar ✕</button>
+        </div>
+      </div>
+
+      <div v-if="detalhes" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-detalhes" @click="detalhes=null">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-detalhes" style="margin-top:0; color:var(--cor-secundaria);">Detalhes do Cadastro</h3>
+          <p><b>Nome:</b> {{ detalhes.nome }}</p>
+          <p><b>E-mail:</b> {{ detalhes.email }}</p>
+          <p><b>Celular:</b> {{ detalhes.celular }}</p>
+          <p><b>Endereço:</b> {{ detalhes.logradouro }}, nº {{ detalhes.numero }} - {{ detalhes.bairro }} ({{ detalhes.cidade }})</p>
+          <p v-if="detalhes.complemento"><b>Complemento:</b> {{ detalhes.complemento }}</p>
+          <p><b>Idade:</b> {{ detalhes.idade }} anos</p>
+          <p><b>Modalidade:</b> {{ detalhes.modalidade }}</p>
+          <p><b>Observações:</b> {{ detalhes.observacoes || '—' }}</p>
+          <div style="text-align:right; margin-top:10px;">
+            <button class="botao-formulario" @click="detalhes=null">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar" @click="closeEdit">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-editar" style="margin-top:0; color:var(--cor-secundaria);">Editar cadastro</h3>
+          <div class="form-db">
+            <input v-model="editBuffer.nome" placeholder="Nome" required aria-label="Nome">
+            <input v-model="editBuffer.email" type="email" placeholder="E-mail" required aria-label="E-mail">
+            <input v-model="editBuffer.celular" placeholder="Celular" required aria-label="Celular">
+            <input v-model="editBuffer.logradouro" placeholder="Logradouro" required aria-label="Logradouro">
+            <input v-model="editBuffer.numero" placeholder="Número" required aria-label="Número">
+            <input v-model="editBuffer.bairro" placeholder="Bairro" required aria-label="Bairro">
+            <input v-model="editBuffer.complemento" placeholder="Complemento" aria-label="Complemento">
+            <input v-model="editBuffer.cidade" placeholder="Cidade" required aria-label="Cidade">
+            <input v-model.number="editBuffer.idade" type="number" min="1" placeholder="Idade" required aria-label="Idade">
+
+            <select v-model="editBuffer.modalidade" required aria-label="Modalidade">
+              <option>Curso de Libras</option>
+              <option>Atendimento Social</option>
+              <option>Evento</option>
+              <option>Voluntário</option>
+              <option>Outro</option>
+            </select>
+
+            <textarea v-model="editBuffer.observacoes" placeholder="Observações" aria-label="Observações"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#28a745;" @click="saveEdit">💾 Salvar</button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="closeEdit">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="detalhesEvento" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-detalhes-evento" @click="detalhesEvento=null">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-detalhes-evento" style="margin-top:0; color:var(--cor-secundaria);">Detalhes do Evento</h3>
+          <p><b>Data do evento:</b> {{ formatarData(detalhesEvento.dataEvento) }}</p>
+          <p><b>Nome do evento:</b> {{ detalhesEvento.nomeEvento }}</p>
+          <p><b>Descrição:</b> {{ detalhesEvento.descricao || '—' }}</p>
+          <p v-if="detalhesEvento.createdAt"><b>Criado em:</b> {{ detalhesEvento.createdAt }}</p>
+          <p v-if="detalhesEvento.updatedAt"><b>Atualizado em:</b> {{ detalhesEvento.updatedAt }}</p>
+          <div style="text-align:right; margin-top:10px;">
+            <button class="botao-formulario" @click="detalhesEvento=null">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="editEventoModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-editar-evento" @click="closeEditEvento">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-editar-evento" style="margin-top:0; color:var(--cor-secundaria);">Editar evento</h3>
+          <div class="form-db">
+            <input v-model="editEventoBuffer.dataEvento" type="date" required aria-label="Data do evento">
+            <input v-model="editEventoBuffer.nomeEvento" placeholder="Nome do evento" required aria-label="Nome do evento">
+            <textarea v-model="editEventoBuffer.descricao" placeholder="Descrição do evento" required aria-label="Descrição do evento"></textarea>
+          </div>
+
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:16px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#28a745;" @click="saveEditEvento">💾 Salvar</button>
+            <button class="botao-formulario" style="background:#6c757d;" @click="closeEditEvento">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="eventosApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-eventos-modal" @click="eventosApiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-eventos-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Eventos em JSON</h3>
+          <div class="fake-api-preview">{{ eventosApiPreview }}</div>
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#6c757d;" @click="eventosApiModal=false">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="atividadesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-atividades-modal" @click="atividadesApiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-atividades-modal" style="margin-top:0; color:var(--cor-secundaria);">Todas as Atividades em JSON</h3>
+          <div class="fake-api-preview">{{ atividadesApiPreview }}</div>
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#6c757d;" @click="atividadesApiModal=false">Fechar</button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="participantesApiModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="titulo-api-participantes-modal" @click="participantesApiModal=false">
+        <div class="modal-card" @click.stop>
+          <h3 id="titulo-api-participantes-modal" style="margin-top:0; color:var(--cor-secundaria);">Todos os Participantes em JSON</h3>
+          <div class="fake-api-preview">{{ participantesApiPreview }}</div>
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:18px; flex-wrap:wrap;">
+            <button class="botao-formulario" style="background:#6c757d;" @click="participantesApiModal=false">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper>
+      <div class="vw-plugin-top-wrapper"></div>
+    </div>
+  </div>
+
+  <script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script>
+    new window.VLibras.Widget('https://vlibras.gov.br/app');
+  </script>
+
+  <script>
+    const API = 'https://script.google.com/macros/s/AKfycbx15jJ1Ft-jUsfMS3fwO35FdKu9W2pvs0RoIqd2h2cTZnwtyFZBTg1FfGh5C2lE_yAr/exec';
+    const GALERIA_PADRAO = [];
+    const SENHA_EXCLUSAO = '1234';
+    const ADMIN_STORAGE_KEY = 'aso_admin_ativo_v1';
+    const MEUS_REGISTROS_STORAGE_KEY = 'aso_meus_registros_ids_v1';
+
+    const SEDE_PADRAO = {
+      endereco: 'Rua Euclides da Cunha nº 812 – Jardim Nazareth – Ourinhos/SP'
+    };
+
+    const ATIVIDADES_PADRAO = [
+      {
+        titulo: 'Curso de Libras',
+        endereco: 'Sede da ASO',
+        resumo: 'Aprendizado de Libras para comunidade, familiares e interessados em comunicação acessível.',
+        link: '',
+        agendamentos: [{ data: '', horaInicio: '19:00', horaFim: '20:00' }]
+      },
+      {
+        titulo: 'Atendimento Social',
+        endereco: 'Sede da ASO',
+        resumo: 'Apoio, orientação e acolhimento à comunidade surda e às famílias.',
+        link: '',
+        agendamentos: [{ data: '', horaInicio: '14:00', horaFim: '17:00' }]
+      },
+      {
+        titulo: 'Eventos e Encontros',
+        endereco: 'Ourinhos/SP',
+        resumo: 'Ações de integração, cultura surda, convivência e conscientização.',
+        link: '',
+        agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
+      },
+      {
+        titulo: 'Voluntariado',
+        endereco: 'Sede da ASO',
+        resumo: 'Espaço para quem deseja colaborar com as ações e atividades da associação.',
+        link: '',
+        agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
+      }
+    ];
+
+    new Vue({
+      el: '#app',
+      data: {
+        isAdmin: false,
+        viewportWidth: window.innerWidth,
+        eventosApiModal: false,
+        eventosApiPreview: '',
+        atividadesApiModal: false,
+        atividadesApiPreview: '',
+        participantesApiModal: false,
+        participantesApiPreview: '',
+
+        textoQuemSomos: [
+          'A Associação Amigos dos Surdos de Ourinhos e Região é uma organização voltada à promoção da inclusão, da acessibilidade e do fortalecimento da comunidade surda em Ourinhos e municípios próximos.',
+          'Seu trabalho busca ampliar a participação social das pessoas surdas, valorizar a Libras e construir relações mais respeitosas entre a comunidade surda, as famílias, os serviços públicos e a sociedade em geral.',
+          'Entre as ações desenvolvidas pela associação estão cursos e práticas de Libras, encontros comunitários, atividades de conscientização, apoio social e iniciativas que aproximam pessoas surdas, ouvintes e instituições da cidade.',
+          'Mais do que oferecer atividades, a ASO ajuda a criar espaços de convivência, pertencimento e cidadania, fortalecendo uma cidade mais humana, acessível e preparada para acolher as diferenças.'
+        ],
+
+        sede: JSON.parse(JSON.stringify(SEDE_PADRAO)),
+        atividades: JSON.parse(JSON.stringify(ATIVIDADES_PADRAO)),
+        atividadeForm: {
+          id: null,
+          titulo: '',
+          endereco: '',
+          resumo: '',
+          link: '',
+          agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
+        },
+
+        horasPredefinidas: [
+          '06:00','06:30','07:00','07:30','08:00','08:30','09:00','09:30',
+          '10:00','10:30','11:00','11:30','12:00','12:30','13:00','13:30',
+          '14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30',
+          '18:00','18:30','19:00','19:30','20:00','20:30','21:00','21:30','22:00'
+        ],
+
+        atividadesPage: 1,
+        imagens: [...GALERIA_PADRAO],
+        active: null,
+        reduceMotionActive: false,
+
+        bancoTodos: [],
+        novo: {
+          nome: '', email: '', celular: '', logradouro: '', numero: '', bairro: '', complemento: '', cidade: '', idade: '', modalidade: '', observacoes: ''
+        },
+        filtro: '',
+        page: 1,
+        perPage: 5,
+        loading: false,
+        detalhes: null,
+        editModal: false,
+        editBuffer: null,
+
+        eventosBanco: [],
+        novoEvento: { dataEvento: '', nomeEvento: '', descricao: '' },
+        filtroEventos: '',
+        eventosPage: 1,
+        eventosLoading: false,
+        detalhesEvento: null,
+        editEventoModal: false,
+        editEventoBuffer: null,
+
+        modalOpen: false,
+        modalIndex: 0,
+        modalImage: ''
+      },
+
+      computed: {
+        atividadesPerPage() {
+          const w = this.viewportWidth;
+          if (w < 640) return 1;
+          if (w < 900) return 2;
+          if (w < 1200) return 3;
+          return 4;
+        },
+
+        eventosPerPage() {
+          const w = this.viewportWidth;
+          if (w < 640) return 1;
+          if (w < 980) return 2;
+          return 3;
+        },
+
+        mostrarNavegacaoAtividades() {
+          return this.atividades.length > this.atividadesPerPage;
+        },
+
+        mostrarNavegacaoEventos() {
+          return this.eventosFiltrados.length > this.eventosPerPage;
+        },
+
+        meusIds() {
+          try {
+            const raw = localStorage.getItem(MEUS_REGISTROS_STORAGE_KEY);
+            const parsed = raw ? JSON.parse(raw) : [];
+            return Array.isArray(parsed) ? parsed.map(Number) : [];
+          } catch (e) {
+            return [];
+          }
+        },
+
+        googleMapsEmbed() {
+          return `https://www.google.com/maps?q=${encodeURIComponent(this.sede.endereco)}&z=16&output=embed`;
+        },
+
+        atividadesTotalPages() {
+          return Math.max(1, Math.ceil(this.atividades.length / this.atividadesPerPage));
+        },
+
+        atividadesPaginadas() {
+          const start = (this.atividadesPage - 1) * this.atividadesPerPage;
+          return this.atividades.slice(start, start + this.atividadesPerPage).map((item, idx) => ({
+            ...item,
+            agendamentosFormatados: this.parseAgendamentos(item.agendamentosJson || item.agendamentos || []),
+            _originalIndex: start + idx
+          }));
+        },
+
+        registrosBase() {
+          if (this.isAdmin) return this.bancoTodos;
+          const ids = new Set(this.meusIds);
+          return this.bancoTodos.filter(r => ids.has(Number(r.id)));
+        },
+
+        registrosFiltrados() {
+          if (!this.filtro) return this.registrosBase;
+          const f = this.normalizarTexto(this.filtro);
+          return this.registrosBase.filter(r =>
+            this.normalizarTexto(r.nome).includes(f) ||
+            this.normalizarTexto(r.email).includes(f) ||
+            this.normalizarTexto(r.cidade).includes(f) ||
+            this.normalizarTexto(r.modalidade).includes(f)
+          );
+        },
+
+        totalPages() {
+          return Math.ceil(this.registrosFiltrados.length / this.perPage) || 1;
+        },
+
+        paginated() {
+          const start = (this.page - 1) * this.perPage;
+          return this.registrosFiltrados.slice(start, start + this.perPage);
+        },
+
+        eventosFiltrados() {
+          if (!this.filtroEventos) return this.eventosBanco;
+          const f = this.normalizarTexto(this.filtroEventos);
+          return this.eventosBanco.filter(ev =>
+            this.normalizarTexto(ev.nomeEvento).includes(f) ||
+            this.normalizarTexto(ev.descricao).includes(f)
+          );
+        },
+
+        eventosTotalPages() {
+          return Math.ceil(this.eventosFiltrados.length / this.eventosPerPage) || 1;
+        },
+
+        eventosPaginados() {
+          const start = (this.eventosPage - 1) * this.eventosPerPage;
+          return this.eventosFiltrados.slice(start, start + this.eventosPerPage);
+        }
+      },
+
+      watch: {
+        filtro() { this.page = 1; },
+        filtroEventos() { this.eventosPage = 1; },
+        isAdmin() { this.page = 1; },
+        atividadesTotalPages(novoTotal) {
+          if (this.atividadesPage > novoTotal) this.atividadesPage = novoTotal;
+          if (this.atividadesPage < 1) this.atividadesPage = 1;
+        },
+        eventosTotalPages(novoTotal) {
+          if (this.eventosPage > novoTotal) this.eventosPage = novoTotal;
+          if (this.eventosPage < 1) this.eventosPage = 1;
+        },
+        atividadesPerPage() {
+          this.atividadesPage = 1;
+          if (!this.reduceMotionActive) this.active = null;
+        },
+        eventosPerPage() {
+          this.eventosPage = 1;
+        }
+      },
+
+      methods: {
+        updateViewport() {
+          this.viewportWidth = window.innerWidth;
+        },
+
+        normalizarTexto(valor) {
+          return String(valor || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+        },
+
+        normalizarLink(link) {
+          const s = String(link || '').trim();
+          if (!s) return '';
+          if (/^https?:\/\//i.test(s)) return s;
+          return 'https://' + s;
+        },
+
+        normalizarDataEvento(data) {
+          if (!data) return '';
+          const str = String(data).trim();
+          if (str.includes('T')) return str.split('T')[0];
+          return str.length >= 10 ? str.slice(0, 10) : str;
+        },
+
+        formatarDataCurta(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'Data a combinar';
+          const [ano, mes, dia] = normalizada.split('-');
+          return `${dia}/${mes}/${ano}`;
+        },
+
+        formatarDataExtenso(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'Data a combinar';
+          const [ano, mes, dia] = normalizada.split('-');
+          const meses = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+          return `${Number(dia)} de ${meses[Number(mes) - 1] || mes} de ${ano}`;
+        },
+
+        montarHorario(horaInicio, horaFim) {
+          if (horaInicio && horaFim) return `${horaInicio} às ${horaFim}`;
+          if (horaInicio) return horaInicio;
+          if (horaFim) return horaFim;
+          return 'Horário a combinar';
+        },
+
+        parseAgendamentos(raw) {
+          let arr = [];
+          try {
+            if (Array.isArray(raw)) arr = raw;
+            else if (typeof raw === 'string' && raw.trim()) arr = JSON.parse(raw);
+          } catch (e) {
+            arr = [];
+          }
+
+          if (!Array.isArray(arr)) arr = [];
+
+          return arr
+            .filter(item => item && (item.data || item.horaInicio || item.horaFim))
+            .map(item => ({
+              data: item.data || '',
+              horaInicio: item.horaInicio || '',
+              horaFim: item.horaFim || '',
+              dataCurta: item.data ? this.formatarDataCurta(item.data) : 'Data a combinar',
+              dataExtenso: item.data ? this.formatarDataExtenso(item.data) : 'Data a combinar',
+              horario: this.montarHorario(item.horaInicio, item.horaFim)
+            }))
+            .sort((a, b) => {
+              if (!a.data && !b.data) return 0;
+              if (!a.data) return 1;
+              if (!b.data) return -1;
+              return a.data.localeCompare(b.data);
+            });
+        },
+
+        getDriveFileIdFromUrl(url) {
+          const s = String(url || '').trim();
+          if (!s) return '';
+          const patterns = [/[\?&]id=([^&]+)/i, /\/d\/([^/]+)/i, /\/uc\?.*id=([^&]+)/i, /\/thumbnail\?id=([^&]+)/i, /\/file\/d\/([^/]+)/i];
+          for (const rx of patterns) {
+            const m = s.match(rx);
+            if (m && m[1]) return m[1];
+          }
+          return '';
+        },
+
+        montarFallbacksImagem(url) {
+          const fileId = this.getDriveFileIdFromUrl(url);
+          const lista = [];
+          if (url) lista.push(url);
+          if (fileId) {
+            lista.push(`https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`);
+            lista.push(`https://drive.google.com/uc?export=view&id=${fileId}`);
+            lista.push(`https://lh3.googleusercontent.com/d/${fileId}=w1600`);
+          }
+          return [...new Set(lista.filter(Boolean))];
+        },
+
+        resolverImagem(img) {
+          const urlBase = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(urlBase);
+          return fallbacks[0] || '';
+        },
+
+        handleImageError(event, img) {
+          const el = event.target;
+          const atual = el.getAttribute('src') || '';
+          const baseUrl = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(baseUrl);
+          const idxAtual = fallbacks.indexOf(atual);
+          const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
+
+          if (proximo && proximo !== atual) {
+            el.src = proximo;
+            return;
+          }
+
+          el.src = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`
+            <svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+              <rect width="100%" height="100%" fill="#f3f4f6"/>
+              <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6b7280" font-family="Arial" font-size="24">
+                Imagem indisponível
+              </text>
+            </svg>
+          `);
+        },
+
+        handleModalImageError(event) {
+          const atual = event.target.getAttribute('src') || '';
+          const img = this.imagens[this.modalIndex];
+          const baseUrl = typeof img === 'string' ? img : (img.url || '');
+          const fallbacks = this.montarFallbacksImagem(baseUrl);
+          const idxAtual = fallbacks.indexOf(atual);
+          const proximo = idxAtual >= 0 ? fallbacks[idxAtual + 1] : fallbacks[1];
+          if (proximo && proximo !== atual) this.modalImage = proximo;
+        },
+
+        adicionarAgendamentoAtividade() {
+          this.atividadeForm.agendamentos.push({ data: '', horaInicio: '', horaFim: '' });
+        },
+
+        removerAgendamentoAtividade(idx) {
+          if (this.atividadeForm.agendamentos.length <= 1) return;
+          this.atividadeForm.agendamentos.splice(idx, 1);
+        },
+
+        limparAtividadeForm() {
+          this.atividadeForm = {
+            id: null,
+            titulo: '',
+            endereco: '',
+            resumo: '',
+            link: '',
+            agendamentos: [{ data: '', horaInicio: '', horaFim: '' }]
+          };
+        },
+
+        editarAtividade(idx) {
+          const item = this.atividades[idx];
+          let ags = this.parseAgendamentos(item.agendamentosJson || item.agendamentos || []);
+          if (!ags.length) ags = [{ data: '', horaInicio: '', horaFim: '' }];
+
+          this.atividadeForm = {
+            id: item.id || null,
+            titulo: item.titulo || '',
+            endereco: item.endereco || '',
+            resumo: item.resumo || '',
+            link: item.link || '',
+            agendamentos: ags.map(a => ({ data: a.data || '', horaInicio: a.horaInicio || '', horaFim: a.horaFim || '' }))
+          };
+
+          window.location.hash = '#atividades';
+        },
+
+        async excluirAtividade(idx) {
+          if (!this.isAdmin) return;
+          const senha = prompt('Informe a senha para excluir a atividade:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente excluir esta atividade?')) return;
+
+          const item = this.atividades[idx];
+          try {
+            await this.apiPost('delete_activity', { id: item.id });
+            this.atividades.splice(idx, 1);
+            if (this.active === idx) this.active = null;
+            if (typeof this.active === 'number' && this.active > idx) this.active--;
+            this.limparAtividadeForm();
+            if (this.atividadesPage > this.atividadesTotalPages) this.atividadesPage = this.atividadesTotalPages;
+          } catch (e) {
+            alert('Erro ao excluir atividade: ' + e.message);
+          }
+        },
+
+        async salvarTudoAtividades() {
+          if (!this.isAdmin) return;
+          if (!this.atividadeForm.titulo.trim()) return alert('Informe o nome da atividade.');
+
+          const agendamentosValidos = this.atividadeForm.agendamentos
+            .map(a => ({ data: (a.data || '').trim(), horaInicio: (a.horaInicio || '').trim(), horaFim: (a.horaFim || '').trim() }))
+            .filter(a => a.data || a.horaInicio || a.horaFim);
+
+          if (!agendamentosValidos.length) return alert('Adicione pelo menos um dia ou horário para a atividade.');
+
+          const payload = {
+            id: this.atividadeForm.id,
+            titulo: this.atividadeForm.titulo.trim(),
+            endereco: this.atividadeForm.endereco.trim(),
+            resumo: this.atividadeForm.resumo.trim(),
+            link: this.atividadeForm.link.trim(),
+            agendamentos: agendamentosValidos
+          };
+
+          try {
+            if (payload.id) {
+              const upd = await this.apiPost('update_activity', payload);
+              const idx = this.atividades.findIndex(x => Number(x.id) === Number(upd.id));
+              if (idx !== -1) this.$set(this.atividades, idx, upd);
+            } else {
+              const created = await this.apiPost('insert_activity', payload);
+              this.atividades.push(created);
+            }
+
+            this.ordenarAtividades();
+            this.limparAtividadeForm();
+            this.atividadesPage = Math.min(this.atividadesPage, this.atividadesTotalPages);
+            alert('Atividade salva com sucesso.');
+          } catch (e) {
+            alert('Erro ao salvar atividade: ' + e.message);
+          }
+        },
+
+        ordenarAtividades() {
+          this.atividades.sort((a, b) => {
+            const agA = this.parseAgendamentos(a.agendamentosJson || a.agendamentos || []);
+            const agB = this.parseAgendamentos(b.agendamentosJson || b.agendamentos || []);
+            const dA = agA.length && agA[0].data ? agA[0].data : '9999-12-31';
+            const dB = agB.length && agB[0].data ? agB[0].data : '9999-12-31';
+            return dA.localeCompare(dB);
+          });
+        },
+
+        prevAtividadesPage() {
+          this.atividadesPage = Math.max(1, this.atividadesPage - 1);
+          if (!this.reduceMotionActive) this.active = null;
+        },
+
+        nextAtividadesPage() {
+          this.atividadesPage = Math.min(this.atividadesTotalPages, this.atividadesPage + 1);
+          if (!this.reduceMotionActive) this.active = null;
+        },
+
+        async compressImage(file, maxWidth = 1600, quality = 0.88) {
+          return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const img = new Image();
+              img.onload = () => {
+                const scale = Math.min(1, maxWidth / img.width);
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.width * scale);
+                canvas.height = Math.round(img.height * scale);
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+              };
+              img.onerror = reject;
+              img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+          });
+        },
+
+        async handleImageUpload(event) {
+          if (!this.isAdmin) {
+            alert('Somente o administrador pode inserir fotos.');
+            event.target.value = '';
+            return;
+          }
+
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+          if (this.imagens.length >= 25) {
+            alert('O limite do mural é de 25 fotos. Exclua uma antes de inserir outra.');
+            event.target.value = '';
+            return;
+          }
+          if (!file.type.startsWith('image/') && !/\.jfif$/i.test(file.name || '')) {
+            alert('Selecione um arquivo de imagem.');
+            event.target.value = '';
+            return;
+          }
+
+          try {
+            const dataUrl = await this.compressImage(file);
+            const base64 = dataUrl.split(',')[1];
+            const created = await this.apiPost('upload_photo', {
+              fileName: (file.name || 'foto.jpg').replace(/\.jfif$/i, '.jpg'),
+              mimeType: 'image/jpeg',
+              base64: base64
+            });
+            this.imagens.push(created);
+          } catch (e) {
+            console.error(e);
+            alert('Erro ao enviar foto: ' + e.message);
+          } finally {
+            event.target.value = '';
+          }
+        },
+
+        async removerFoto(foto, index) {
+          if (!this.isAdmin) return alert('Somente o administrador pode excluir fotos.');
+          const senha = prompt('Informe a senha para excluir a foto:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente excluir esta foto do mural?')) return;
+
+          try {
+            if (foto && foto.id) await this.apiPost('delete_photo', { id: foto.id });
+            this.imagens.splice(index, 1);
+            if (this.modalOpen && this.modalIndex === index) this.closeModal();
+          } catch (e) {
+            alert('Erro ao excluir foto: ' + e.message);
+          }
+        },
+
+        getDiaEvento(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return '--';
+          return normalizada.split('-')[2];
+        },
+
+        getMesAnoEvento(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada || normalizada.split('-').length !== 3) return 'sem data';
+          const [ano, mes] = normalizada.split('-');
+          const meses = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
+          return `${meses[Number(mes) - 1] || mes}/${ano}`;
+        },
+
+        formatarData(data) {
+          const normalizada = this.normalizarDataEvento(data);
+          if (!normalizada) return '';
+          const partes = normalizada.split('-');
+          if (partes.length !== 3) return normalizada;
+          return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        },
+
+        carregarAdminLocal() {
+          this.isAdmin = localStorage.getItem(ADMIN_STORAGE_KEY) === '1';
+        },
+
+        toggleAdmin() {
+          if (this.isAdmin) {
+            this.isAdmin = false;
+            localStorage.removeItem(ADMIN_STORAGE_KEY);
+            return;
+          }
+
+          const senha = prompt('Informe a senha de administrador:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          this.isAdmin = true;
+          localStorage.setItem(ADMIN_STORAGE_KEY, '1');
+        },
+
+        salvarMeuRegistroId(id) {
+          try {
+            const atual = this.meusIds.slice();
+            if (!atual.includes(Number(id))) {
+              atual.push(Number(id));
+              localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify(atual));
+            }
+          } catch (e) {
+            console.error('Erro ao salvar id local do usuário:', e);
+          }
+        },
+
+        removerMeuRegistroId(id) {
+          try {
+            const atual = this.meusIds.filter(x => Number(x) !== Number(id));
+            localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify(atual));
+          } catch (e) {
+            console.error('Erro ao remover id local do usuário:', e);
+          }
+        },
+
+        podeManipularRegistro(registro) {
+          if (this.isAdmin) return true;
+          return this.meusIds.includes(Number(registro.id));
+        },
+
+        async apiGetList() {
+          const r = await fetch(API + '?action=list', { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar');
+          const data = await r.json();
+          this.bancoTodos = Array.isArray(data) ? data : (data.data || []);
+        },
+
+        async apiGetAtividadesList() {
+          const r = await fetch(API + '?action=list_activities', { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar atividades');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.atividades = arr.length ? arr : JSON.parse(JSON.stringify(ATIVIDADES_PADRAO));
+          this.ordenarAtividades();
+        },
+
+        async apiGetFotosList() {
+          const r = await fetch(API + '?action=list_photos', { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar fotos');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.imagens = Array.isArray(arr) ? arr : [];
+        },
+
+        async apiGetEventosList() {
+          const r = await fetch(API + '?action=list_events', { method: 'GET' });
+          if (!r.ok) throw new Error('Falha ao listar eventos');
+          const data = await r.json();
+          const arr = Array.isArray(data) ? data : (data.data || []);
+          this.eventosBanco = this.ordenarEventosLista(Array.isArray(arr) ? arr : []);
+        },
+
+        async apiPost(action, payload) {
+          const r = await fetch(API + '?action=' + action, { method: 'POST', body: JSON.stringify(payload || {}) });
+          const json = await r.json();
+          if (!r.ok || json.ok === false) throw new Error(json.error || 'Erro');
+          return json.data;
+        },
+
+        ordenarEventosLista(arr) {
+          return [...arr].sort((a, b) => this.normalizarDataEvento(b.dataEvento).localeCompare(this.normalizarDataEvento(a.dataEvento)));
+        },
+
+        async apiEventosInsert(payload) { return await this.apiPost('insert_event', payload); },
+        async apiEventosUpdate(payload) { return await this.apiPost('update_event', payload); },
+        async apiEventosDelete(id) { return await this.apiPost('delete_event', { id }); },
+        async apiEventosTruncate() { return await this.apiPost('delete_all_events', {}); },
+
+        async gerarTodosEventosJson() {
+          await this.apiGetEventosList();
+          const resposta = { ok: true, data: this.eventosBanco, total: this.eventosBanco.length };
+          this.eventosApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodosEventosJsonModal() {
+          if (!this.isAdmin) return;
+          this.eventosApiModal = true;
+          try { await this.gerarTodosEventosJson(); }
+          catch (e) { this.eventosApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
+        },
+
+        async gerarTodasAtividadesJson() {
+          await this.apiGetAtividadesList();
+          const resposta = { ok: true, data: this.atividades, total: this.atividades.length };
+          this.atividadesApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodasAtividadesJsonModal() {
+          if (!this.isAdmin) return;
+          this.atividadesApiModal = true;
+          try { await this.gerarTodasAtividadesJson(); }
+          catch (e) { this.atividadesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
+        },
+
+        async gerarTodosParticipantesJson() {
+          await this.apiGetList();
+          const resposta = { ok: true, data: this.bancoTodos, total: this.bancoTodos.length };
+          this.participantesApiPreview = JSON.stringify(resposta, null, 2);
+          return resposta;
+        },
+
+        async abrirTodosParticipantesJsonModal() {
+          if (!this.isAdmin) return;
+          this.participantesApiModal = true;
+          try { await this.gerarTodosParticipantesJson(); }
+          catch (e) { this.participantesApiPreview = JSON.stringify({ ok: false, error: e.message }, null, 2); }
+        },
+
+        copiarUrlEventosJson() { this.copiarTexto(API + '?action=list_events', 'URL dos eventos copiada com sucesso.'); },
+        copiarUrlAtividadesJson() { this.copiarTexto(API + '?action=list_activities', 'URL das atividades copiada com sucesso.'); },
+        copiarUrlParticipantesJson() { this.copiarTexto(API + '?action=list', 'URL dos participantes copiada com sucesso.'); },
+
+        copiarTexto(texto, mensagemSucesso) {
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(texto).then(() => alert(mensagemSucesso)).catch(() => this.copiarTextoFallback(texto, mensagemSucesso));
+            return;
+          }
+          this.copiarTextoFallback(texto, mensagemSucesso);
+        },
+
+        copiarTextoFallback(texto, mensagemSucesso) {
+          const input = document.createElement('textarea');
+          input.value = texto;
+          input.setAttribute('readonly', '');
+          input.style.position = 'absolute';
+          input.style.left = '-9999px';
+          document.body.appendChild(input);
+          input.select();
+          try {
+            document.execCommand('copy');
+            alert(mensagemSucesso);
+          } catch (e) {
+            alert('Não foi possível copiar automaticamente. URL: ' + texto);
+          }
+          document.body.removeChild(input);
+        },
+
+        openModal(i) {
+          this.modalIndex = i;
+          this.modalImage = this.resolverImagem(this.imagens[i]);
+          this.modalOpen = true;
+          this.$nextTick(() => { this.$refs.firstModalBtn?.focus(); });
+          document.addEventListener('keydown', this.handleModalKeys);
+        },
+
+        closeModal() {
+          this.modalOpen = false;
+          document.removeEventListener('keydown', this.handleModalKeys);
+        },
+
+        handleModalKeys(ev) {
+          if (ev.key === 'Escape') { this.closeModal(); ev.preventDefault(); }
+          if (ev.key === 'ArrowRight') { this.nextImage(); ev.preventDefault(); }
+          if (ev.key === 'ArrowLeft') { this.prevImage(); ev.preventDefault(); }
+        },
+
+        prevImage() {
+          if (!this.imagens.length) return;
+          this.modalIndex = (this.modalIndex - 1 + this.imagens.length) % this.imagens.length;
+          this.modalImage = this.resolverImagem(this.imagens[this.modalIndex]);
+        },
+
+        nextImage() {
+          if (!this.imagens.length) return;
+          this.modalIndex = (this.modalIndex + 1) % this.imagens.length;
+          this.modalImage = this.resolverImagem(this.imagens[this.modalIndex]);
+        },
+
+        toggle(idx) {
+          if (this.reduceMotionActive) return;
+          this.active = this.active === idx ? null : idx;
+        },
+
+        async load() {
+          this.loading = true;
+          try { await this.apiGetList(); }
+          catch (e) { console.error(e); alert('Não consegui conectar à API de pessoas. Verifique a URL do Google Apps Script.'); }
+          finally { this.loading = false; }
+        },
+
+        async loadAtividades() {
+          try { await this.apiGetAtividadesList(); }
+          catch (e) { console.error(e); alert('A API de atividades não respondeu. Verifique a publicação do Google Apps Script.'); }
+        },
+
+        async loadFotos() {
+          try { await this.apiGetFotosList(); }
+          catch (e) { console.error(e); alert('A API das fotos não respondeu. Verifique a publicação do Google Apps Script.'); }
+        },
+
+        async loadEventos() {
+          this.eventosLoading = true;
+          try { await this.apiGetEventosList(); }
+          catch (e) { console.error(e); alert('A API de eventos não respondeu. Verifique a publicação do Google Apps Script.'); }
+          finally { this.eventosLoading = false; }
+        },
+
+        async insertRegistro() {
+          this.loading = true;
+          try {
+            const created = await this.apiPost('insert', this.novo);
+            this.bancoTodos.push(created);
+            this.salvarMeuRegistroId(created.id);
+            this.novo = { nome: '', email: '', celular: '', logradouro: '', numero: '', bairro: '', complemento: '', cidade: '', idade: '', modalidade: '', observacoes: '' };
+            if (this.isAdmin) this.page = this.totalPages;
+          } catch (e) {
+            alert('Erro ao inserir: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        viewDetalhes(r) {
+          if (!this.podeManipularRegistro(r)) return alert('Você só pode visualizar os cadastros que inseriu.');
+          this.detalhes = r;
+        },
+
+        openEdit(r) {
+          if (!this.podeManipularRegistro(r)) return alert('Você só pode editar os cadastros que inseriu.');
+          this.editBuffer = JSON.parse(JSON.stringify(r));
+          this.editModal = true;
+        },
+
+        closeEdit() {
+          this.editModal = false;
+          this.editBuffer = null;
+        },
+
+        async saveEdit() {
+          if (!this.editBuffer || !this.podeManipularRegistro(this.editBuffer)) return alert('Você não tem permissão para editar este cadastro.');
+          this.loading = true;
+          try {
+            const upd = await this.apiPost('update', this.editBuffer);
+            const idx = this.bancoTodos.findIndex(x => Number(x.id) === Number(upd.id));
+            if (idx !== -1) this.$set(this.bancoTodos, idx, upd);
+            this.closeEdit();
+          } catch (e) {
+            alert('Erro ao salvar: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async deleteRegistro(registro) {
+          if (!this.podeManipularRegistro(registro)) return alert('Você só pode excluir os cadastros que inseriu.');
+          const senha = prompt('Informe a senha para excluir o registro:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente excluir este registro?')) return;
+
+          this.loading = true;
+          try {
+            await this.apiPost('delete', { id: registro.id });
+            this.bancoTodos = this.bancoTodos.filter(r => Number(r.id) !== Number(registro.id));
+            this.removerMeuRegistroId(registro.id);
+            if (this.page > this.totalPages) this.page = this.totalPages;
+          } catch (e) {
+            alert('Erro ao excluir: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async resetBanco() {
+          if (!this.isAdmin) return alert('Somente o administrador pode apagar todos os registros.');
+          const senha = prompt('Informe a senha para APAGAR TODOS os registros:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente apagar todos os registros?')) return;
+
+          this.loading = true;
+          try {
+            await this.apiPost('delete_all', {});
+            this.bancoTodos = [];
+            this.page = 1;
+            localStorage.setItem(MEUS_REGISTROS_STORAGE_KEY, JSON.stringify([]));
+          } catch (e) {
+            alert('Erro ao apagar tudo: ' + e.message);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        async insertEvento() {
+          if (!this.isAdmin) return alert('Somente o administrador pode inserir eventos.');
+          this.eventosLoading = true;
+          try {
+            const created = await this.apiEventosInsert(this.novoEvento);
+            this.eventosBanco.push(created);
+            this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
+            this.novoEvento = { dataEvento: '', nomeEvento: '', descricao: '' };
+            this.eventosPage = 1;
+            await this.gerarTodosEventosJson();
+          } catch (e) {
+            alert('Erro ao inserir evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        viewDetalhesEvento(ev) {
+          if (!this.isAdmin) return;
+          this.detalhesEvento = ev;
+        },
+
+        openEditEvento(ev) {
+          if (!this.isAdmin) return alert('Somente o administrador pode editar eventos.');
+          this.editEventoBuffer = JSON.parse(JSON.stringify(ev));
+          this.editEventoModal = true;
+        },
+
+        closeEditEvento() {
+          this.editEventoModal = false;
+          this.editEventoBuffer = null;
+        },
+
+        async saveEditEvento() {
+          if (!this.isAdmin) return alert('Somente o administrador pode editar eventos.');
+          this.eventosLoading = true;
+          try {
+            const upd = await this.apiEventosUpdate(this.editEventoBuffer);
+            const idx = this.eventosBanco.findIndex(x => Number(x.id) === Number(upd.id));
+            if (idx !== -1) this.$set(this.eventosBanco, idx, upd);
+            this.eventosBanco = this.ordenarEventosLista(this.eventosBanco);
+            await this.gerarTodosEventosJson();
+            this.closeEditEvento();
+          } catch (e) {
+            alert('Erro ao salvar evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        async deleteEvento(evento) {
+          if (!this.isAdmin) return alert('Somente o administrador pode excluir eventos.');
+          const senha = prompt('Informe a senha para excluir o evento:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente excluir este evento?')) return;
+
+          this.eventosLoading = true;
+          try {
+            await this.apiEventosDelete(evento.id);
+            this.eventosBanco = this.eventosBanco.filter(ev => Number(ev.id) !== Number(evento.id));
+            if (this.eventosPage > this.eventosTotalPages) this.eventosPage = this.eventosTotalPages;
+            await this.gerarTodosEventosJson();
+          } catch (e) {
+            alert('Erro ao excluir evento: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        async resetEventos() {
+          if (!this.isAdmin) return alert('Somente o administrador pode apagar todos os eventos.');
+          const senha = prompt('Informe a senha para APAGAR TODOS os eventos:');
+          if (senha === null) return;
+          if (senha !== SENHA_EXCLUSAO) return alert('Senha incorreta.');
+          if (!confirm('Deseja realmente apagar todos os eventos?')) return;
+
+          this.eventosLoading = true;
+          try {
+            await this.apiEventosTruncate();
+            this.eventosBanco = [];
+            this.eventosPage = 1;
+            await this.gerarTodosEventosJson();
+          } catch (e) {
+            alert('Erro ao apagar todos os eventos: ' + e.message);
+          } finally {
+            this.eventosLoading = false;
+          }
+        },
+
+        prevPage() { if (this.page > 1) this.page--; },
+        nextPage() { if (this.page < this.totalPages) this.page++; },
+        prevEventosPage() { if (this.eventosPage > 1) this.eventosPage--; },
+        nextEventosPage() { if (this.eventosPage < this.eventosTotalPages) this.eventosPage++; }
+      },
+
+      mounted() {
+        this.carregarAdminLocal();
+        this.load();
+        this.loadEventos();
+        this.loadAtividades();
+        this.loadFotos();
+        window.addEventListener('resize', this.updateViewport, { passive: true });
+
+        const body = document.body;
+        const btnContrast = document.getElementById('btn-contrast');
+        const btnFontPlus = document.getElementById('btn-font+');
+        const btnFontMinus = document.getElementById('btn-font-');
+        const btnSpacing = document.getElementById('btn-spacing');
+        const btnMotion = document.getElementById('btn-motion');
+
+        btnContrast.addEventListener('click', () => body.classList.toggle('high-contrast'));
+        btnSpacing.addEventListener('click', () => body.classList.toggle('extra-spacing'));
+
+        btnMotion.addEventListener('click', () => {
+          body.classList.toggle('reduce-motion');
+          this.reduceMotionActive = body.classList.contains('reduce-motion');
+          this.active = null;
+        });
+
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          body.classList.add('reduce-motion');
+          this.reduceMotionActive = true;
+          this.active = null;
+        }
+
+        let fontScale = 100;
+        const applyFontScale = () => {
+          document.documentElement.style.fontSize = fontScale + '%';
+        };
+
+        btnFontPlus.addEventListener('click', () => {
+          fontScale = Math.min(180, fontScale + 10);
+          applyFontScale();
+        });
+
+        btnFontMinus.addEventListener('click', () => {
+          fontScale = Math.max(80, fontScale - 10);
+          applyFontScale();
+        });
+      },
+
+      beforeDestroy() {
+        window.removeEventListener('resize', this.updateViewport);
+        document.removeEventListener('keydown', this.handleModalKeys);
+      }
+    });
+  </script>
+</body>
+</html>

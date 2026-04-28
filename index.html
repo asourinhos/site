@@ -1681,9 +1681,7 @@
               {{ googleError }}
             </div>
 
-            <div v-else class="google-status-box info" aria-live="polite">
-              {{ googleReady ? 'Você também pode preencher o formulário abaixo.' : 'Preparando login Google...' }}
-            </div>
+
           </div>
 
           <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ASO - MVP</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #222;
+      line-height: 1.5;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      padding: 14px 16px;
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      z-index: 100;
+    }
+
+    nav a {
+      color: #222;
+      text-decoration: none;
+      white-space: nowrap;
+      font-size: 15px;
+    }
+
+    main {
+      padding-top: 64px;
+    }
+
+    header,
+    section,
+    footer {
+      padding: 56px 20px;
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3, h4, p {
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-weight: 700;
+      text-align: left;
+    }
+
+    h2 {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      margin-bottom: 20px;
+    }
+
+    .hero-logo-wrap {
+      min-height: 55vh;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .hero-logo {
+      width: min(78vw, 520px);
+      display: block;
+      margin-left: 0;
+    }
+
+    .texto-box,
+    .form-box,
+    .lista-box {
+      border: 1px solid #ddd;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      background: #fff;
+      padding: 18px;
+      text-align: left;
+    }
+
+    .card h3,
+    .card h4 {
+      margin-bottom: 10px;
+      font-size: 1.15rem;
+    }
+
+    .card p {
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .form-grid textarea {
+      grid-column: 1 / -1;
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      background: #fff;
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .fake-message {
+      margin-top: 14px;
+      color: #666;
+      font-size: 0.95rem;
+    }
+
+    .footer-text {
+      color: #555;
+    }
+
+    @media (max-width: 640px) {
+      header,
+      section,
+      footer {
+        padding: 42px 16px;
+      }
+
+      main {
+        padding-top: 58px;
+      }
+
+      nav {
+        padding: 12px 14px;
+      }
+
+      .hero-logo-wrap {
+        min-height: 38vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <nav>
+      <a href="#topo">Início</a>
+      <a href="#quem-somos">Quem Somos</a>
+      <a href="#atividades">Atividades</a>
+      <a href="#participe">Participe</a>
+      <a href="#eventos">Eventos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <main>
+      <header id="topo">
+        <div class="container hero-logo-wrap">
+          <img src="logo.png" alt="Logo da ASO" class="hero-logo" />
+        </div>
+      </header>
+
+      <section id="quem-somos">
+        <div class="container">
+          <h2>Quem Somos</h2>
+          <div class="texto-box">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Este texto é apenas um exemplo provisório para a área institucional do projeto.</p>
+            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Conteúdo em definição.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Seção ainda em construção.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="atividades">
+        <div class="container">
+          <h2>Atividades</h2>
+          <div class="lista-box">
+            <div class="cards-grid">
+              <article class="card" v-for="(atividade, index) in atividades" :key="index">
+                <h3>{{ atividade.titulo }}</h3>
+                <p>{{ atividade.descricao }}</p>
+                <p><strong>Horário:</strong> {{ atividade.horario }}</p>
+                <p><strong>Local:</strong> {{ atividade.local }}</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="participe">
+        <div class="container">
+          <h2>Participe</h2>
+          <div class="form-box">
+            <form class="form-grid" @submit.prevent="enviarFormulario">
+              <input v-model="form.nome" type="text" placeholder="Nome" required>
+              <input v-model="form.email" type="email" placeholder="E-mail" required>
+              <input v-model="form.celular" type="text" placeholder="Celular" required>
+              <input v-model="form.cidade" type="text" placeholder="Cidade" required>
+
+              <select v-model="form.modalidade" required>
+                <option disabled value="">Modalidade</option>
+                <option>Exemplo de modalidade 1</option>
+                <option>Exemplo de modalidade 2</option>
+                <option>Exemplo de modalidade 3</option>
+              </select>
+
+              <textarea v-model="form.observacoes" placeholder="Observações"></textarea>
+
+              <button type="submit">Enviar</button>
+            </form>
+
+            <p class="fake-message" v-if="mensagemFormulario">{{ mensagemFormulario }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="eventos">
+        <div class="container">
+          <h2>Eventos</h2>
+          <div class="lista-box">
+            <div class="cards-grid">
+              <article class="card" v-for="(evento, index) in eventos" :key="index">
+                <h4>{{ evento.titulo }}</h4>
+                <p>{{ evento.descricao }}</p>
+                <p><strong>Data:</strong> {{ evento.data }}</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer id="contato">
+        <div class="container">
+          <h2>Contato</h2>
+          <div class="texto-box footer-text">
+            <p>Exemplo de telefone</p>
+            <p>Exemplo de e-mail</p>
+            <p>Exemplo de endereço</p>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#app',
+      data: {
+        mensagemFormulario: '',
+        form: {
+          nome: '',
+          email: '',
+          celular: '',
+          cidade: '',
+          modalidade: '',
+          observacoes: ''
+        },
+        atividades: [
+          {
+            titulo: 'Exemplo de atividade 1',
+            descricao: 'Exemplo de descrição da atividade.',
+            horario: 'Exemplo de horário',
+            local: 'Exemplo de local'
+          },
+          {
+            titulo: 'Exemplo de atividade 2',
+            descricao: 'Exemplo de descrição da atividade.',
+            horario: 'Exemplo de horário',
+            local: 'Exemplo de local'
+          },
+          {
+            titulo: 'Exemplo de atividade 3',
+            descricao: 'Exemplo de descrição da atividade.',
+            horario: 'Exemplo de horário',
+            local: 'Exemplo de local'
+          }
+        ],
+        eventos: [
+          {
+            titulo: 'Exemplo de evento 1',
+            descricao: 'Exemplo de descrição do evento.',
+            data: 'Exemplo de data'
+          },
+          {
+            titulo: 'Exemplo de evento 2',
+            descricao: 'Exemplo de descrição do evento.',
+            data: 'Exemplo de data'
+          },
+          {
+            titulo: 'Exemplo de evento 3',
+            descricao: 'Exemplo de descrição do evento.',
+            data: 'Exemplo de data'
+          }
+        ]
+      },
+      methods: {
+        enviarFormulario() {
+          this.mensagemFormulario = 'Formulário de exemplo enviado. Integração ainda não implementada.';
+          this.form = {
+            nome: '',
+            email: '',
+            celular: '',
+            cidade: '',
+            modalidade: '',
+            observacoes: ''
+          };
+        }
+      }
+    });
+  </script>
+</body>
+</html>

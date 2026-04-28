@@ -1648,8 +1648,8 @@
 
         <div class="bloco-admin">
           <div v-if="!isAdmin" class="google-signin-wrap">
-            <h3>Cadastre-se com o Google</h3>
-            <p class="google-cta-subtitle">Ou preencha o formulário abaixo.</p>
+            <h3>Cadastre-se</h3>
+            <p class="google-cta-subtitle"></p>
 
             <button
               type="button"
@@ -1681,7 +1681,9 @@
               {{ googleError }}
             </div>
 
-
+            <div v-else class="google-status-box info" aria-live="polite">
+              {{ googleReady ? 'Você também pode preencher o formulário abaixo.' : 'Preparando login Google...' }}
+            </div>
           </div>
 
           <form @submit.prevent="insertRegistro" class="form-db" aria-describedby="dica-form">

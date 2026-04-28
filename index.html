@@ -2704,7 +2704,7 @@
 
             this.novo.nome = this.googleUser.nome || '';
             this.novo.email = this.googleUser.email || '';
-            this.novo.observacoes = this.novo.observacoes || 'Cadastro inicial via Google. Se possíveç, preencha os demais dados e aguarde contato por e-mail.';
+            this.novo.observacoes = this.novo.observacoes || 'Cadastro inicial via Google. Caso possível, preencha os demais dados e aguarde contato por e-mail.';
 
             const leadKey = this.googleUser.sub || this.googleUser.email;
             if (leadKey && localStorage.getItem('aso_google_lead_' + leadKey) === '1') {
